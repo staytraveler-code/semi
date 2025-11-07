@@ -1,9 +1,9 @@
 package db.fund.management;
 
 public class FundManagementDTO {
-	private String fund_code;
-	private String pjt_code;
-	private String res_code;
+	private int fcode;
+	private String pcode;
+	private String rcode;
 	private String charger_name;
 	private String category;
 	private String date_used;
@@ -12,24 +12,24 @@ public class FundManagementDTO {
 	private String vendor_name;
 	private String proof_type;
 	private String memo;
-	
-	public String getFund_code() {
-		return fund_code;
+
+	public int getFcode() {
+		return fcode;
 	}
-	public void setFund_code(String fund_code) {
-		this.fund_code = fund_code;
+	public void setFcode(int fcode) {
+		this.fcode = fcode;
 	}
-	public String getPjt_code() {
-		return pjt_code;
+	public String getPcode() {
+		return pcode;
 	}
-	public void setPjt_code(String pjt_code) {
-		this.pjt_code = pjt_code;
+	public void setPcode(String pcode) {
+		this.pcode = pcode;
 	}
-	public String getRes_code() {
-		return res_code;
+	public String getRcode() {
+		return rcode;
 	}
-	public void setRes_code(String res_code) {
-		this.res_code = res_code;
+	public void setRcode(String rcode) {
+		this.rcode = rcode;
 	}
 	public String getCharger_name() {
 		return charger_name;
@@ -80,4 +80,5 @@ public class FundManagementDTO {
 		this.memo = memo;
 	}
 	
+
 }
