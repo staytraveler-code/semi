@@ -3,7 +3,7 @@ package db.organization;
 import java.sql.SQLException;
 
 public interface OrganizationDAO {
-	
+
 	public void insertOrganization(OrganizationDTO dto) throws SQLException;
 	public void updateOrganization(OrganizationDTO dto) throws SQLException;
 	public void deleteOrganization(String id) throws SQLException;

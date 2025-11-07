@@ -4,7 +4,6 @@ package db.organization;
   연구기관
  */
 public class OrganizationDTO {
-
 	
 	private String orgName;
 	private String orgType; //기관유형
