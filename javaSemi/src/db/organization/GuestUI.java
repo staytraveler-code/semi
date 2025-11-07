@@ -1,4 +1,4 @@
-package com.sp;
+package db.organization;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
