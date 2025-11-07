@@ -1,7 +1,7 @@
 package db.milestone;
 
 //마일스톤
-public class milestoneDTO {
+public class MilestoneDTO {
 	private String mileCode; //milestone code
 	private String pCode; //project code
 	private String name;
@@ -11,11 +11,11 @@ public class milestoneDTO {
 	private String status; //status
 	
 	
-	public String getmCode() {
+	public String getMileCode() {
 		return mileCode;
 	}
-	public void setmCode(String mCode) {
-		this.mileCode = mCode;
+	public void setMileCode(String mileCode) {
+		this.mileCode = mileCode;
 	}
 	public String getpCode() {
 		return pCode;
