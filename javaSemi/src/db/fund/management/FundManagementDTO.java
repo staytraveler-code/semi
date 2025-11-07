@@ -1,6 +1,83 @@
 package db.fund.management;
 
 public class FundManagementDTO {
+	private String fund_code;
+	private String pjt_code;
+	private String res_code;
+	private String charger_name;
+	private String category;
+	private String date_used;
+	private long expense;
+	private String content;
+	private String vendor_name;
+	private String proof_type;
+	private String memo;
 	
+	public String getFund_code() {
+		return fund_code;
+	}
+	public void setFund_code(String fund_code) {
+		this.fund_code = fund_code;
+	}
+	public String getPjt_code() {
+		return pjt_code;
+	}
+	public void setPjt_code(String pjt_code) {
+		this.pjt_code = pjt_code;
+	}
+	public String getRes_code() {
+		return res_code;
+	}
+	public void setRes_code(String res_code) {
+		this.res_code = res_code;
+	}
+	public String getCharger_name() {
+		return charger_name;
+	}
+	public void setCharger_name(String charger_name) {
+		this.charger_name = charger_name;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getDate_used() {
+		return date_used;
+	}
+	public void setDate_used(String date_used) {
+		this.date_used = date_used;
+	}
+	public long getExpense() {
+		return expense;
+	}
+	public void setExpense(long expense) {
+		this.expense = expense;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getVendor_name() {
+		return vendor_name;
+	}
+	public void setVendor_name(String vendor_name) {
+		this.vendor_name = vendor_name;
+	}
+	public String getProof_type() {
+		return proof_type;
+	}
+	public void setProof_type(String proof_type) {
+		this.proof_type = proof_type;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 	
 }
