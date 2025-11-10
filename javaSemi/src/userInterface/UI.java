@@ -67,7 +67,7 @@ public class UI {
 
             projectUI = new ProjectUI(br, this, loginOrg.getOrgCode());
             memberUI = new MemberUI(br, this, organizationDAO, loginOrg.getOrgId());
-            System.out.println("\n✅ 로그인 성공: " + loginOrg.getOrgName() + " (" + loginOrg.getOrgCode() + ")");
+            System.out.println(loginOrg.getOrgName());
             showOrgMainMenu();
 
         } catch (SQLException e) {
