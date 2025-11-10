@@ -1,5 +1,7 @@
 package userInterface;
 
+import db.util.DBConn;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +16,6 @@ public class UI {
     public UI() {
         br = new BufferedReader(new InputStreamReader(System.in));
         authUI = new AuthUI(br, this);
-        projectUI = new ProjectUI(br, this);
         memberUI = new MemberUI(br, this);
         researcherUI = new ResearcherUI(br, this);
 
@@ -49,6 +50,12 @@ public class UI {
         }
     }
 
+    // 로그인 성공 시 호출 (기관 코드 전달)
+    public void onOrgLogin(String orgCode) throws IOException {
+        projectUI = new ProjectUI(br, this, orgCode); // 로그인한 기관 코드로 ProjectUI 생성
+        showOrgMainMenu();
+    }
+
     // 기관 메인 메뉴
     public void showOrgMainMenu() throws IOException {
         while (true) {
@@ -80,6 +87,7 @@ public class UI {
     // 프로그램 종료
     public void exit() {
         System.out.println("프로그램 종료");
+        DBConn.close();
         System.exit(0);
     }
 }

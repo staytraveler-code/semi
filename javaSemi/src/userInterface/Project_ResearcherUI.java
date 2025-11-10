@@ -2,7 +2,7 @@ package userInterface;
 
 public class Project_ResearcherUI {
 
-    public void printProjectResearcher() {
+    public void printProjectResearcherList() {
         System.out.println("1111 김바보");
         System.out.println("1112 김수열");
     }

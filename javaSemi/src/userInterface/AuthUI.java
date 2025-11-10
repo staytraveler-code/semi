@@ -22,8 +22,11 @@ public class AuthUI {
         System.out.print("비밀번호: ");
         String pw = br.readLine();
 
+        // TODO: 실제 DB 연동 시 OrganizationDAO를 사용해서 검증하도록 변경
         System.out.println(">> 로그인 성공 (테스트용)\n");
-        ui.showOrgMainMenu(); // 로그인 성공 후 기관 메뉴 이동
+
+        // ✅ 로그인 성공 시 onOrgLogin 호출 (projectUI 생성됨)
+        ui.onOrgLogin(id);
     }
 
     // 회원가입
@@ -40,6 +43,5 @@ public class AuthUI {
         String name = br.readLine();
 
         System.out.println(">> 회원가입 완료 (테스트용)\n");
-        // 회원가입 후 초기 메뉴로 자동 복귀
     }
 }

@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import db.milestone.MilestoneDAO;
-import db.milestone.MilestoneDTO;
-
 public class Project_MilestoneUI {
     private List<String> milestoneList = new ArrayList<>();
     private BufferedReader br;
@@ -21,32 +18,16 @@ public class Project_MilestoneUI {
         this.br = br;
     }
 
-    //미완
-    public void printMilestoneList() { //마일스톤 전체 출력
-         MilestoneDAO dao = new MilestoneDAO(); // DAO 객체 생성
-         List<MilestoneDTO> list = dao.listMilestone(); // 조회 메서드 호출
-         
-         if (list.isEmpty()) {
-             System.out.println("(등록된 마일스톤이 없습니다)");
-         }
-
-         System.out.println("===== 마일스톤 목록 =====");
-
-         System.out.printf("%-8s %-20s %-50s %-20s %-20s %10s %n",
-                    "코드", "목표", "내용", "계획완료일", "실제완료일", "상태");
-          System.out.println("=".repeat(150));
-
-            for (MilestoneDTO dto : list) {
-                System.out.printf("%-8s %-20s %-50s %-20s %-20s %10s %n",
-                        dto.getMileCode(),
-                        dto.getName(),
-                        dto.getDesc(),
-                        dto.getPeDate(),
-                        dto.getAeDate(),
-                        dto.getStatus());
+    public void printMilestoneList() {
+        System.out.println("===== 마일스톤 목록 =====");
+        if (milestoneList.isEmpty()) {
+            System.out.println("(등록된 마일스톤이 없습니다)");
+        } else {
+            for (int i = 0; i < milestoneList.size(); i++) {
+                System.out.printf("%d. %s%n", i + 1, milestoneList.get(i));
             }
-            
-            System.out.println("=".repeat(150));
+        }
+        System.out.println("========================\n");
     }
 
     public void addMilestone() throws IOException {
