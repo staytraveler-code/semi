@@ -7,8 +7,5 @@ public interface OrganizationDAO {
     void updateOrganization(OrganizationDTO dto) throws SQLException;
     void deleteOrganization(String id) throws SQLException;
     OrganizationDTO selectRecord(String id) throws SQLException;
-    
-    default OrganizationDTO findById(String id) throws SQLException {
-        return selectRecord(id);
-    }
+    OrganizationDTO findById(String id) throws SQLException; // 로그인용
 }

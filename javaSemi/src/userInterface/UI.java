@@ -1,9 +1,9 @@
 package userInterface;
 
-import db.util.DBConn;
 import db.organization.OrganizationDAO;
 import db.organization.OrganizationDAOImpl;
 import db.organization.OrganizationDTO;
+import db.util.DBConn;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,15 +17,15 @@ public class UI {
     private MemberUI memberUI;
     private ResearcherUI researcherUI;
 
-    private OrganizationDAO organizationDAO; // 🔹 기관 DAO 추가
+    private OrganizationDAO organizationDAO;
 
     public UI() {
         br = new BufferedReader(new InputStreamReader(System.in));
         organizationDAO = new OrganizationDAOImpl();
         authUI = new AuthUI(br, this);
-        memberUI = new MemberUI(br, this);
         researcherUI = new ResearcherUI(br, this);
-
+        
+        // 초기 메뉴 호출
         try {
             showInitialMenu();
         } catch (IOException e) {
@@ -33,7 +33,6 @@ public class UI {
         }
     }
 
-    // 초기 화면
     public void showInitialMenu() throws IOException {
         while (true) {
             System.out.println("""
@@ -57,7 +56,6 @@ public class UI {
         }
     }
 
-    // 로그인 성공 시 호출 (아이디로 DTO 조회)
     public void onOrgLogin(String orgId) throws IOException {
         try {
             OrganizationDTO loginOrg = organizationDAO.findById(orgId);
@@ -67,8 +65,8 @@ public class UI {
                 return;
             }
 
-            // ✅ ORG_CODE를 기반으로 ProjectUI 연결
             projectUI = new ProjectUI(br, this, loginOrg.getOrgCode());
+            memberUI = new MemberUI(br, this, organizationDAO, loginOrg.getOrgId());
             System.out.println("\n✅ 로그인 성공: " + loginOrg.getOrgName() + " (" + loginOrg.getOrgCode() + ")");
             showOrgMainMenu();
 
@@ -77,7 +75,6 @@ public class UI {
         }
     }
 
-    // 기관 메인 메뉴
     public void showOrgMainMenu() throws IOException {
         while (true) {
             System.out.println("""
@@ -105,7 +102,6 @@ public class UI {
         }
     }
 
-    // 프로그램 종료
     public void exit() {
         System.out.println("프로그램 종료");
         DBConn.close();

@@ -14,26 +14,33 @@ public class ProjectDAO {
         List<ProjectDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM Project WHERE org_code = ? ORDER BY project_code";
 
-        try (Connection conn = DBConn.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = DBConn.getConnection(); // 싱글톤 커넥션
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-            ps.setString(1, orgCode);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ProjectDTO dto = new ProjectDTO();
-                    dto.setProjectCode(rs.getString("project_code"));
-                    dto.setOrgCode(rs.getString("org_code"));
-                    dto.setTitle(rs.getString("title"));
-                    dto.setStage(rs.getString("stage"));
-                    dto.setStatus(rs.getString("status"));
-                    dto.setBudget(rs.getLong("budget"));
-                    dto.setStartDate(rs.getDate("start_date"));
-                    dto.setEndDate(rs.getDate("end_date"));
-                    list.add(dto);
-                }
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, orgCode); // 한 번만 설정
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ProjectDTO dto = new ProjectDTO();
+                dto.setProjectCode(rs.getString("project_code"));
+                dto.setOrgCode(rs.getString("org_code"));
+                dto.setTitle(rs.getString("title"));
+                dto.setStage(rs.getString("stage"));
+                dto.setStatus(rs.getString("status"));
+                dto.setBudget(rs.getLong("budget"));
+                dto.setStartDate(rs.getDate("start_date"));
+                dto.setEndDate(rs.getDate("end_date"));
+                list.add(dto);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // ResultSet과 PreparedStatement만 닫기, Connection은 닫지 않음
+            try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+            try { if (ps != null) ps.close(); } catch (Exception ignored) {}
         }
 
         return list;
