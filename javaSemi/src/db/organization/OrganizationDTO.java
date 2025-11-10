@@ -2,14 +2,14 @@ package db.organization;
 
 /** 연구기관 정보 DTO */
 public class OrganizationDTO {
-    private String orgId;      // id
-    private String orgPwd;     // pwd
-    private String orgName;    // name
-    private String orgType;    // type
-    private String bizRegNo;   // biz_reg_no
-    private String orgTel;     // tel
-    private String orgEmail;   // email
-    private String orgAddress; // address
+    private String orgId;      // ID
+    private String orgPwd;     // PWD
+    private String orgName;    // NAME
+    private String orgType;    // TYPE
+    private String bizRegNo;   // BIZ_REG_NO
+    private String orgTel;     // TEL
+    private String orgEmail;   // EMAIL
+    private String orgAddress; // ADDRESS
 
     public String getOrgId() { return orgId; }
     public void setOrgId(String orgId) { this.orgId = orgId; }

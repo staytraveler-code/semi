@@ -50,9 +50,9 @@ public class UI {
         }
     }
 
-    // 로그인 성공 시 호출 (기관 코드 전달)
-    public void onOrgLogin(String orgCode) throws IOException {
-        projectUI = new ProjectUI(br, this, orgCode); // 로그인한 기관 코드로 ProjectUI 생성
+    // 로그인 성공 시 호출 (기관 ID 전달)
+    public void onOrgLogin(String orgId) throws IOException {
+        projectUI = new ProjectUI(br, this, orgId); // 로그인한 기관 ID로 ProjectUI 생성
         showOrgMainMenu();
     }
 

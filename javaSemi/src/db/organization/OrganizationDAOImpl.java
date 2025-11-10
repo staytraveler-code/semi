@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.util.DBConn;
-import db.util.DBUtil;
 
 public class OrganizationDAOImpl implements OrganizationDAO {
-    private Connection conn = DBConn.getConnection();
+    private Connection conn;
+
+    public OrganizationDAOImpl() {
+        this.conn = DBConn.getConnection();
+    }
 
     // 기관 등록
     @Override
@@ -18,10 +21,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             INSERT INTO organization(id, pwd, name, type, biz_reg_no, tel, email, address)
             VALUES(?,?,?,?,?,?,?,?)
         """;
-        PreparedStatement pstmt = null;
 
-        try {
-            pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, dto.getOrgId());
             pstmt.setString(2, dto.getOrgPwd());
             pstmt.setString(3, dto.getOrgName());
@@ -31,8 +32,6 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(7, dto.getOrgEmail());
             pstmt.setString(8, dto.getOrgAddress());
             pstmt.executeUpdate();
-        } finally {
-            DBUtil.close(pstmt);
         }
     }
 
@@ -44,10 +43,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
                SET name = ?, type = ?, biz_reg_no = ?, tel = ?, email = ?, address = ?
              WHERE id = ?
         """;
-        PreparedStatement pstmt = null;
 
-        try {
-            pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, dto.getOrgName());
             pstmt.setString(2, dto.getOrgType());
             pstmt.setString(3, dto.getBizRegNo());
@@ -56,8 +53,6 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(6, dto.getOrgAddress());
             pstmt.setString(7, dto.getOrgId());
             pstmt.executeUpdate();
-        } finally {
-            DBUtil.close(pstmt);
         }
     }
 
@@ -65,14 +60,10 @@ public class OrganizationDAOImpl implements OrganizationDAO {
     @Override
     public void deleteOrganization(String id) throws SQLException {
         String sql = "DELETE FROM organization WHERE id = ?";
-        PreparedStatement pstmt = null;
 
-        try {
-            pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, id);
             pstmt.executeUpdate();
-        } finally {
-            DBUtil.close(pstmt);
         }
     }
 
@@ -84,30 +75,32 @@ public class OrganizationDAOImpl implements OrganizationDAO {
               FROM organization
              WHERE id = ?
         """;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+
         OrganizationDTO dto = null;
 
-        try {
-            pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, id);
-            rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                dto = new OrganizationDTO();
-                dto.setOrgId(rs.getString("id"));
-                dto.setOrgPwd(rs.getString("pwd"));
-                dto.setOrgName(rs.getString("name"));
-                dto.setOrgType(rs.getString("type"));
-                dto.setBizRegNo(rs.getString("biz_reg_no"));
-                dto.setOrgTel(rs.getString("tel"));
-                dto.setOrgEmail(rs.getString("email"));
-                dto.setOrgAddress(rs.getString("address"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    dto = new OrganizationDTO();
+                    dto.setOrgId(rs.getString("id"));
+                    dto.setOrgPwd(rs.getString("pwd"));
+                    dto.setOrgName(rs.getString("name"));
+                    dto.setOrgType(rs.getString("type"));
+                    dto.setBizRegNo(rs.getString("biz_reg_no"));
+                    dto.setOrgTel(rs.getString("tel"));
+                    dto.setOrgEmail(rs.getString("email"));
+                    dto.setOrgAddress(rs.getString("address"));
+                }
             }
-        } finally {
-            DBUtil.close(rs);
-            DBUtil.close(pstmt);
         }
+
         return dto;
+    }
+
+    // 로그인용 아이디 확인 (selectRecord와 동일하게 동작)
+    public OrganizationDTO findById(String id) throws SQLException {
+        return selectRecord(id);
     }
 }
