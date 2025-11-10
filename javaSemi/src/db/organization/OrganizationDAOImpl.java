@@ -18,8 +18,10 @@ public class OrganizationDAOImpl implements OrganizationDAO {
     @Override
     public void insertOrganization(OrganizationDTO dto) throws SQLException {
         String sql = """
-            INSERT INTO organization(id, pwd, name, type, biz_reg_no, tel, email, address)
-            VALUES(?,?,?,?,?,?,?,?)
+            INSERT INTO organization(
+                org_code, id, pwd, name, type, biz_reg_no, tel, email, address
+            )
+            VALUES('ORG_' || LPAD(seq_org_code.NEXTVAL, 3, '0'), ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -32,6 +34,17 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(7, dto.getOrgEmail());
             pstmt.setString(8, dto.getOrgAddress());
             pstmt.executeUpdate();
+        }
+
+        // ✅ 방금 생성된 org_code를 다시 조회해 DTO에 세팅
+        String getCodeSql = "SELECT org_code FROM organization WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(getCodeSql)) {
+            pstmt.setString(1, dto.getOrgId());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    dto.setOrgCode(rs.getString("org_code"));
+                }
+            }
         }
     }
 
@@ -71,7 +84,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
     @Override
     public OrganizationDTO selectRecord(String id) throws SQLException {
         String sql = """
-            SELECT id, pwd, name, type, biz_reg_no, tel, email, address
+            SELECT org_code, id, pwd, name, type, biz_reg_no, tel, email, address
               FROM organization
              WHERE id = ?
         """;
@@ -84,6 +97,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     dto = new OrganizationDTO();
+                    dto.setOrgCode(rs.getString("org_code")); // ✅ org_code도 가져오기
                     dto.setOrgId(rs.getString("id"));
                     dto.setOrgPwd(rs.getString("pwd"));
                     dto.setOrgName(rs.getString("name"));
@@ -99,7 +113,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
         return dto;
     }
 
-    // 로그인용 아이디 확인 (selectRecord와 동일하게 동작)
+    // 로그인용 아이디 확인
     public OrganizationDTO findById(String id) throws SQLException {
         return selectRecord(id);
     }

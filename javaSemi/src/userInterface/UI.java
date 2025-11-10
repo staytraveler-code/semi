@@ -1,10 +1,14 @@
 package userInterface;
 
 import db.util.DBConn;
+import db.organization.OrganizationDAO;
+import db.organization.OrganizationDAOImpl;
+import db.organization.OrganizationDTO;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 public class UI {
     private BufferedReader br;
@@ -13,8 +17,11 @@ public class UI {
     private MemberUI memberUI;
     private ResearcherUI researcherUI;
 
+    private OrganizationDAO organizationDAO; // 🔹 기관 DAO 추가
+
     public UI() {
         br = new BufferedReader(new InputStreamReader(System.in));
+        organizationDAO = new OrganizationDAOImpl();
         authUI = new AuthUI(br, this);
         memberUI = new MemberUI(br, this);
         researcherUI = new ResearcherUI(br, this);
@@ -50,10 +57,24 @@ public class UI {
         }
     }
 
-    // 로그인 성공 시 호출 (기관 ID 전달)
+    // 로그인 성공 시 호출 (아이디로 DTO 조회)
     public void onOrgLogin(String orgId) throws IOException {
-        projectUI = new ProjectUI(br, this, orgId); // 로그인한 기관 ID로 ProjectUI 생성
-        showOrgMainMenu();
+        try {
+            OrganizationDTO loginOrg = organizationDAO.findById(orgId);
+
+            if (loginOrg == null) {
+                System.out.println("❌ 로그인 정보가 유효하지 않습니다.");
+                return;
+            }
+
+            // ✅ ORG_CODE를 기반으로 ProjectUI 연결
+            projectUI = new ProjectUI(br, this, loginOrg.getOrgCode());
+            System.out.println("\n✅ 로그인 성공: " + loginOrg.getOrgName() + " (" + loginOrg.getOrgCode() + ")");
+            showOrgMainMenu();
+
+        } catch (SQLException e) {
+            System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
+        }
     }
 
     // 기관 메인 메뉴
@@ -66,7 +87,7 @@ public class UI {
                 1. 과제 관리
                 2. 회원 정보 관리
                 3. 연구원 정보 관리
-                0. 뒤로가기
+                0. 로그아웃
                 00. 종료
                 ===============================
                 """);

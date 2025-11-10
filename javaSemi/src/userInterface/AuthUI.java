@@ -79,16 +79,11 @@ public class AuthUI {
         dto.setOrgAddress(br.readLine());
 
         try {
-            orgDAO.insertOrganization(dto); // void 메서드 호출
-
-            System.out.println("✅ 회원가입이 완료되었습니다!\n");
-
+            orgDAO.insertOrganization(dto);
+            System.out.println("✅ 회원가입 완료!\n");
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1) { // Oracle unique constraint
-                System.out.println("⚠️ 이미 존재하는 아이디입니다.\n");
-            } else {
-                System.out.println("❌ 데이터베이스 오류: " + e.getMessage());
-            }
+            System.out.println("❌ 데이터베이스 오류: " + e.getMessage());
         }
     }
+
 }

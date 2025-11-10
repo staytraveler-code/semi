@@ -121,7 +121,10 @@ public class ProjectUI {
     
 		 // 1. 성과 관리
 		 private void managePerformance() throws IOException {
-		     while (true) {
+			 System.out.println("DEBUG: 현재 로그인 기관 코드 = " + orgCode);
+			 System.out.println("DEBUG: DB 조회 결과 수 = " + projectDAO.getProjectsByOrganization(orgCode).size());
+
+			 while (true) {
 		         projectPerformance.printPerformanceList();
 		         System.out.println("""
 		             1. 성과 추가
