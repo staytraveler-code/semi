@@ -1,66 +1,108 @@
 package userInterface;
 
+import db.fund.management.FundManagementDAO;
+import db.fund.management.FundManagementDAOImpl;
+import db.fund.management.FundManagementDTO;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Project_FundUI {
-    private List<String> fundList = new ArrayList<>();
     private BufferedReader br;
-
-    public Project_FundUI() {
-        fundList.add("장비 구입 - 1,000,000원");
-        fundList.add("재료비 - 500,000원");
-        fundList.add("외주 용역 - 2,000,000원");
-    }
+    private FundManagementDAO fundDAO = new FundManagementDAOImpl();
+    private String projectCode; // 현재 프로젝트 코드
 
     public void setBufferedReader(BufferedReader br) {
         this.br = br;
     }
 
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
     public void printFundUsageList() {
         System.out.println("===== 연구비 사용 내역 =====");
-        if (fundList.isEmpty()) {
-            System.out.println("(등록된 연구비 사용 내역이 없습니다)");
-        } else {
-            for (int i = 0; i < fundList.size(); i++) {
-                System.out.printf("%d. %s%n", i + 1, fundList.get(i));
+        try {
+            List<FundManagementDTO> list = fundDAO.listRecord();
+            boolean hasData = false;
+            for (FundManagementDTO dto : list) {
+                if (!dto.getPcode().equals(projectCode)) continue; // 현재 프로젝트만
+                hasData = true;
+                System.out.printf("코드: %d | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
+                        dto.getFcode(), dto.getCharger_name(), dto.getCategory(),
+                        dto.getDate_used(), dto.getExpense(), dto.getContent(),
+                        dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
             }
+            if (!hasData) System.out.println("(등록된 연구비 사용 내역이 없습니다)");
+        } catch (Exception e) {
+            System.out.println("⚠️ 연구비 사용 내역 조회 오류: " + e.getMessage());
         }
         System.out.println("===========================\n");
     }
 
-    public void addFundUsageList() throws IOException {
-        System.out.print("새로운 사용 내역 입력 ▶ ");
-        String input = br.readLine();
-        fundList.add(input);
-        System.out.println("✅ 연구비 사용 내역 추가 완료!\n");
-    }
+    public void addFundUsage() throws IOException {
+        FundManagementDTO dto = new FundManagementDTO();
+        dto.setPcode(projectCode);
+        System.out.print("연구원 코드 ▶ "); dto.setRcode(br.readLine());
+        System.out.print("담당자 이름 ▶ "); dto.setCharger_name(br.readLine());
+        System.out.print("분류 ▶ "); dto.setCategory(br.readLine());
+        System.out.print("사용일 (YYYY-MM-DD) ▶ "); dto.setDate_used(br.readLine());
+        System.out.print("금액 ▶ "); dto.setExpense(Long.parseLong(br.readLine()));
+        System.out.print("내용 ▶ "); dto.setContent(br.readLine());
+        System.out.print("업체명 ▶ "); dto.setVendor_name(br.readLine());
+        System.out.print("증빙 ▶ "); dto.setProof_type(br.readLine());
+        System.out.print("메모 ▶ "); dto.setMemo(br.readLine());
 
-    public void updateFundUsageList() throws IOException {
-        printFundUsageList();
-        System.out.print("수정할 번호 입력 ▶ ");
-        int idx = Integer.parseInt(br.readLine()) - 1;
-        if (idx >= 0 && idx < fundList.size()) {
-            System.out.print("새로운 내용 입력 ▶ ");
-            String newContent = br.readLine();
-            fundList.set(idx, newContent);
-            System.out.println("✅ 수정 완료!\n");
-        } else {
-            System.out.println("⚠️ 잘못된 번호입니다.\n");
+        try {
+            fundDAO.insertRecord(dto);
+            System.out.println("✅ 연구비 사용 내역 추가 완료!\n");
+        } catch (Exception e) {
+            System.out.println("⚠️ 추가 실패: " + e.getMessage());
         }
     }
 
-    public void deleteFundUsageList() throws IOException {
+    public void updateFundUsage() throws IOException {
         printFundUsageList();
-        System.out.print("삭제할 번호 입력 ▶ ");
-        int idx = Integer.parseInt(br.readLine()) - 1;
-        if (idx >= 0 && idx < fundList.size()) {
-            fundList.remove(idx);
-            System.out.println("✅ 삭제 완료!\n");
-        } else {
-            System.out.println("⚠️ 잘못된 번호입니다.\n");
+        System.out.print("수정할 코드 입력 ▶ "); 
+        int fcode = Integer.parseInt(br.readLine());
+
+        try {
+            FundManagementDTO dto = fundDAO.listRecord().stream()
+                    .filter(f -> f.getFcode() == fcode)
+                    .findFirst().orElse(null);
+
+            if (dto == null) { 
+                System.out.println("⚠️ 해당 코드가 존재하지 않습니다.\n"); 
+                return; 
+            }
+
+            System.out.print("담당자 이름 (" + dto.getCharger_name() + ") ▶ "); 
+            String input = br.readLine(); if (!input.isEmpty()) dto.setCharger_name(input);
+            System.out.print("분류 (" + dto.getCategory() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setCategory(input);
+            System.out.print("사용일 (" + dto.getDate_used() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setDate_used(input);
+            System.out.print("금액 (" + dto.getExpense() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setExpense(Long.parseLong(input));
+            System.out.print("내용 (" + dto.getContent() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setContent(input);
+            System.out.print("업체명 (" + dto.getVendor_name() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setVendor_name(input);
+            System.out.print("증빙 (" + dto.getProof_type() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setProof_type(input);
+            System.out.print("메모 (" + dto.getMemo() + ") ▶ "); input = br.readLine(); if (!input.isEmpty()) dto.setMemo(input);
+
+            fundDAO.updateRecord(dto);
+            System.out.println("✅ 연구비 사용 내역 수정 완료!\n");
+        } catch (Exception e) { 
+            System.out.println("⚠️ 수정 실패: " + e.getMessage()); 
+        }
+    }
+
+    public void deleteFundUsage() throws IOException {
+        printFundUsageList();
+        System.out.print("삭제할 코드 입력 ▶ "); 
+        int fcode = Integer.parseInt(br.readLine());
+        try { 
+            fundDAO.deleteRecord(fcode); 
+            System.out.println("✅ 삭제 완료!\n"); 
+        } catch (Exception e) { 
+            System.out.println("⚠️ 삭제 실패: " + e.getMessage()); 
         }
     }
 }

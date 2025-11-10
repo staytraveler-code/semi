@@ -107,134 +107,129 @@ public class ProjectUI {
             String input = br.readLine();
 
             switch (input) {
-            case "1" -> managePerformance();          // 성과 관리
-            case "2" -> manageFund();                 // 연구비 관리
-            case "3" -> managePersonnelCost();        // 인건비 관리
-            case "4" -> manageMilestone();            // 마일스톤 관리
-            case "5" -> manageProjectResearcher();    // 연구원 관리
-            case "0" -> { return; }
-            case "00" -> ui.exit();
-            default -> System.out.println("\n⚠️ 잘못된 입력입니다.\n");
-        }
+                case "1" -> managePerformance();
+                case "2" -> manageFund(projectId); // 연구비 관리
+                case "3" -> managePersonnelCost();
+                case "4" -> manageMilestone();
+                case "5" -> manageProjectResearcher();
+                case "0" -> { return; }
+                case "00" -> ui.exit();
+                default -> System.out.println("\n⚠️ 잘못된 입력입니다.\n");
+            }
         }
     }
-    
-		 // 1. 성과 관리
-		 private void managePerformance() throws IOException {
-			 System.out.println("DEBUG: 현재 로그인 기관 코드 = " + orgCode);
-			 System.out.println("DEBUG: DB 조회 결과 수 = " + projectDAO.getProjectsByOrganization(orgCode).size());
 
-			 while (true) {
-		         projectPerformance.printPerformanceList();
-		         System.out.println("""
-		             1. 성과 추가
-		             2. 성과 수정
-		             3. 성과 삭제
-		             0. 뒤로가기
-		         """);
-		         System.out.print("선택 ▶ ");
-		         String input = br.readLine();
-		
-		         switch (input) {
-		             case "1" -> projectPerformance.addPerformance();
-		             case "2" -> projectPerformance.updatePerformance();
-		             case "3" -> projectPerformance.deletePerformance();
-		             case "0" -> { return; }
-		             default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-		         }
-		     }
-		 }
-		
-		 // 2. 연구비 관리
-		 private void manageFund() throws IOException {
-		     while (true) {
-		         projectFund.printFundUsageList();
-		         System.out.println("""
-		             1. 연구비 사용 내역 추가
-		             2. 연구비 사용 내역 수정
-		             3. 연구비 사용 내역 삭제
-		             0. 뒤로가기
-		         """);
-		         System.out.print("선택 ▶ ");
-		         String input = br.readLine();
-		
-		         switch (input) {
-		             case "1" -> projectFund.addFundUsageList();
-		             case "2" -> projectFund.updateFundUsageList();
-		             case "3" -> projectFund.deleteFundUsageList();
-		             case "0" -> { return; }
-		             default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-		         }
-		     }
-		 }
-		
-		 // 3. 인건비 관리
-		 private void managePersonnelCost() throws IOException {
-		     while (true) {
-		         personnelExpensesUI.printPersonnelExpensesList();
-		         System.out.println("""
-		             1. 인건비 추가
-		             2. 인건비 수정
-		             3. 인건비 삭제
-		             0. 뒤로가기
-		         """);
-		         System.out.print("선택 ▶ ");
-		         String input = br.readLine();
-		
-		         switch (input) {
-		             case "1" -> personnelExpensesUI.addPersonnelExpenses();
-		             case "2" -> personnelExpensesUI.updatePersonnelExpenses();
-		             case "3" -> personnelExpensesUI.deletePersonnelExpenses();
-		             case "0" -> { return; }
-		             default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-		         }
-		     }
-		 }
-		
-		 // 4. 마일스톤 관리
-		 private void manageMilestone() throws IOException {
-		     while (true) {
-		         projectMilestone.printMilestoneList();
-		         System.out.println("""
-		             1. 마일스톤 추가
-		             2. 마일스톤 수정
-		             3. 마일스톤 삭제
-		             0. 뒤로가기
-		         """);
-		         System.out.print("선택 ▶ ");
-		         String input = br.readLine();
-		
-		         switch (input) {
-		             case "1" -> projectMilestone.addMilestone();
-		             case "2" -> projectMilestone.updateMilestone();
-		             case "3" -> projectMilestone.deleteMilestone();
-		             case "0" -> { return; }
-		             default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-		         }
-		     }
-		 }
-		
-		 // 5. 프로젝트 연구원 관리
-		 private void manageProjectResearcher() throws IOException {
-		     while (true) {
-		         projectResearcher.printProjectResearcherList();
-		         System.out.println("""
-		             1. 연구원 추가
-		             2. 연구원 삭제
-		             0. 뒤로가기
-		         """);
-		         System.out.print("선택 ▶ ");
-		         String input = br.readLine();
-		
-		         switch (input) {
-		             case "1" -> projectResearcher.addProjectResearcher();
-		             case "2" -> projectResearcher.deleteProjectResearcher();
-		             case "0" -> { return; }
-		             default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-		         }
-		     }
-		 }
+    // 1. 성과 관리
+    private void managePerformance() throws IOException {
+        while (true) {
+            projectPerformance.printPerformanceList();
+            System.out.println("""
+                1. 성과 추가
+                2. 성과 수정
+                3. 성과 삭제
+                0. 뒤로가기
+            """);
+            System.out.print("선택 ▶ ");
+            String input = br.readLine();
 
-    
+            switch (input) {
+                case "1" -> projectPerformance.addPerformance();
+                case "2" -> projectPerformance.updatePerformance();
+                case "3" -> projectPerformance.deletePerformance();
+                case "0" -> { return; }
+                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+            }
+        }
     }
 
+    // 2. 연구비 관리
+    private void manageFund(String projectId) throws IOException {
+        projectFund.setProjectCode(projectId); // 선택한 과제 코드 전달
+        while (true) {
+            projectFund.printFundUsageList();
+            System.out.println("""
+                1. 연구비 사용 내역 추가
+                2. 연구비 사용 내역 수정
+                3. 연구비 사용 내역 삭제
+                0. 뒤로가기
+            """);
+            System.out.print("선택 ▶ ");
+            String input = br.readLine();
+
+            switch (input) {
+                case "1" -> projectFund.addFundUsage();
+                case "2" -> projectFund.updateFundUsage();
+                case "3" -> projectFund.deleteFundUsage();
+                case "0" -> { return; }
+                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+            }
+        }
+    }
+
+    // 3. 인건비 관리
+    private void managePersonnelCost() throws IOException {
+        while (true) {
+            personnelExpensesUI.printPersonnelExpensesList();
+            System.out.println("""
+                1. 인건비 추가
+                2. 인건비 수정
+                3. 인건비 삭제
+                0. 뒤로가기
+            """);
+            System.out.print("선택 ▶ ");
+            String input = br.readLine();
+
+            switch (input) {
+                case "1" -> personnelExpensesUI.addPersonnelExpenses();
+                case "2" -> personnelExpensesUI.updatePersonnelExpenses();
+                case "3" -> personnelExpensesUI.deletePersonnelExpenses();
+                case "0" -> { return; }
+                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+            }
+        }
+    }
+
+    // 4. 마일스톤 관리
+    private void manageMilestone() throws IOException {
+        while (true) {
+            projectMilestone.printMilestoneList();
+            System.out.println("""
+                1. 마일스톤 추가
+                2. 마일스톤 수정
+                3. 마일스톤 삭제
+                0. 뒤로가기
+            """);
+            System.out.print("선택 ▶ ");
+            String input = br.readLine();
+
+            switch (input) {
+                case "1" -> projectMilestone.addMilestone();
+                case "2" -> projectMilestone.updateMilestone();
+                case "3" -> projectMilestone.deleteMilestone();
+                case "0" -> { return; }
+                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+            }
+        }
+    }
+
+    // 5. 프로젝트 연구원 관리
+    private void manageProjectResearcher() throws IOException {
+        while (true) {
+            projectResearcher.printProjectResearcherList();
+            System.out.println("""
+                1. 연구원 추가
+                2. 연구원 삭제
+                0. 뒤로가기
+            """);
+            System.out.print("선택 ▶ ");
+            String input = br.readLine();
+
+            switch (input) {
+                case "1" -> projectResearcher.addProjectResearcher();
+                case "2" -> projectResearcher.deleteProjectResearcher();
+                case "0" -> { return; }
+                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+            }
+        }
+    }
+}
