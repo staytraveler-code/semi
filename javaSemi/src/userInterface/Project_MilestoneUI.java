@@ -1,65 +1,64 @@
 package userInterface;
 
+import db.milestone.MilestoneDAO;
+import db.milestone.MilestoneDTO;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Project_MilestoneUI {
-    private List<String> milestoneList = new ArrayList<>();
     private BufferedReader br;
-
-    public Project_MilestoneUI() {
-        milestoneList.add("중간 점검 - 완료");
-        milestoneList.add("최종 점검 - 예정");
-    }
+    private MilestoneDAO milestoneDAO = new MilestoneDAO();
+    private String projectCode; // 현재 프로젝트 코드
 
     public void setBufferedReader(BufferedReader br) {
         this.br = br;
     }
 
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    // 마일스톤 목록 출력
     public void printMilestoneList() {
         System.out.println("===== 마일스톤 목록 =====");
-        if (milestoneList.isEmpty()) {
-            System.out.println("(등록된 마일스톤이 없습니다)");
-        } else {
-            for (int i = 0; i < milestoneList.size(); i++) {
-                System.out.printf("%d. %s%n", i + 1, milestoneList.get(i));
-            }
+        List<MilestoneDTO> list = milestoneDAO.listMilestone();
+        boolean hasData = false;
+        for (MilestoneDTO dto : list) {
+            if (!dto.getpCode().equals(projectCode)) continue; // 현재 프로젝트만 표시
+            hasData = true;
+            System.out.printf("코드: %s | 목표: %s | 내용: %s | 계획완료: %s | 실제완료: %s | 상태: %s%n",
+                    dto.getMileCode(), dto.getName(), dto.getDesc(),
+                    dto.getPeDate(), dto.getAeDate(), dto.getStatus());
         }
+        if (!hasData) System.out.println("(등록된 마일스톤이 없습니다)");
         System.out.println("========================\n");
     }
 
+    // 마일스톤 추가
     public void addMilestone() throws IOException {
-        System.out.print("추가할 마일스톤 입력 ▶ ");
-        String input = br.readLine();
-        milestoneList.add(input);
-        System.out.println("✅ 마일스톤 추가 완료!\n");
+        MilestoneDTO dto = new MilestoneDTO();
+        dto.setpCode(projectCode);
+
+        System.out.print("마일스톤 코드 ▶ "); dto.setMileCode(br.readLine());
+        System.out.print("목표 ▶ "); dto.setName(br.readLine());
+        System.out.print("내용 ▶ "); dto.setDesc(br.readLine());
+        System.out.print("계획완료일 (YYYY-MM-DD) ▶ "); dto.setPeDate(br.readLine());
+        System.out.print("실제완료일 (YYYY-MM-DD) ▶ "); dto.setAeDate(br.readLine());
+        System.out.print("상태 ▶ "); dto.setStatus(br.readLine());
+
+        int result = milestoneDAO.insertMilestone(dto);
+        if (result > 0) System.out.println("✅ 마일스톤 추가 완료!\n");
+        else System.out.println("⚠️ 추가 실패\n");
     }
 
-    public void updateMilestone() throws IOException {
-        printMilestoneList();
-        System.out.print("수정할 번호 입력 ▶ ");
-        int idx = Integer.parseInt(br.readLine()) - 1;
-        if (idx >= 0 && idx < milestoneList.size()) {
-            System.out.print("새로운 내용 입력 ▶ ");
-            String newValue = br.readLine();
-            milestoneList.set(idx, newValue);
-            System.out.println("✅ 수정 완료!\n");
-        } else {
-            System.out.println("⚠️ 잘못된 번호입니다.\n");
-        }
+    // 수정/삭제는 추후 DAO에 구현 가능
+    public void updateMilestone() {
+        System.out.println("⚠️ 수정 기능은 아직 구현되지 않았습니다.");
     }
 
-    public void deleteMilestone() throws IOException {
-        printMilestoneList();
-        System.out.print("삭제할 번호 입력 ▶ ");
-        int idx = Integer.parseInt(br.readLine()) - 1;
-        if (idx >= 0 && idx < milestoneList.size()) {
-            milestoneList.remove(idx);
-            System.out.println("✅ 삭제 완료!\n");
-        } else {
-            System.out.println("⚠️ 잘못된 번호입니다.\n");
-        }
+    public void deleteMilestone() {
+        System.out.println("⚠️ 삭제 기능은 아직 구현되지 않았습니다.");
     }
 }

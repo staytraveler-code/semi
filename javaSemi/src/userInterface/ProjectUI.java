@@ -108,9 +108,9 @@ public class ProjectUI {
 
             switch (input) {
                 case "1" -> managePerformance();
-                case "2" -> manageFund(projectId); // 연구비 관리
+                case "2" -> manageFund(projectId);
                 case "3" -> managePersonnelCost();
-                case "4" -> manageMilestone();
+                case "4" -> manageMilestone(projectId);
                 case "5" -> manageProjectResearcher();
                 case "0" -> { return; }
                 case "00" -> ui.exit();
@@ -144,7 +144,7 @@ public class ProjectUI {
 
     // 2. 연구비 관리
     private void manageFund(String projectId) throws IOException {
-        projectFund.setProjectCode(projectId); // 선택한 과제 코드 전달
+        projectFund.setProjectCode(projectId);
         while (true) {
             projectFund.printFundUsageList();
             System.out.println("""
@@ -190,7 +190,8 @@ public class ProjectUI {
     }
 
     // 4. 마일스톤 관리
-    private void manageMilestone() throws IOException {
+    private void manageMilestone(String projectId) throws IOException {
+        projectMilestone.setProjectCode(projectId);
         while (true) {
             projectMilestone.printMilestoneList();
             System.out.println("""

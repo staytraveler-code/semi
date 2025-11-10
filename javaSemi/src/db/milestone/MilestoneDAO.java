@@ -16,30 +16,29 @@ public class MilestoneDAO {
 
 	
 	
-	public List<MilestoneDTO> listMilestone() { // 조회화면출력 //특정기관의 과제에 대한 마일스톤만나오게 조건절 추가해야함
+	public List<MilestoneDTO> listMilestone() {
+	    List<MilestoneDTO> list = new ArrayList<>();
+	    try {
+	        String sql = "SELECT milestone_code, project_code, name, description, p_end_date, a_end_date, status FROM Milestone";
+	        pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
 
-		try {
-			String sql = "SELECT milestone_code, name, "
-					+ "description, p_end_date, "
-					+ "a_end_date, status FROM Milestone";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            MilestoneDTO dto = new MilestoneDTO();
+	            dto.setMileCode(rs.getString("milestone_code"));
+	            dto.setpCode(rs.getString("project_code")); // ← 여기 추가
+	            dto.setName(rs.getString("name"));
+	            dto.setDesc(rs.getString("description"));
+	            dto.setPeDate(rs.getString("p_end_date"));
+	            dto.setAeDate(rs.getString("a_end_date"));
+	            dto.setStatus(rs.getString("status"));
+	            list.add(dto);
+	        }
 
-			while (rs.next()) {
-				MilestoneDTO dto = new MilestoneDTO();
-				dto.setMileCode(rs.getString("milestone_code"));
-				dto.setName(rs.getString("name"));
-				dto.setDesc(rs.getString("description"));
-				dto.setPeDate(rs.getString("p_end_date"));
-				dto.setAeDate(rs.getString("a_end_date"));
-				dto.setStatus(rs.getString("status"));
-				list.add(dto);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return list;
 	}
 	
 	// 추가
