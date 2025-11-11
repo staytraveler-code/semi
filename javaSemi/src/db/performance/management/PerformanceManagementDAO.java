@@ -54,18 +54,20 @@ public class PerformanceManagementDAO {
 	
 	
 	//성과 추가 -- 성과코드,프로젝트코드는 시퀀스명으로 수정해야함
-	public int insertPerformance(PerformanceManagementDTO dto) {
+	public int insertPerformance(PerformanceManagementDTO dto, String projectCode) {
         int result = 0;
         try {
             String sql = "INSERT INTO performance_management (performance_code, project_code, "
-            		+ "name, category, content, p_date, memo) VALUES (시퀀스, 시퀀스, ?, ?, ?, ?, ?)";
+            		+ "name, category, content, p_date, memo) VALUES (시퀀스, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
-            pstmt.setString(1, dto.getName());
-            pstmt.setString(2, dto.getCategory());
-            pstmt.setString(3, dto.getContent());
-            pstmt.setDate(4, java.sql.Date.valueOf(dto.getpDate()));
-            pstmt.setString(5, dto.getMemo());
+            
+            pstmt.setString(1, projectCode);
+            pstmt.setString(2, dto.getName());
+            pstmt.setString(3, dto.getCategory());
+            pstmt.setString(4, dto.getContent());
+            pstmt.setDate(5, java.sql.Date.valueOf(dto.getpDate()));
+            pstmt.setString(6, dto.getMemo());
             result = pstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

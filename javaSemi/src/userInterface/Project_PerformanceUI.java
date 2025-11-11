@@ -65,7 +65,7 @@ public class Project_PerformanceUI {
 		System.out.print("메모 ▶ ");
 		dto.setMemo(br.readLine());
 
-		int result = dao.insertPerformance(dto);
+		int result = dao.insertPerformance(dto,projectCode);
 
 		if (result > 0) {
 
