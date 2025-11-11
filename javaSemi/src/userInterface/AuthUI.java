@@ -29,14 +29,24 @@ public class AuthUI {
         String pw = br.readLine();
 
         try {
-            OrganizationDTO org = orgDAO.selectRecord(id); // findById 대신 selectRecord 사용
+            OrganizationDTO org = orgDAO.selectRecord(id);
 
             if (org == null || !org.getOrgPwd().equals(pw)) {
                 System.out.println("⚠️ 아이디가 존재하지 않거나, 비밀번호가 틀렸습니다.\n");
                 return;
             }
-            System.out.println("✅ 로그인 성공! " + org.getOrgName() + " 기관 환영합니다.\n");
-            ui.onOrgLogin(org.getOrgId()); // 로그인 성공 후 기관 ID 전달
+            System.out.println();
+            System.out.println("✅ " + org.getOrgName() + " 기관 로그인 성공!\n");
+            
+            // 잠시 정지
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            
+        	// 로그인 성공 후 기관 ID 전달
+            ui.onOrgLogin(org.getOrgId()); 
 
         } catch (SQLException e) {
             System.out.println("❌ 로그인 중 오류 발생: " + e.getMessage());

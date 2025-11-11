@@ -34,9 +34,9 @@ public class ProjectUI {
     // 과제 목록 관리
     public void manageProject() throws IOException {
         while (true) {
-            System.out.println("\n\n===================================");
+            System.out.println("\n====================================================================================================================================");
             System.out.println("            과제 리스트");
-            System.out.println("===================================");
+            System.out.println("====================================================================================================================================");
             printProjectList(); // 기관 과제만 출력
 
             System.out.print("관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) ");
@@ -69,7 +69,7 @@ public class ProjectUI {
 
         System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %-10s%n",
                 "과제코드", "과제명", "기관코드", "단계", "상태", "예산");
-        System.out.println("──────────────────────────────────────────────────────────────────────────────");
+        System.out.println("────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 
         for (ProjectDTO p : projects) {
             System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %,10d%n",
@@ -90,21 +90,22 @@ public class ProjectUI {
     // 개별 과제 상세 메뉴
     private void printProjectDetail(String projectId) throws IOException {
         while (true) {
-            System.out.println("\n===================================");
-            System.out.println("       [" + projectId + "] 과제 상세 관리");
-            System.out.println("===================================");
+            System.out.println("\n==============================================================");
+            System.out.println("     [" + projectId + "] 과제 상세 관리");
+            System.out.println("==============================================================");
             System.out.println("""
                 1. 성과 관리
                 2. 연구비 관리
                 3. 인건비 관리
                 4. 마일스톤 관리
                 5. 연구원 관리
-                -----------------------------------
+            --------------------------------------------------------------
                 0. 뒤로가기     00. 종료
             """);
 
             System.out.print("메뉴 선택 ▶ ");
             String input = br.readLine();
+            System.out.println();
 
             switch (input) {
                 case "1" -> managePerformance();

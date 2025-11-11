@@ -35,7 +35,7 @@ public class UI {
 
     public void showInitialMenu() throws IOException {
         while (true) {
-            System.out.println("""
+            System.out.print("""
                 ===============================
                       국가 R & D 관리 프로그램
                 ===============================
@@ -46,6 +46,7 @@ public class UI {
                 """);
             System.out.print("메뉴 선택 ▶ ");
             String input = br.readLine();
+            System.out.println();
 
             switch (input) {
                 case "1" -> authUI.signIn();
@@ -67,7 +68,6 @@ public class UI {
 
             projectUI = new ProjectUI(br, this, loginOrg.getOrgCode());
             memberUI = new MemberUI(br, this, organizationDAO, loginOrg.getOrgId());
-            System.out.println(loginOrg.getOrgName());
             showOrgMainMenu();
 
         } catch (SQLException e) {
@@ -77,7 +77,7 @@ public class UI {
 
     public void showOrgMainMenu() throws IOException {
         while (true) {
-            System.out.println("""
+            System.out.print("""
                 ===============================
                       기관 메인 메뉴
                 ===============================
