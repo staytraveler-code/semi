@@ -29,6 +29,7 @@ public class ProjectUI {
         projectMilestone.setBufferedReader(br);
         projectPerformance.setBufferedReader(br);
         personnelExpensesUI.setBufferedReader(br);
+        projectResearcher.setBufferedReader(br); // Project_ResearcherUI도 br 세팅
     }
 
     // 과제 목록 관리
@@ -112,7 +113,7 @@ public class ProjectUI {
                 case "2" -> manageFund(projectId);
                 case "3" -> managePersonnelCost();
                 case "4" -> manageMilestone(projectId);
-                case "5" -> manageProjectResearcher();
+                case "5" -> manageProjectResearcher(projectId);
                 case "0" -> { return; }
                 case "00" -> ui.exit();
                 default -> System.out.println("\n⚠️ 잘못된 입력입니다.\n");
@@ -215,23 +216,11 @@ public class ProjectUI {
     }
 
     // 5. 프로젝트 연구원 관리
-    private void manageProjectResearcher() throws IOException {
-        while (true) {
-            projectResearcher.printProjectResearcherList();
-            System.out.println("""
-                1. 연구원 추가
-                2. 연구원 삭제
-                0. 뒤로가기
-            """);
-            System.out.print("선택 ▶ ");
-            String input = br.readLine();
+    private void manageProjectResearcher(String projectId) throws IOException {
+        // 프로젝트 코드 세팅
+        projectResearcher.setProjectCode(projectId);
 
-            switch (input) {
-                case "1" -> projectResearcher.addProjectResearcher();
-                case "2" -> projectResearcher.deleteProjectResearcher();
-                case "0" -> { return; }
-                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-            }
-        }
+        // 프로젝트별 연구원 관리 UI 실행
+        projectResearcher.manageProjectResearchers();
     }
 }
