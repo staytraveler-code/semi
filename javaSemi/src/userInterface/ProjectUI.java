@@ -109,7 +109,7 @@ public class ProjectUI {
             System.out.println();
 
             switch (input) {
-                case "1" -> managePerformance();
+                case "1" -> managePerformance(projectId);
                 case "2" -> manageFund(projectId);
                 case "3" -> managePersonnelCost();
                 case "4" -> manageMilestone(projectId);
@@ -122,8 +122,10 @@ public class ProjectUI {
     }
 
     // 1. 성과 관리
-    private void managePerformance() throws IOException {
+    private void managePerformance(String projectId) throws IOException {
         while (true) {
+        	 projectPerformance.setOrgCode(orgCode);
+        	 projectPerformance.setProjectCode(projectId);
             projectPerformance.printPerformanceList();
             System.out.println("""
                 1. 성과 추가
