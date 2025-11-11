@@ -14,9 +14,10 @@ public class MinistryDAO {
         List<MinistryDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM Ministry ORDER BY ministry_code";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try {
+        	Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            
             while (rs.next()) {
                 MinistryDTO dto = new MinistryDTO();
                 dto.setMinistryCode(rs.getString("MINISTRY_CODE"));

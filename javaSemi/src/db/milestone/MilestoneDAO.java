@@ -35,7 +35,6 @@ public class MilestoneDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DBUtil.rollback(conn);
         } finally {
             try { if (rs != null) rs.close(); } catch (Exception e) { }
             try { if (pstmt != null) pstmt.close(); } catch (Exception e) { }
@@ -49,6 +48,7 @@ public class MilestoneDAO {
         int result = 0;
         PreparedStatement pstmt = null;
         try {
+        	conn.setAutoCommit(false);
             String sql = "INSERT INTO milestone (milestone_code, project_code, name, description, p_end_date, a_end_date, status) " +
                          "VALUES (?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
@@ -60,9 +60,11 @@ public class MilestoneDAO {
             pstmt.setDate(6, parseDate(dto.getAeDate()));
             pstmt.setString(7, dto.getStatus());
             result = pstmt.executeUpdate();
+            conn.commit();
 
         } catch (Exception e) {
             e.printStackTrace();
+            DBUtil.rollback(conn);
         } finally {
             try { if (pstmt != null) pstmt.close(); } catch (Exception e) { }
         }
@@ -74,6 +76,7 @@ public class MilestoneDAO {
         int result = 0;
         PreparedStatement pstmt = null;
         try {
+        	conn.setAutoCommit(false);
             String sql = "UPDATE Milestone SET name=?, description=?, p_end_date=?, a_end_date=?, status=? " +
                          "WHERE milestone_code=? AND project_code=?";
             pstmt = conn.prepareStatement(sql);
@@ -100,11 +103,13 @@ public class MilestoneDAO {
         int result = 0;
         PreparedStatement pstmt = null;
         try {
+        	conn.setAutoCommit(false);
             String sql = "DELETE FROM Milestone WHERE milestone_code=? AND project_code=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, mileCode);
             pstmt.setString(2, projectCode);
             result = pstmt.executeUpdate();
+            conn.commit();
 
         } catch (Exception e) {
             e.printStackTrace();
