@@ -77,13 +77,12 @@ public class ResearcherUI {
         }
     }
 
-    // 연구원 추가
+ // 연구원 추가 (연구원 코드는 시퀀스로 자동 생성)
     private void addResearcher() throws IOException {
         try {
             ResearcherDTO dto = new ResearcherDTO();
-            System.out.print("연구원 코드 ▶ ");
-            dto.setResearcherCode(br.readLine());
             dto.setOrgCode(orgCode);
+
             System.out.print("이름 ▶ ");
             dto.setName(br.readLine());
             System.out.print("전화번호 ▶ ");
@@ -92,7 +91,7 @@ public class ResearcherUI {
             dto.setEmail(br.readLine());
 
             researcherDAO.insertResearcherDAO(dto);
-            System.out.println("✅ 연구원 등록 완료\n");
+            System.out.println("✅ 연구원 등록 완료 (코드 자동 생성)\n");
 
         } catch (SQLException e) {
             System.out.println("❌ 연구원 등록 실패: " + e.getMessage());
@@ -111,7 +110,7 @@ public class ResearcherUI {
                 return;
             }
 
-            System.out.println("회원 정보 수정 (Enter: 기존값 유지)");
+            System.out.println("연구원 정보 수정 (Enter: 기존값 유지)");
             System.out.println("----------------------------------------");
 
             System.out.println("현재 이름: " + dto.getName());

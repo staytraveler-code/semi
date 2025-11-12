@@ -14,17 +14,17 @@ public class ResearcherDAOImpl implements ResearcherDAO {
 
     @Override
     public void insertResearcherDAO(ResearcherDTO dto) throws SQLException {
-        String sql = "INSERT INTO Researcher (researcher_code, org_code, name, tel, email) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Researcher (researcher_code, org_code, name, tel, email) " +
+                     "VALUES (SEQ_RESEARCHER.NEXTVAL, ?, ?, ?, ?)";
         PreparedStatement pstmt = null;
 
         try {
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, dto.getResearcherCode());
-            pstmt.setString(2, dto.getOrgCode());
-            pstmt.setString(3, dto.getName());
-            pstmt.setString(4, dto.getTel());
-            pstmt.setString(5, dto.getEmail());
+            pstmt.setString(1, dto.getOrgCode());
+            pstmt.setString(2, dto.getName());
+            pstmt.setString(3, dto.getTel());
+            pstmt.setString(4, dto.getEmail());
             pstmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
