@@ -91,7 +91,7 @@ public class ResearcherUI {
             dto.setEmail(br.readLine());
 
             researcherDAO.insertResearcherDAO(dto);
-            System.out.println("✅ 연구원 등록 완료 (코드 자동 생성)\n");
+            System.out.println("✅ 연구원 등록 완료\n");
 
         } catch (SQLException e) {
             System.out.println("❌ 연구원 등록 실패: " + e.getMessage());
