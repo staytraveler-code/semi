@@ -23,7 +23,6 @@ public class UI {
         br = new BufferedReader(new InputStreamReader(System.in));
         organizationDAO = new OrganizationDAOImpl();
         authUI = new AuthUI(br, this);
-        researcherUI = new ResearcherUI(br, this);
         
         // 초기 메뉴 호출
         try {
@@ -57,6 +56,7 @@ public class UI {
         }
     }
 
+    // 로그인 성공 시
     public void onOrgLogin(String orgId) throws IOException {
         try {
             OrganizationDTO loginOrg = organizationDAO.findById(orgId);
@@ -68,6 +68,8 @@ public class UI {
 
             projectUI = new ProjectUI(br, this, loginOrg.getOrgCode());
             memberUI = new MemberUI(br, this, organizationDAO, loginOrg.getOrgId());
+            researcherUI = new ResearcherUI(br, this, loginOrg.getOrgCode());
+
             showOrgMainMenu();
 
         } catch (SQLException e) {
