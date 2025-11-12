@@ -13,7 +13,7 @@ public class ResearcherUI {
     private BufferedReader br;
     private UI ui;
     private ResearcherDAO researcherDAO;
-    private String orgCode;
+    private String orgCode; // 현재 로그인 기관
 
     public ResearcherUI(BufferedReader br, UI ui, String orgCode) {
         this.br = br;
@@ -77,11 +77,11 @@ public class ResearcherUI {
         }
     }
 
- // 연구원 추가 (연구원 코드는 시퀀스로 자동 생성)
+    // 연구원 추가 (자기 기관만 가능)
     private void addResearcher() throws IOException {
         try {
             ResearcherDTO dto = new ResearcherDTO();
-            dto.setOrgCode(orgCode);
+            dto.setOrgCode(orgCode); // 항상 자기 기관
 
             System.out.print("이름 ▶ ");
             dto.setName(br.readLine());
@@ -98,7 +98,7 @@ public class ResearcherUI {
         }
     }
 
- // 연구원 수정 (Enter 시 기존값 유지)
+    // 연구원 수정 (자기 기관 소속만 가능)
     private void updateResearcher() throws IOException {
         try {
             System.out.print("수정할 연구원 코드 ▶ ");
@@ -107,6 +107,12 @@ public class ResearcherUI {
             ResearcherDTO dto = ((ResearcherDAOImpl) researcherDAO).selectResearcherByCode(code);
             if (dto == null) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않습니다.");
+                return;
+            }
+
+            // 소속 기관 체크
+            if (!dto.getOrgCode().equals(orgCode)) {
+                System.out.println("⚠️ 수정 불가: 해당 연구원은 다른 기관 소속입니다.");
                 return;
             }
 
@@ -136,12 +142,23 @@ public class ResearcherUI {
         }
     }
 
-
-    // 연구원 삭제
+    // 연구원 삭제 (자기 기관 소속만 가능)
     private void deleteResearcher() throws IOException {
         try {
             System.out.print("삭제할 연구원 코드 ▶ ");
             String code = br.readLine();
+
+            ResearcherDTO dto = ((ResearcherDAOImpl) researcherDAO).selectResearcherByCode(code);
+            if (dto == null) {
+                System.out.println("⚠️ 해당 연구원이 존재하지 않습니다.");
+                return;
+            }
+
+            // 소속 기관 체크
+            if (!dto.getOrgCode().equals(orgCode)) {
+                System.out.println("⚠️ 삭제 불가: 해당 연구원은 다른 기관 소속입니다.");
+                return;
+            }
 
             ((ResearcherDAOImpl) researcherDAO).deleteResearcherDAO(code);
             System.out.println("✅ 연구원 삭제 완료\n");
