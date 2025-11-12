@@ -9,7 +9,7 @@ public class ResearcherDAOImpl implements ResearcherDAO {
     private Connection conn;
 
     public ResearcherDAOImpl() {
-        this.conn = DBConn.getConnection(); // 종료 시까지 재사용
+        this.conn = DBConn.getConnection(); // 프로그램 종료 전까지 재사용
     }
 
     @Override
@@ -88,6 +88,7 @@ public class ResearcherDAOImpl implements ResearcherDAO {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, researcherCode);
             rs = pstmt.executeQuery();
+
             if (rs.next()) {
                 dto = new ResearcherDTO();
                 dto.setResearcherCode(rs.getString("researcher_code"));

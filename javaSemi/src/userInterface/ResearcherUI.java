@@ -25,9 +25,9 @@ public class ResearcherUI {
     // 연구원 관리 메인
     public void manageResearcherInformation() throws IOException {
         while (true) {
-            System.out.println("\n============================================================================================================================");
+            System.out.println("\n======================================================================================");
             System.out.println("              연구원 정보 관리 (" + orgCode + ")");
-            System.out.println("============================================================================================================================");
+            System.out.println("=======================================================================================");
             printResearcherList();
 
             System.out.println("""
@@ -62,14 +62,15 @@ public class ResearcherUI {
                 return;
             }
 
-            System.out.printf("%-10s │ %-10s │ %-15s │ %-15s │ %-25s%n",
-                    "연구원코드", "기관코드", "이름", "전화번호", "이메일");
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                    "연구원코드", "이름", "전화번호", "이메일");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
 
             for (ResearcherDTO r : list) {
-                System.out.printf("%-10s │ %-10s │ %-15s │ %-15s │ %-25s%n",
-                        r.getResearcherCode(), r.getOrgCode(), r.getName(), r.getTel(), r.getEmail());
+                System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                        r.getResearcherCode(), r.getName(), r.getTel(), r.getEmail());
             }
+            System.out.println();
 
         } catch (SQLException e) {
             System.out.println("⚠️ 목록 조회 중 오류: " + e.getMessage());
@@ -98,7 +99,7 @@ public class ResearcherUI {
         }
     }
 
-    // 연구원 수정
+ // 연구원 수정 (Enter 시 기존값 유지)
     private void updateResearcher() throws IOException {
         try {
             System.out.print("수정할 연구원 코드 ▶ ");
@@ -110,17 +111,23 @@ public class ResearcherUI {
                 return;
             }
 
+            System.out.println("회원 정보 수정 (Enter: 기존값 유지)");
+            System.out.println("----------------------------------------");
+
             System.out.println("현재 이름: " + dto.getName());
-            System.out.print("새 이름 ▶ ");
-            dto.setName(br.readLine());
+            System.out.print("이름 ▶ ");
+            String newName = br.readLine();
+            if (!newName.isBlank()) dto.setName(newName);
 
             System.out.println("현재 전화번호: " + dto.getTel());
-            System.out.print("새 전화번호 ▶ ");
-            dto.setTel(br.readLine());
+            System.out.print("전화번호 ▶ ");
+            String newTel = br.readLine();
+            if (!newTel.isBlank()) dto.setTel(newTel);
 
             System.out.println("현재 이메일: " + dto.getEmail());
-            System.out.print("새 이메일 ▶ ");
-            dto.setEmail(br.readLine());
+            System.out.print("이메일 ▶ ");
+            String newEmail = br.readLine();
+            if (!newEmail.isBlank()) dto.setEmail(newEmail);
 
             researcherDAO.updateResearcherDAO(dto);
             System.out.println("✅ 연구원 정보 수정 완료\n");
@@ -129,6 +136,7 @@ public class ResearcherUI {
             System.out.println("❌ 수정 실패: " + e.getMessage());
         }
     }
+
 
     // 연구원 삭제
     private void deleteResearcher() throws IOException {
