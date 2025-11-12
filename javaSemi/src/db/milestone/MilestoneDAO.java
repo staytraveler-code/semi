@@ -110,13 +110,32 @@ public class MilestoneDAO {
         return result;
     }
 
+    // 마일스톤이 특정 기관의 과제에 속하는지 확인
+    public boolean isMilestoneBelongsToOrg(String mileCode, String orgCode) {
+        String sql = """
+            SELECT 1
+            FROM Milestone m
+            JOIN Project p ON m.project_code = p.project_code
+            WHERE m.milestone_code = ? AND p.org_code = ?
+        """;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, mileCode);
+            pstmt.setString(2, orgCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private java.sql.Date parseDate(String dateStr, String existingDate) {
         if (dateStr == null || dateStr.isBlank()) dateStr = existingDate;
         if (dateStr == null || dateStr.isBlank()) return null;
 
-        // 날짜 형식 체크
         try {
-            return java.sql.Date.valueOf(dateStr);
+            return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
         } catch (IllegalArgumentException e) {
             System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
             return null;

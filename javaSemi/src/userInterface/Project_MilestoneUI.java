@@ -10,9 +10,11 @@ public class Project_MilestoneUI {
     private BufferedReader br;
     private MilestoneDAO milestoneDAO = new MilestoneDAO();
     private String projectCode;
+    private String orgCode; // 기관 코드
 
     public void setBufferedReader(BufferedReader br) { this.br = br; }
     public void setProjectCode(String projectCode) { this.projectCode = projectCode; }
+    public void setOrgCode(String orgCode) { this.orgCode = orgCode; }
 
     // 마일스톤 목록 출력
     public void printMilestoneList() {
@@ -30,6 +32,12 @@ public class Project_MilestoneUI {
 
     // 마일스톤 추가
     public void addMilestone() throws IOException {
+        // 기관 소속 과제인지 체크
+        if (!isProjectBelongsToOrg()) {
+            System.out.println("⚠️ 이 과제는 해당 기관의 과제가 아닙니다.");
+            return;
+        }
+
         MilestoneDTO dto = new MilestoneDTO();
         dto.setpCode(projectCode);
 
@@ -50,8 +58,14 @@ public class Project_MilestoneUI {
 
         System.out.print("수정할 마일스톤 코드 입력 ▶ ");
         String code = br.readLine();
-        MilestoneDTO target = null;
 
+        // 기관 체크
+        if (!milestoneDAO.isMilestoneBelongsToOrg(code, orgCode)) {
+            System.out.println("⚠️ 이 마일스톤은 해당 기관의 과제가 아닙니다.");
+            return;
+        }
+
+        MilestoneDTO target = null;
         for (MilestoneDTO dto : list) {
             if (dto.getMileCode().equals(code)) { target = dto; break; }
         }
@@ -81,30 +95,22 @@ public class Project_MilestoneUI {
         System.out.println(result > 0 ? "✅ 마일스톤 수정 완료!\n" : "⚠️ 수정 실패\n");
     }
 
-    // 기존값 유지 가능한 날짜 입력
-    private String readDateAllowBlank(String prompt, String existingDate) throws IOException {
-        while (true) {
-            System.out.print(prompt);
-            String input = br.readLine();
-            if (input.isBlank()) return existingDate;
-            try {
-                java.sql.Date.valueOf(input);
-                return input;
-            } catch (Exception e) {
-                System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-            }
-        }
-    }
-
     // 삭제
     public void deleteMilestone() throws IOException {
         System.out.print("삭제할 마일스톤 코드 입력 ▶ ");
         String code = br.readLine();
+
+        // 기관 체크
+        if (!milestoneDAO.isMilestoneBelongsToOrg(code, orgCode)) {
+            System.out.println("⚠️ 이 마일스톤은 해당 기관의 과제가 아닙니다.");
+            return;
+        }
+
         int result = milestoneDAO.deleteMilestone(code, projectCode);
         System.out.println(result > 0 ? "✅ 마일스톤 삭제 완료!\n" : "⚠️ 해당 마일스톤이 없습니다.\n");
     }
 
-    // 날짜 입력 (필수)
+    // 날짜 입력 (Enter → 필수)
     private String readDate(String prompt) throws IOException {
         while (true) {
             System.out.print(prompt);
@@ -120,5 +126,26 @@ public class Project_MilestoneUI {
                 System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
             }
         }
+    }
+
+    private String readDateAllowBlank(String prompt, String existingDate) throws IOException {
+        while (true) {
+            System.out.print(prompt);
+            String input = br.readLine();
+            if (input.isBlank()) return existingDate;
+            try {
+                java.sql.Date.valueOf(input);
+                return input;
+            } catch (Exception e) {
+                System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
+            }
+        }
+    }
+
+    // 프로젝트가 기관 소속인지 확인 (필요 시 projectDAO와 연계)
+    private boolean isProjectBelongsToOrg() {
+        // 프로젝트가 orgCode 소속인지 확인하는 DAO 메서드 호출
+        // return projectDAO.isProjectBelongsToOrg(projectCode, orgCode);
+        return true; // 임시: 실제로는 projectDAO에서 체크
     }
 }
