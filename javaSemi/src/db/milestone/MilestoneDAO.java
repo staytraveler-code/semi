@@ -7,13 +7,13 @@ import db.util.DBConn;
 import db.util.DBUtil;
 
 public class MilestoneDAO {
-    private final Connection conn; // DAO 객체 내에서 한 번만 가져옴
+    private final Connection conn;
 
     public MilestoneDAO() {
-        this.conn = DBConn.getConnection(); // 연결 유지
+        this.conn = DBConn.getConnection();
     }
 
-    // 전체 마일스톤 조회 (특정 프로젝트)
+    // 특정 프로젝트 마일스톤 목록
     public List<MilestoneDTO> listMilestoneByProject(String projectCode) {
         List<MilestoneDTO> list = new ArrayList<>();
         String sql = "SELECT milestone_code, project_code, name, description, p_end_date, a_end_date, status " +
@@ -43,24 +43,23 @@ public class MilestoneDAO {
     public int insertMilestone(MilestoneDTO dto) {
         int result = 0;
         String sql = "INSERT INTO milestone (milestone_code, project_code, name, description, p_end_date, a_end_date, status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES ('MS_' || LPAD(seq_milestone.NEXTVAL, 3, '0'), ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            conn.setAutoCommit(false); // 수동 커밋
+            conn.setAutoCommit(false);
 
-            pstmt.setString(1, dto.getMileCode());
-            pstmt.setString(2, dto.getpCode());
-            pstmt.setString(3, dto.getName());
-            pstmt.setString(4, dto.getDesc());
-            pstmt.setDate(5, parseDate(dto.getPeDate()));
-            pstmt.setDate(6, parseDate(dto.getAeDate()));
-            pstmt.setString(7, dto.getStatus());
+            pstmt.setString(1, dto.getpCode());
+            pstmt.setString(2, dto.getName());
+            pstmt.setString(3, dto.getDesc());
+            pstmt.setDate(4, parseDate(dto.getPeDate(), null));
+            pstmt.setDate(5, parseDate(dto.getAeDate(), null));
+            pstmt.setString(6, dto.getStatus());
 
             result = pstmt.executeUpdate();
             conn.commit();
 
         } catch (Exception e) {
             e.printStackTrace();
-            DBUtil.rollback(conn); // 실패 시 롤백
+            DBUtil.rollback(conn);
         }
         return result;
     }
@@ -75,8 +74,8 @@ public class MilestoneDAO {
 
             pstmt.setString(1, dto.getName());
             pstmt.setString(2, dto.getDesc());
-            pstmt.setDate(3, parseDate(dto.getPeDate()));
-            pstmt.setDate(4, parseDate(dto.getAeDate()));
+            pstmt.setDate(3, parseDate(dto.getPeDate(), null));
+            pstmt.setDate(4, parseDate(dto.getAeDate(), null));
             pstmt.setString(5, dto.getStatus());
             pstmt.setString(6, dto.getMileCode());
             pstmt.setString(7, dto.getpCode());
@@ -111,10 +110,16 @@ public class MilestoneDAO {
         return result;
     }
 
-    // 문자열 날짜 -> java.sql.Date
-    private java.sql.Date parseDate(String dateStr) {
+    private java.sql.Date parseDate(String dateStr, String existingDate) {
+        if (dateStr == null || dateStr.isBlank()) dateStr = existingDate;
         if (dateStr == null || dateStr.isBlank()) return null;
-        try { return java.sql.Date.valueOf(dateStr); }
-        catch (Exception e) { return null; }
+
+        // 날짜 형식 체크
+        try {
+            return java.sql.Date.valueOf(dateStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
+            return null;
+        }
     }
 }
