@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import db.util.DBConn;
+import db.util.DBUtil;
 
 public class PartnerOrganizationDAOImpl implements PartnerOrganizationDAO {
 	private Connection conn = DBConn.getConnection();
@@ -31,6 +32,8 @@ public class PartnerOrganizationDAOImpl implements PartnerOrganizationDAO {
 
 	
 			pstmt = conn.prepareStatement(sql);
+			
+			
 			pstmt.setString(1, dto.getPartnerOrgName());
 			pstmt.setString(2, dto.getBizRegNo());
 			pstmt.setString(3, dto.getPartnerOrgTel());
@@ -42,24 +45,19 @@ public class PartnerOrganizationDAOImpl implements PartnerOrganizationDAO {
             pstmt.setString(9, dto.getAccountNo());
             pstmt.setString(10, dto.getAccountHolder());
             
-            
-            pstmt.executeUpdate();
+            int result = pstmt.executeUpdate();
+            if(result == 0) {
+            	throw new SQLException("협력기관 등록이 정상적으로 이루어지지 않았습니다.");
+            }
+     
             conn.commit();
 			
 			
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			e.printStackTrace();
+			DBUtil.rollback(conn);
+			throw e;
 		}finally {
-			if(pstmt != null)
-				try {
-					pstmt.close();
-				} catch (Exception e2) {				
-				}
+			if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
 		}
 		
 	}
@@ -91,22 +89,21 @@ public class PartnerOrganizationDAOImpl implements PartnerOrganizationDAO {
 	            pstmt.setString(10, dto.getAccountHolder());
 	            pstmt.setString(11, dto.getBizRegNo());
 	            
-	            pstmt.executeUpdate();
+	            int result = pstmt.executeUpdate();
+	            if(result == 0) {
+	            	throw new SQLException("협력기관 정보 수정이 정상적으로 이루어지지 않았습니다.");
+	            	
+	            }
+	            
+	           
 	            conn.commit();
 	            
 		 } catch (Exception e) { 
-			 try {
-				conn.rollback();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			 e.printStackTrace();
+			DBUtil.rollback(conn);
+			throw e;
 		 }finally {
-			if(pstmt != null)
-				try {
-					pstmt.close();
-				}catch (Exception e2) {
-				}
+			 if(pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
+	
 		}
 		
 	}

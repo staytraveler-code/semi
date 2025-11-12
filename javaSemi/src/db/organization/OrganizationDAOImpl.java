@@ -37,9 +37,17 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(6, dto.getOrgTel());
             pstmt.setString(7, dto.getOrgEmail());
             pstmt.setString(8, dto.getOrgAddress());
-            pstmt.executeUpdate();
-
-         
+            
+            
+            int result = pstmt.executeUpdate();
+            
+            
+            // 실패 시 SQLException 던지기
+            if(result == 0) {
+            	throw new SQLException("기관 등록이 정상적으로 이루어지지 않았습니다.") ;
+            }
+            
+            // 방금 등록한 org_code 조회
             String getCodeSql = "SELECT org_code FROM organization WHERE id = ?";
             try (PreparedStatement pstmt2 = conn.prepareStatement(getCodeSql)) {
                 pstmt2.setString(1, dto.getOrgId());
@@ -53,18 +61,15 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             conn.commit(); 
             
             
-       
         } catch (SQLException e) {
-        	System.out.println("기관 등록 실패 " + e.getMessage());
-            DBUtil.rollback(conn);
-            throw e; 
-            
-            
+            DBUtil.rollback(conn); // 실패 시 rollback
+            throw e; // UI에서 처리하도록 예외 재던지기
         } finally {
             if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
         }
     }
 
+    
     @Override
     public void updateOrganization(OrganizationDTO dto) throws SQLException {
         PreparedStatement pstmt = null;
@@ -86,7 +91,11 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(6, dto.getOrgAddress());
             pstmt.setString(7, dto.getOrgId());
 
-            pstmt.executeUpdate();
+            int result = pstmt.executeUpdate();
+            if (result == 0) {
+                throw new SQLException("기관 수정 실패 : 데이터가 존재하지 않습니다.");
+            }
+            
             conn.commit();
 
         } catch (SQLException e) {
@@ -97,6 +106,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
         }
     }
 
+    
+    
     @Override
     public void deleteOrganization(String id) throws SQLException {
         PreparedStatement pstmt = null;
@@ -106,18 +117,24 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             String sql = "DELETE FROM organization WHERE id = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, id);
-            pstmt.executeUpdate();
+            
+           int result = pstmt.executeUpdate();
+           if(result == 0) {
+        	   throw new SQLException("기관 삭제가 실패되었습니다. 데이터가 존재하지 않습니다.");
+           }
 
             conn.commit();
 
         } catch (SQLException e) {
             DBUtil.rollback(conn);
-            throw e;
+            throw e; // UI에서 처리
         } finally {
             if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
         }
     }
 
+    
+    
     @Override
     public OrganizationDTO selectRecord(String id) throws SQLException {
         PreparedStatement pstmt = null;
