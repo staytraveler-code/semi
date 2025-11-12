@@ -14,7 +14,7 @@ public class ProjectDAO {
         List<ProjectDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM Project WHERE org_code = ? ORDER BY project_code";
 
-        Connection conn = DBConn.getConnection(); // 싱글톤 커넥션
+        Connection conn = DBConn.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -38,7 +38,6 @@ public class ProjectDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // ResultSet과 PreparedStatement만 닫기, Connection은 닫지 않음
             try { if (rs != null) rs.close(); } catch (Exception ignored) {}
             try { if (ps != null) ps.close(); } catch (Exception ignored) {}
         }

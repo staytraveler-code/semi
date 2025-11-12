@@ -65,6 +65,12 @@ public class ProjectUI {
 
         if (projects.isEmpty()) {
             System.out.println("⚠️ 등록된 과제가 없습니다.");
+            // 잠시 정지
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             return;
         }
 
