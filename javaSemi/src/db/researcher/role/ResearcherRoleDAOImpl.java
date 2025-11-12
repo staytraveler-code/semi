@@ -19,9 +19,15 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
         try {
             conn.setAutoCommit(false);
 
-            String sql = "INSERT INTO ResearcherRole(project_code, researcher_code, role, start_date, end_date) "
-                       + "VALUES (?, ?, ?, ?, ?)";
+            String sql = """
+            	    INSERT INTO researcher_role(
+            	        project_code, researcher_code, role, start_date, end_date
+            	    )
+            	    VALUES('PROJ_' || LPAD(seq_project.NEXTVAL, 3, '0'),
+            	           ?, ?, ?, ?)
+            	""";
 
+            
             pstmt = conn.prepareStatement(sql);
 
             // java.util.Date -> java.sql.Date 변환 (null 체크 포함)

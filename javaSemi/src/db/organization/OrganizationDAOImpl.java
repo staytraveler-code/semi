@@ -27,7 +27,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
                 )
                 VALUES('ORG_' || LPAD(seq_org_code.NEXTVAL, 3, '0'), ?, ?, ?, ?, ?, ?, ?, ?)
             """;
-
+            
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, dto.getOrgId());
             pstmt.setString(2, dto.getOrgPwd());
@@ -39,7 +39,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(8, dto.getOrgAddress());
             pstmt.executeUpdate();
 
-            // 방금 생성된 org_code 조회
+         
             String getCodeSql = "SELECT org_code FROM organization WHERE id = ?";
             try (PreparedStatement pstmt2 = conn.prepareStatement(getCodeSql)) {
                 pstmt2.setString(1, dto.getOrgId());
@@ -50,11 +50,16 @@ public class OrganizationDAOImpl implements OrganizationDAO {
                 }
             }
 
-            conn.commit(); // 성공 시 커밋
-
+            conn.commit(); 
+            
+            
+       
         } catch (SQLException e) {
-            DBUtil.rollback(conn); // 실패 시 롤백
-            throw e; // 필요 시 호출자에게 예외 전달
+        	System.out.println("기관 등록 실패 " + e.getMessage());
+            DBUtil.rollback(conn);
+            throw e; 
+            
+            
         } finally {
             if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
         }

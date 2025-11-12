@@ -9,22 +9,28 @@ public class ResearcherDAOImpl implements ResearcherDAO {
     private Connection conn;
 
     public ResearcherDAOImpl() {
-        this.conn = DBConn.getConnection(); // 프로그램 종료 전까지 재사용
+        this.conn = DBConn.getConnection(); // 종료 시까지 재사용
     }
 
     @Override
     public void insertResearcherDAO(ResearcherDTO dto) throws SQLException {
-        String sql = "INSERT INTO Researcher (researcher_code, org_code, name, tel, email) " +
-                     "VALUES (SEQ_RESEARCHER.NEXTVAL, ?, ?, ?, ?)";
+    	String sql = """
+    		    INSERT INTO researcher(
+    		        researcher_code, org_code, name, tel, email
+    		    )
+    		    VALUES('RES_' || LPAD(seq_researcher.NEXTVAL, 3, '0'),
+    		           ?, ?, ?, ?)
+    		""";
         PreparedStatement pstmt = null;
 
         try {
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, dto.getOrgCode());
-            pstmt.setString(2, dto.getName());
-            pstmt.setString(3, dto.getTel());
-            pstmt.setString(4, dto.getEmail());
+            pstmt.setString(1, dto.getResearcherCode());
+            pstmt.setString(2, dto.getOrgCode());
+            pstmt.setString(3, dto.getName());
+            pstmt.setString(4, dto.getTel());
+            pstmt.setString(5, dto.getEmail());
             pstmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
@@ -88,7 +94,6 @@ public class ResearcherDAOImpl implements ResearcherDAO {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, researcherCode);
             rs = pstmt.executeQuery();
-
             if (rs.next()) {
                 dto = new ResearcherDTO();
                 dto.setResearcherCode(rs.getString("researcher_code"));
