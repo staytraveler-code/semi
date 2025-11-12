@@ -19,12 +19,6 @@ public class PartnerOrganizationDAOImpl implements PartnerOrganizationDAO {
 			conn.setAutoCommit(false);
 			
 			
-			// 다시 확인
-			sql = "INSERT INTO partner_organization(partner_org_name,biz_reg_no,partner_org_tel,partner_org_email,"
-					+ "partner_org_address,charger_name,charger_tel)"
-					+ "bank_name,account_number, account_holder"
-					+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)" ;
-			
 			sql = "INSERT INTO partner_organization "
 	                + "(partner_org_name, biz_reg_no, partner_org_tel, partner_org_email, "
 	                + "partner_org_address, manager_name, manager_tel, bank_name, account_no, account_holder) "
