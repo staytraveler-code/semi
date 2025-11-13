@@ -9,4 +9,5 @@ public interface ResearcherDAO {
     void deleteResearcherDAO(String researcherCode) throws SQLException;   // 연구원 삭제
     ResearcherDTO selectResearcherByCode(String researcherCode) throws SQLException; // 단일 조회
     List<ResearcherDTO> listResearchersByOrg(String orgCode) throws SQLException;    // 기관별 전체 조회
+    boolean isOrgIncludeRes(String oCode, String rCode) throws SQLException; // 기관에 속한 연구원인지 확인
 }

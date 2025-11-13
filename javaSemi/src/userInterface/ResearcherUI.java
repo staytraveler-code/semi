@@ -154,7 +154,6 @@ public class ResearcherUI {
                 return;
             }
 
-            // 소속 기관 체크
             if (!dto.getOrgCode().equals(orgCode)) {
                 System.out.println("⚠️ 삭제 불가: 해당 연구원은 다른 기관 소속입니다.");
                 return;

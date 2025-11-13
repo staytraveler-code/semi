@@ -277,7 +277,7 @@ public class ProjectUI {
 	private void manageProjectResearcher(String projectId) {
 		try {
 			// 프로젝트 코드 세팅
-			projectResearcher.setProjectCode(projectId);
+			projectResearcher.setCode(projectId, orgCode);
 			// 프로젝트별 연구원 관리 UI 실행
 			projectResearcher.manageProjectResearchers();
 		} catch (IOException e) {

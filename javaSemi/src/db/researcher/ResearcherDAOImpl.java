@@ -15,9 +15,7 @@ public class ResearcherDAOImpl implements ResearcherDAO {
     @Override
     public void insertResearcherDAO(ResearcherDTO dto) throws SQLException {
         String sql = """
-            INSERT INTO researcher(
-                researcher_code, org_code, name, tel, email
-            )
+            INSERT INTO researcher(researcher_code, org_code, name, tel, email)
             VALUES('RES_' || LPAD(seq_researcher.NEXTVAL, 3, '0'), ?, ?, ?, ?)
         """;
 
@@ -32,10 +30,17 @@ public class ResearcherDAOImpl implements ResearcherDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            
         } catch (SQLException e) {
-            DBUtil.rollback(conn);
-            throw e;
-        }
+			e.printStackTrace();
+			DBUtil.rollback(conn);
+			throw e;
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
     }
 
     @Override
@@ -117,4 +122,23 @@ public class ResearcherDAOImpl implements ResearcherDAO {
         }
         return list;
     }
+
+	@Override
+	public boolean isOrgIncludeRes(String oCode, String rCode) throws SQLException {
+		String sql = "SELECT name FROM Researcher WHERE researcher_code = ? AND org_code = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, rCode);
+            pstmt.setString(2, oCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+	}
+    
+    
 }
