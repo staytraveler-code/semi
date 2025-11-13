@@ -77,7 +77,7 @@ public class InputHandler {
 	}
 
 	// 전화번호 입력 메소드
-	public static String getTelInput(BufferedReader br, String prompt) throws IOException {
+	public static String getValidatedTelInput(BufferedReader br, String prompt) throws IOException {
 
 		// 010-1234-5678, 02-123-4567, 031-1234-5678 등
         String phoneRegex = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
@@ -96,7 +96,7 @@ public class InputHandler {
 	}
 	
 	// 날짜 입력 메소드
-	public static String getDateInput(BufferedReader br, String prompt) throws IOException {
+	public static String getValidatedDateInput(BufferedReader br, String prompt) throws IOException {
 		
 		String input = "";
 		while (true) {
@@ -117,7 +117,7 @@ public class InputHandler {
 	}
 	
 	// 사업자등록번호 입력 메소드
-	public static String getBizRegInput(BufferedReader br, String prompt) throws IOException {
+	public static String getValidatedBizRegInput(BufferedReader br, String prompt) throws IOException {
 		
 		// 사업자등록번호 정규표현식 ( ex. 000-00-00000 )
 		String brnRegex = "^\\d{3}-\\d{2}-\\d{5}$";
