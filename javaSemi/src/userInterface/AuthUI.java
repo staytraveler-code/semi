@@ -90,17 +90,25 @@ public class AuthUI {
 
             System.out.print("기관 유형(대학/기업/공공기관 등): ");
             dto.setOrgType(br.readLine());
-
-            System.out.print("사업자등록번호: "); // 중복체크
-            String bizRegNo = br.readLine();
             
-            if (!bizRegNo.matches("\\d+")) {
+            String bizRegNo;
+
+            while (true) {
+            System.out.print("사업자등록번호: "); // 중복체크
+            bizRegNo = br.readLine();
+            
+            if (!bizRegNo.matches("[0-9-]+")) {
                 System.out.println("⦁ 숫자만 입력 가능합니다.");
+                continue;
             }
             
             if(orgDAO.isBizRegNoExists(bizRegNo)) {
             	System.out.println("⦁ 이미 등록된 사업자 번호입니다. ");
-            	return; // 회원가입 중단
+            	continue; 
+          
+            }
+            break;
+            
             }
             dto.setBizRegNo(bizRegNo);
             
