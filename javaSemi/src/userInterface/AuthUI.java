@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class AuthUI {
     private BufferedReader br;
     private UI ui;
-    private OrganizationDAO orgDAO = new OrganizationDAOImpl(); // DAO 구현체 사용
+    private OrganizationDAO orgDAO = new OrganizationDAOImpl();
 
     public AuthUI(BufferedReader br, UI ui) {
         this.br = br;
@@ -21,37 +21,36 @@ public class AuthUI {
     // 로그인
     public void signIn() throws IOException {
         System.out.println("===== 로그인 =====");
-
-        System.out.print("아이디: ");
-        String id = br.readLine();
-
-        System.out.print("비밀번호: ");
-        String pw = br.readLine();
-
+        
         try {
-            OrganizationDTO org = orgDAO.selectRecord(id);
-
-            if (org == null || !org.getOrgPwd().equals(pw)) {
-                System.out.println("⚠️ 아이디가 존재하지 않거나, 비밀번호가 틀렸습니다.\n");
-                return;
-            }
-            System.out.println();
-            System.out.println("✅ " + org.getOrgName() + " 기관 로그인 성공!\n");
+        	System.out.print("로그인 : ");
+        	String id = br.readLine();
+        	
+        	System.out.print("비밀번호 : ");
+        	String pw = br.readLine();
+        	
+        	// DB조회
+        	OrganizationDTO org = orgDAO.selectRecord(id);
+        	
+        	if(org == null || !org.getOrgPwd().equals(pw)) {
+        		System.out.println(" ⦁ 아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.");
+        		return;
+        	}
+        	// 로그인 성공
+        
+            System.out.println("[기관명] ▶ " + org.getOrgName());
             
-            // 잠시 정지
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            ui.onOrgLogin(org.getOrgId());// 로그인 성공 후 기관 ID 전달
             
-        	// 로그인 성공 후 기관 ID 전달
-            ui.onOrgLogin(org.getOrgId()); 
-
-        } catch (SQLException e) {
-            System.out.println("❌ 로그인 중 오류 발생: " + e.getMessage());
-        } 
+            
+        }catch (IOException e) {
+        	 System.out.println("입력 중 오류 발생: " + e.getMessage());
+		}catch (SQLException e) {
+			 System.out.println("로그인 처리 중 DB 오류 발생: " + e.getMessage());
+		}
     }
+
+ 
 
     // 회원가입
     public void signUp() throws IOException {
@@ -65,14 +64,26 @@ public class AuthUI {
             // ID 중복 체크
             OrganizationDTO existing = orgDAO.selectRecord(id);
             if (existing != null) {
-                System.out.println("⚠️ 이미 존재하는 아이디입니다. 다른 아이디를 사용하세요.\n");
-                return; // 회원가입 중단
+                System.out.println("⦁ 아이디 : 사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요. \n");
+                return;
             }
 
             dto.setOrgId(id); // 사용 가능 ID 세팅
+            
+            // 비밀번호 필수 입력 체크
+       
+            String pw;
+            while (true) {
+                System.out.print("비밀번호: ");
+                pw = br.readLine(); // 먼저 입력 받기
 
-            System.out.print("비밀번호: ");
-            dto.setOrgPwd(br.readLine());
+                if (pw == null || pw.trim().isEmpty()) {
+                    System.out.println("⦁ 비밀번호는 필수 정보입니다.");
+                } else {
+                    dto.setOrgPwd(pw); // 정상 입력이면 DTO에 저장
+                    break;
+                }
+            }
 
             System.out.print("기관명: ");
             dto.setOrgName(br.readLine());
@@ -80,8 +91,19 @@ public class AuthUI {
             System.out.print("기관 유형(대학/기업/공공기관 등): ");
             dto.setOrgType(br.readLine());
 
-            System.out.print("사업자등록번호: ");
-            dto.setBizRegNo(br.readLine());
+            System.out.print("사업자등록번호: "); // 중복체크
+            String bizRegNo = br.readLine();
+            
+            if (!bizRegNo.matches("\\d+")) {
+                System.out.println("⦁ 숫자만 입력 가능합니다.");
+            }
+            
+            if(orgDAO.isBizRegNoExists(bizRegNo)) {
+            	System.out.println("⦁ 이미 등록된 사업자 번호입니다. ");
+            	return; // 회원가입 중단
+            }
+            dto.setBizRegNo(bizRegNo);
+            
 
             System.out.print("전화번호: ");
             dto.setOrgTel(br.readLine());
@@ -93,7 +115,7 @@ public class AuthUI {
             dto.setOrgAddress(br.readLine());
 
             orgDAO.insertOrganization(dto);
-            System.out.println("✅ 회원가입 완료!\n");
+            System.out.println("⦁ 회원가입이 완료 되었습니다. \n");
 
         } catch (SQLException e) {
             System.out.println("❌ 데이터베이스 오류: " + e.getMessage());
