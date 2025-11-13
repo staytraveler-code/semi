@@ -104,7 +104,7 @@ public class ResearcherUI {
             System.out.print("수정할 연구원 코드 ▶ ");
             String code = br.readLine();
 
-            ResearcherDTO dto = ((ResearcherDAOImpl) researcherDAO).selectResearcherByCode(code);
+            ResearcherDTO dto = researcherDAO.selectResearcherByCode(code);
             if (dto == null) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않습니다.");
                 return;
@@ -160,7 +160,7 @@ public class ResearcherUI {
                 return;
             }
 
-            ((ResearcherDAOImpl) researcherDAO).deleteResearcherDAO(code);
+            researcherDAO.deleteResearcherDAO(code);
             System.out.println("✅ 연구원 삭제 완료\n");
 
         } catch (SQLException e) {

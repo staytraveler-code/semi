@@ -112,7 +112,6 @@ public class MilestoneDAO {
 			conn.setAutoCommit(false);
 
 			pstmt.setString(1, mileCode);
-
 			result = pstmt.executeUpdate();
 			conn.commit();
 

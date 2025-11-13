@@ -11,133 +11,187 @@ import db.util.DBUtil;
 
 public class PerformanceManagementDAO {
 	Connection conn = DBConn.getConnection();
-		
-	 // ✅ 기관별 + 과제별 성과 목록 조회
-    public List<PerformanceManagementDTO> performanceList(String orgCode, String projectCode) {
-        List<PerformanceManagementDTO> list = new ArrayList<>();
 
-        try {
-            String sql =
-                "SELECT p_m.performance_code AS code, " +
-                "       p_m.name AS name, " +
-                "       p_m.category AS category, " +
-                "       p_m.content AS content, " +
-                "       p_m.p_date AS p_date, " +
-                "       p_m.memo AS memo " +
-                "FROM performance_management p_m " +
-                "JOIN project p ON p_m.project_code = p.project_code " +
-                "WHERE p.org_code = ? AND p.project_code = ?";
+	// 과제별 성과 목록 조회 -- 완료
+	public List<PerformanceManagementDTO> performanceList(String projectCode) throws Exception {
+		List<PerformanceManagementDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT performance_code AS code, name, category, content, p_date, memo "
+					+ "FROM performance_management WHERE project_code = ?";
 
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, orgCode);       // 로그인한 기관 코드
-            pstmt.setString(2, projectCode);   // 선택된 과제 코드
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, projectCode); // 선택된 과제 코드
 
-            ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                PerformanceManagementDTO dto = new PerformanceManagementDTO();
-                dto.setPerfCode(rs.getString("code"));
-                dto.setName(rs.getString("name"));
-                dto.setCategory(rs.getString("category"));
-                dto.setContent(rs.getString("content"));
-                dto.setpDate(rs.getString("p_date"));
-                dto.setMemo(rs.getString("memo"));
-                list.add(dto);
-            }
+			while (rs.next()) {
+				PerformanceManagementDTO dto = new PerformanceManagementDTO();
+				dto.setPerfCode(rs.getString("code"));
+				dto.setName(rs.getString("name"));
+				dto.setCategory(rs.getString("category"));
+				dto.setContent(rs.getString("content"));
+				dto.setpDate(rs.getString("p_date"));
+				dto.setMemo(rs.getString("memo"));
+				list.add(dto);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            DBUtil.rollback(conn);
-        }
-        return list;
-    }
-	
-	
-	//성과 추가 -- 성과코드,프로젝트코드는 시퀀스명으로 수정해야함
-	public int insertPerformance(PerformanceManagementDTO dto, String projectCode) {
-        int result = 0;
-        try {
-            String sql = "INSERT INTO performance_management (performance_code, project_code, "
-            		+ "name, category, content, p_date, memo) VALUES (시퀀스, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            
-            pstmt.setString(1, projectCode);
-            pstmt.setString(2, dto.getName());
-            pstmt.setString(3, dto.getCategory());
-            pstmt.setString(4, dto.getContent());
-            pstmt.setDate(5, java.sql.Date.valueOf(dto.getpDate()));
-            pstmt.setString(6, dto.getMemo());
-            result = pstmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            DBUtil.rollback(conn);
-        }
-        return result;
-    }
-	
-	//성과 업데이트
-	public int updatePerformance(PerformanceManagementDTO dto) {
-	 int result = 0;
-     try {
-         String sql = "UPDATE performance_management SET name=?, category=?, content=?, "
-         		+ "p_date=?, memo=? WHERE performance_code=? ";
-         PreparedStatement pstmt = conn.prepareStatement(sql);
-         pstmt.setString(1, dto.getName());
-         pstmt.setString(2, dto.getCategory());
-         pstmt.setString(3, dto.getContent());
-         pstmt.setDate(4, java.sql.Date.valueOf(dto.getpDate()));
-         pstmt.setString(5, dto.getMemo());
-         pstmt.setString(6, dto.getPerfCode());
-         result = pstmt.executeUpdate();
-         conn.commit();
-     } catch (Exception e) {
-         e.printStackTrace();
-         DBUtil.rollback(conn);
-     }
-     return result;
+			}
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+			DBUtil.close(rs);
+		}
+		return list;
 	}
-	
-	//성과 삭제
-	public int deletePerformance(String perfCode) {
-	    int result = 0;
-	    try {
-	        String sql = "DELETE FROM performance_management WHERE performance_code = ?";
-	        PreparedStatement pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, perfCode);
-	        result = pstmt.executeUpdate();
 
-	        if (result > 0) {
-	            System.out.println("성과가 삭제되었습니다.");
-	        } else {
-	            System.out.println("삭제할 성과가 존재하지 않습니다.");
-	        }
+	// 성과 추가 -- 완료
+	public int insertPerformance(PerformanceManagementDTO dto, String projectCode) throws Exception {
+		int result = 0;
+		try {
+			conn.setAutoCommit(false);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        DBUtil.rollback(conn);
-	    }
-	    return result;
+			String sql = "INSERT INTO performance_management (performance_code, project_code, "
+					+ "name, category, content, p_date, memo) VALUES ('PERF_' || LPAD(SEQ_PERFORMANCE_MANAGEMENT.NEXTVAL, 3, '0'), "
+					+ "?, ?, ?, ?, ?, ?)";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, projectCode);
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getCategory());
+			pstmt.setString(4, dto.getContent());
+			pstmt.setDate(5, parseDate(dto.getpDate(), null));
+			pstmt.setString(6, dto.getMemo());
+			result = pstmt.executeUpdate();
+
+			conn.commit();
+
+		} catch (Exception e) {
+			DBUtil.rollback(conn);
+			throw e;
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		return result;
 	}
-	
-	
-	
-	//코드 판별(존재여부)
-	public boolean existsPerformanceCode(String perfCode) {
-	    boolean exists = false;
-	    try {
-	        String sql = "SELECT COUNT(*) AS cnt FROM performance_management WHERE performance_code = ?";
-	        PreparedStatement pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, perfCode);
-	        ResultSet rs = pstmt.executeQuery();
 
-	        if (rs.next() && rs.getInt("cnt") > 0) {
-	            exists = true;
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return exists;
+	// 성과 업데이트 -- 완료
+	public int updatePerformance(PerformanceManagementDTO dto) throws Exception {
+		int result = 0;
+		String sql = "UPDATE performance_management SET name=?, category=?, content=?, "
+				+ "p_date=TO_DATE(?, 'YYYYMMDD'), memo=? WHERE performance_code=? ";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+			conn.setAutoCommit(false);
+
+			pstmt.setString(1, dto.getName());
+			pstmt.setString(2, dto.getCategory());
+			pstmt.setString(3, dto.getContent());
+			pstmt.setDate(4, parseDate(dto.getpDate(), null));
+			pstmt.setString(5, dto.getMemo());
+			pstmt.setString(6, dto.getPerfCode());
+			result = pstmt.executeUpdate();
+			
+			conn.commit();
+		} catch (Exception e) {
+			DBUtil.rollback(conn);
+			throw e;
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		return result;
 	}
-	
+
+	// 성과 삭제 -- 완료
+	public int deletePerformance(String perfCode) throws Exception {
+		int result = 0;
+		String sql = "DELETE FROM performance_management WHERE performance_code = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+			conn.setAutoCommit(false);
+			
+			pstmt.setString(1, perfCode);
+			result = pstmt.executeUpdate();
+			
+			conn.commit();
+
+		} catch (Exception e) {
+			DBUtil.rollback(conn);
+			throw e;
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		return result;
+	}
+
+	// 코드 판별(존재여부)
+	public boolean existsPerformanceCode(String perfCode) throws Exception {
+		boolean exists = false;
+		try {
+			String sql = "SELECT COUNT(*) AS cnt FROM performance_management WHERE performance_code = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, perfCode);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next() && rs.getInt("cnt") > 0) {
+				exists = true;
+			}
+		} catch (Exception e) {
+			throw new Exception("코드 존재 여부 확인 중 오류", e);
+		}
+		return exists;
+	}
+
+	// 과제에 성과가 있는지 확인
+	public boolean isPerformnace(String code, String projectCode) throws Exception {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT 1 "
+					+ "FROM performance_management WHERE performance_code = ? AND project_code = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, code);
+			pstmt.setString(2, projectCode);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return false;
+	}
+
+	private java.sql.Date parseDate(String dateStr, String existingDate) {
+		if (dateStr == null || dateStr.isBlank())
+			dateStr = existingDate;
+		if (dateStr == null || dateStr.isBlank())
+			return null;
+
+		try {
+			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
+		} catch (IllegalArgumentException e) {
+			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
+			return null;
+		}
+	}
+
 }

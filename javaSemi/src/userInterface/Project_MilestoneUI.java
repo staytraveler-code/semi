@@ -146,7 +146,7 @@ public class Project_MilestoneUI {
 		}
 	}
 
-	// 삭제 -- 완료
+	// 마일스톤 삭제 -- 완료
 	public void deleteMilestone() {
 		try {
 
@@ -160,7 +160,7 @@ public class Project_MilestoneUI {
 			}
 
 			int result = milestoneDAO.deleteMilestone(code);
-			System.out.println(result > 0 ? "✅ 마일스톤 삭제 완료!\n" : "⚠️ 해당 마일스톤이 없습니다.\n");
+			System.out.println(result > 0 ? "✅ 마일스톤 삭제 완료!\n" : "⚠️ 해당 마일스톤삭제 실패.\n");
 		} catch (IOException e) {
 			System.out.println("입력중 오류발생");
 		} catch (SQLException e) {
