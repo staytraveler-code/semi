@@ -63,6 +63,7 @@ public class Project_ResearcherUI {
     private void printProjectResearchers() {
         try {
             List<ResearcherRoleDTO> list = roleDAO.listRole(projectCode); // 프로젝트 코드 기준으로 필터링 필요
+            
 
             if (list.isEmpty()) {
                 System.out.println("⚠️ 해당 프로젝트에 배정된 연구원이 없습니다.\n");
@@ -70,14 +71,16 @@ public class Project_ResearcherUI {
             }
 
             System.out.println("프로젝트 연구원 목록:");
-            System.out.printf("%-10s | %-10s | %-15s | %-15s | %-20s%n",
-                    "프로젝트코드", "연구원코드", "역할", "참여시작일", "참여종료일");
+            System.out.printf("%-10s | %-10s | %-10s | %-15s | %-15s | %-20s%n",
+                    "프로젝트코드", "연구원코드", "이름", "역할", "참여시작일", "참여종료일");
             System.out.println("-------------------------------------------------------------------------------------------------------------");
 
             for (ResearcherRoleDTO dto : list) {
-                System.out.printf("%-16s | %-15s | %-12s | %-20s | %-20s%n",
+            	ResearcherDTO rdto = researcherDAO.selectResearcherByCode(dto.getResearcherCode());
+                System.out.printf("%-16s | %-15s | %-9s | %-12s | %-20s | %-20s%n",
                         dto.getProjectCode(),
                         dto.getResearcherCode(),
+                        rdto.getName(),
                         dto.getRole(),
                         dto.getStartDate().substring(0, 10),
                         dto.getEndDate().substring(0, 10));
@@ -96,7 +99,7 @@ public class Project_ResearcherUI {
             String rCode = br.readLine();
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
-            	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아닙니다.\n");
+            	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
             	return;
             }
             
@@ -124,7 +127,7 @@ public class Project_ResearcherUI {
             String rCode = br.readLine();
             
             if(!roleDAO.isProjectIncludeRes(projectCode, rCode)) {
-            	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아닙니다.\n");
+            	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
             	return;
             }
             

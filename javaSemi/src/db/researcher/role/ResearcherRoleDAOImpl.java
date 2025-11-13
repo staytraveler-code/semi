@@ -128,7 +128,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 
 	@Override
 	public boolean isProjectIncludeRes(String pCode, String rCode) throws SQLException {
-		String sql = "SELECT name FROM Researcher_Role WHERE researcher_code = ? AND project_code = ?";
+		String sql = "SELECT role FROM Researcher_Role WHERE researcher_code = ? AND project_code = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, rCode);
