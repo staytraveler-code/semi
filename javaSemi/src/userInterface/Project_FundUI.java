@@ -24,21 +24,21 @@ public class Project_FundUI {
     public void printFundUsageList() {
         System.out.println("===== 연구비 사용 내역 =====");
         try {
-            List<FundManagementDTO> list = fundDAO.listRecord();
-            boolean hasData = false;
-            for (FundManagementDTO dto : list) {
-                if (!dto.getPcode().equals(projectCode)) continue; // 현재 프로젝트만
-                hasData = true;
-                System.out.printf("코드: %d | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
-                        dto.getFcode(), dto.getCharger_name(), dto.getCategory(),
-                        dto.getDate_used(), dto.getExpense(), dto.getContent(),
-                        dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
+            List<FundManagementDTO> list = fundDAO.listRecord(projectCode);
+            if(list.size() == 0) {
+            	System.out.println("(등록된 연구비 사용 내역이 없습니다)");
+            } else {
+            	for (FundManagementDTO dto : list) {
+            		System.out.printf("코드: %d | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
+            				dto.getFcode(), dto.getCharger_name(), dto.getCategory(),
+            				dto.getDate_used(), dto.getExpense(), dto.getContent(),
+            				dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
+            	}
             }
-            if (!hasData) System.out.println("(등록된 연구비 사용 내역이 없습니다)");
         } catch (Exception e) {
             System.out.println("⚠️ 연구비 사용 내역 조회 오류: " + e.getMessage());
         }
-        System.out.println("===========================\n");
+        System.out.println("============================\n");
     }
 
     public void addFundUsage() throws IOException {
