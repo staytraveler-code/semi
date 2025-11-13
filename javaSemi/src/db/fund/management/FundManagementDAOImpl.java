@@ -180,4 +180,122 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		return list;
 	}
 
+	@Override
+	public FundManagementDTO findByFundCode(String code) {
+		FundManagementDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+					+ "date_used, expense, content, vendor_name, proof_type, memo "
+					+ "FROM Fund_Management WHERE fund_code = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, code);
+
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				dto = new FundManagementDTO();
+				
+				dto.setFcode(rs.getInt("fund_code"));
+				dto.setPcode(rs.getString("project_code"));
+				dto.setRcode(rs.getString("researcher_code"));
+				dto.setCharger_name(rs.getString("charger_name"));
+				dto.setCategory(rs.getString("category"));
+				dto.setDate_used(rs.getDate("date_used").toString());
+				dto.setExpense(rs.getLong("expense"));
+				dto.setContent(rs.getString("content"));
+				dto.setVendor_name(rs.getString("vendor_name"));
+				dto.setProof_type(rs.getString("proof_type"));
+				dto.setMemo(rs.getString("memo"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public boolean isProjectFundRecord(String pcode, String fcode) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+					+ "date_used, expense, content, vendor_name, proof_type, memo "
+					+ "FROM Fund_Management WHERE fund_code = ? AND project_code = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, fcode);
+			pstmt.setString(2, pcode);
+
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				return true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return false;
+	}
+
+	@Override
+	public List<FundManagementDTO> listRecord(String code) {
+		List<FundManagementDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+					+ "date_used, expense, content, vendor_name, proof_type, memo "
+					+ "FROM Fund_Management WHERE project_code = ? ORDER BY fund_code";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, code);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				FundManagementDTO dto = new FundManagementDTO();
+
+				dto.setFcode(rs.getInt("fund_code"));
+				dto.setPcode(rs.getString("project_code"));
+				dto.setRcode(rs.getString("researcher_code"));
+				dto.setCharger_name(rs.getString("charger_name"));
+				dto.setCategory(rs.getString("category"));
+				dto.setDate_used(rs.getDate("date_used").toString());
+				dto.setExpense(rs.getLong("expense"));
+				dto.setContent(rs.getString("content"));
+				dto.setVendor_name(rs.getString("vendor_name"));
+				dto.setProof_type(rs.getString("proof_type"));
+				dto.setMemo(rs.getString("memo"));
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return list;
+	}
+
 }
