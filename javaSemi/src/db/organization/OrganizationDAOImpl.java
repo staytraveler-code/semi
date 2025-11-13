@@ -20,7 +20,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
         PreparedStatement pstmt = null;
         try {
             conn.setAutoCommit(true); // 자동커밋
-
+            
             String sql = """
                 INSERT INTO organization(
                     org_code, id, pwd, name, type, biz_reg_no, tel, email, address
@@ -38,6 +38,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(7, dto.getOrgEmail());
             pstmt.setString(8, dto.getOrgAddress());
             
+           
             
             int result = pstmt.executeUpdate();
             
