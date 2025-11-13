@@ -38,7 +38,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
             pstmt.setString(7, dto.getOrgEmail());
             pstmt.setString(8, dto.getOrgAddress());
             
-           
+          
             
             int result = pstmt.executeUpdate();
             
