@@ -24,7 +24,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			sql = "INSERT INTO Fund_Management(fund_code, project_code, researcher_code,"
 					+ "charger_name, category, date_used, expense, content, vendor_name,"
 					+ "proof_type, memo) "
-					+ "VALUES (fund_management_fund_code_seq.NEXTVAL, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?)";
+					+ "VALUES ('F' || LPAD(fund_management_fund_code_seq.NEXTVAL, 4, '0'), ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
 			
@@ -89,7 +89,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			pstmt.setString(8, dto.getVendor_name());
 			pstmt.setString(9, dto.getProof_type());
 			pstmt.setString(10, dto.getMemo());
-			pstmt.setInt(11, dto.getFcode());
+			pstmt.setString(11, dto.getFcode());
 
 			pstmt.executeUpdate();
 
@@ -108,7 +108,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 	}
 
 	@Override
-	public void deleteRecord(int code) throws SQLException {
+	public void deleteRecord(String code) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		
@@ -119,7 +119,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, code);
+			pstmt.setString(1, code);
 
 			pstmt.executeUpdate();
 
@@ -156,7 +156,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			while (rs.next()) {
 				FundManagementDTO dto = new FundManagementDTO();
 
-				dto.setFcode(rs.getInt("fund_code"));
+				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
 				dto.setCharger_name(rs.getString("charger_name"));
@@ -200,7 +200,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			if(rs.next()) {
 				dto = new FundManagementDTO();
 				
-				dto.setFcode(rs.getInt("fund_code"));
+				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
 				dto.setCharger_name(rs.getString("charger_name"));
@@ -274,7 +274,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			while (rs.next()) {
 				FundManagementDTO dto = new FundManagementDTO();
 
-				dto.setFcode(rs.getInt("fund_code"));
+				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
 				dto.setCharger_name(rs.getString("charger_name"));

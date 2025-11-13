@@ -1,7 +1,7 @@
 package db.fund.management;
 
 public class FundManagementDTO {
-	private int fcode;
+	private String fcode;
 	private String pcode;
 	private String rcode;
 	private String charger_name;
@@ -13,10 +13,10 @@ public class FundManagementDTO {
 	private String proof_type;
 	private String memo;
 
-	public int getFcode() {
+	public String getFcode() {
 		return fcode;
 	}
-	public void setFcode(int fcode) {
+	public void setFcode(String fcode) {
 		this.fcode = fcode;
 	}
 	public String getPcode() {
