@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 
+
 public class UI {
     private BufferedReader br;
     private AuthUI authUI;
@@ -24,40 +25,43 @@ public class UI {
         organizationDAO = new OrganizationDAOImpl();
         authUI = new AuthUI(br, this);
         
-        // 초기 메뉴 호출
-        try {
-            showInitialMenu();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // 초기 메뉴 시작
+        showInitialMenu();   
     }
 
-    public void showInitialMenu() throws IOException {
-        while (true) {
-            System.out.print("""
-                ===============================
-                      국가 R & D 관리 프로그램
-                ===============================
-                1. 로그인
-                2. 회원가입
-                0. 종료
-                ===============================
-                """);
-            System.out.print("메뉴 선택 ▶ ");
-            String input = br.readLine();
-            System.out.println();
+    public void showInitialMenu() {
+    	try {
+    		 while (true) {
+    	            System.out.print("""
+    	                ===============================
+    	                      국가 R & D 관리 프로그램
+    	                ===============================
+    	                1. 로그인
+    	                2. 회원가입
+    	                0. 종료
+    	                ===============================
+    	                """);
+    	            System.out.print("메뉴 선택 ▶ ");
+    	            String input = br.readLine();
+    	            System.out.println();
 
-            switch (input) {
-                case "1" -> authUI.signIn();
-                case "2" -> authUI.signUp();
-                case "0" -> exit();
-                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-            }
-        }
+    	            switch (input) {
+    	                case "1" -> authUI.signIn();
+    	                case "2" -> authUI.signUp();
+    	                case "0" -> exit();
+    	                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+    	            }
+    	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+       
     }
 
     // 로그인 성공 시
-    public void onOrgLogin(String orgId) throws IOException {
+    public void onOrgLogin(String orgId) {
         try {
             OrganizationDTO loginOrg = organizationDAO.findById(orgId);
 
@@ -74,34 +78,42 @@ public class UI {
 
         } catch (SQLException e) {
             System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
-        }
+        } catch (Exception e) {
+        	e.printStackTrace();
+		}
     }
 
-    public void showOrgMainMenu() throws IOException {
-        while (true) {
-            System.out.print("""
-                ===============================
-                      기관 메인 메뉴
-                ===============================
-                1. 과제 관리
-                2. 회원 정보 관리
-                3. 연구원 정보 관리
-                0. 로그아웃
-                00. 종료
-                ===============================
-                """);
-            System.out.print("메뉴 선택 ▶ ");
-            String input = br.readLine();
+    public void showOrgMainMenu() {
+    	try {
+    		while (true) {
+                System.out.print("""
+                    ===============================
+                          기관 메인 메뉴
+                    ===============================
+                    1. 과제 관리
+                    2. 회원 정보 관리
+                    3. 연구원 정보 관리
+                    0. 로그아웃
+                    00. 종료
+                    ===============================
+                    """);
+                System.out.print("메뉴 선택 ▶ ");
+                String input = br.readLine();
 
-            switch (input) {
-                case "1" -> projectUI.chooseProject();
-                case "2" -> memberUI.manageMemberInformation();
-                case "3" -> researcherUI.manageResearcherInformation();
-                case "0" -> { return; }
-                case "00" -> exit();
-                default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+                switch (input) {
+                    case "1" -> projectUI.chooseProject();
+                    case "2" -> memberUI.manageMemberInformation();
+                    case "3" -> researcherUI.manageResearcherInformation();
+                    case "0" -> { return; }
+                    case "00" -> exit();
+                    default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
+                }
             }
-        }
+    	} catch (IOException e) {
+    		e.printStackTrace();
+        } catch (Exception e) {
+        	e.printStackTrace();
+		}
     }
 
     public void exit() {

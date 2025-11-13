@@ -131,7 +131,7 @@ public class ProjectUI {
 	// 과제 상세 정보
 		private void showProjectDetail(String projectId) {
 			try {
-				
+				System.out.println("이곳에 과제 상세가 뜹니다");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
