@@ -77,16 +77,15 @@ public class MemberUI {
             System.out.print("이름 ▶ ");
             String newName = br.readLine();
             if (!newName.isBlank()) dto.setOrgName(newName);
-
+            
+         
             System.out.println("현재 기관유형: " + dto.getOrgType());
             System.out.print("기관유형 ▶ ");
             String newType = br.readLine();
             if (!newType.isBlank()) dto.setOrgType(newType);
-
-            System.out.println("현재 사업자번호: " + dto.getBizRegNo());
-            System.out.print("사업자번호 ▶ ");
-            String newBiz = br.readLine();
-            if (!newBiz.isBlank()) dto.setBizRegNo(newBiz);
+            
+            // 사업자번호 수정 불가능
+            System.out.println("사업자번호: " +  dto.getBizRegNo());
 
             System.out.println("현재 전화번호: " + dto.getOrgTel());
             System.out.print("전화번호 ▶ ");
