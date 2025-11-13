@@ -94,7 +94,7 @@ public class UI {
             String input = br.readLine();
 
             switch (input) {
-                case "1" -> projectUI.manageProject();
+                case "1" -> projectUI.chooseProject();
                 case "2" -> memberUI.manageMemberInformation();
                 case "3" -> researcherUI.manageResearcherInformation();
                 case "0" -> { return; }
