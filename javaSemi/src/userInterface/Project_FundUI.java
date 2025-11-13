@@ -44,15 +44,15 @@ public class Project_FundUI {
     public void addFundUsage() throws IOException {
         FundManagementDTO dto = new FundManagementDTO();
         dto.setPcode(projectCode);
-        System.out.print("연구원 코드 ▶ "); dto.setRcode(br.readLine());
-        System.out.print("담당자 이름 ▶ "); dto.setCharger_name(br.readLine());
-        System.out.print("분류 ▶ "); dto.setCategory(br.readLine());
-        System.out.print("사용일 (YYYY-MM-DD) ▶ "); dto.setDate_used(br.readLine());
-        System.out.print("금액 ▶ "); dto.setExpense(Long.parseLong(br.readLine()));
-        System.out.print("내용 ▶ "); dto.setContent(br.readLine());
-        System.out.print("업체명 ▶ "); dto.setVendor_name(br.readLine());
-        System.out.print("증빙 ▶ "); dto.setProof_type(br.readLine());
-        System.out.print("메모 ▶ "); dto.setMemo(br.readLine());
+        dto.setRcode(InputHandler.getValidatedInput(br, "연구원 코드 ▶ "));
+        dto.setCharger_name(InputHandler.getValidatedInput(br, "담당자 이름 ▶ "));
+        dto.setCategory(InputHandler.getValidatedInput(br, "분류 ▶ "));
+        dto.setDate_used(InputHandler.getValidatedInput(br, "사용일 (YYYY-MM-DD) ▶ "));
+        dto.setExpense(Long.parseLong(InputHandler.getValidatedInput(br, "금액 ▶ ")));
+        dto.setContent(InputHandler.getValidatedInput(br, "내용 ▶ "));
+        dto.setVendor_name(InputHandler.getInput(br, "업체명 ▶ "));
+        dto.setProof_type(InputHandler.getValidatedInput(br, "증빙 ▶ "));
+        dto.setMemo(InputHandler.getInput(br, "메모 ▶ "));
 
         try {
             fundDAO.insertRecord(dto);
@@ -95,6 +95,14 @@ public class Project_FundUI {
             input = br.readLine(); if (!input.isEmpty()) dto.setProof_type(input);
             System.out.print("메모 (" + dto.getMemo() + ") ▶ "); 
             input = br.readLine(); if (!input.isEmpty()) dto.setMemo(input);
+            
+            /*
+            FundManagementDTO p_dto = fundDAO.findByFundCode(fcode); // 이전 객체
+            dto = new FundManagementDTO();
+            
+            dto.setCharger_name(InputHandler.getValidatedInput(br, "담당자 이름 (" + dto.getCharger_name() + ") ▶ ", p_dto.getCharger_name()));
+            dto.setCategory(InputHandler.getValidatedInput(br, "분류 (" + dto.getCategory() + ") ▶ ", p_dto.getCategory()));
+            */
 
             fundDAO.updateRecord(dto);
             
