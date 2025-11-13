@@ -25,7 +25,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 
             String sql = """
             	    INSERT INTO researcher_role(project_code, researcher_code, role, start_date, end_date)
-            	    VALUES(?, ?, ?, DATE(?, 'YYYY-MM-DD'), DATE(?, 'YYYY-MM-DD'))
+            	    VALUES(?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'))
             	""";
 
             pstmt = conn.prepareStatement(sql);
@@ -88,7 +88,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
     }
 
 	@Override
-	public List<ResearcherRoleDTO> listRole(String code) {
+	public List<ResearcherRoleDTO> listRole(String code) throws SQLException{
 		List<ResearcherRoleDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -96,7 +96,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 		
 		try {
 			sql = "SELECT project_code, researcher_code, role, start_date, end_date"
-					+ "FROM Researcher_Role WHERE project_code = ?";
+					+ " FROM Researcher_Role WHERE project_code = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, code);
@@ -117,6 +117,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			DBUtil.close(rs);
 			DBUtil.close(pstmt);

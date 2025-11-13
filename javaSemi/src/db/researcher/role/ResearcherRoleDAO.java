@@ -8,7 +8,7 @@ public interface ResearcherRoleDAO {
 	public void updateResearcherRoleDAO(ResearcherRoleDTO dto) throws SQLException;
 	public void deleteResearcherRoleDAO(String pCode, String rCode) throws SQLException;
 	
-	public List<ResearcherRoleDTO> listRole(String code);
+	public List<ResearcherRoleDTO> listRole(String code) throws SQLException;
 	boolean isProjectIncludeRes(String pCode, String rCode) throws SQLException;
 
 }
