@@ -125,10 +125,11 @@ public class ResearcherDAOImpl implements ResearcherDAO {
 
 	@Override
 	public boolean isOrgIncludeRes(String oCode, String rCode) throws SQLException {
-		String sql = "SELECT name FROM Researcher WHERE researcher_code=?";
+		String sql = "SELECT name FROM Researcher WHERE researcher_code = ? AND org_code = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, rCode);
+            pstmt.setString(2, oCode);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return true;
