@@ -166,8 +166,7 @@ public class Project_PerformanceUI {
 	// 기존 성과 삭제하기.
 	public void deletePerformance()  {
 		try {
-			System.out.print("삭제할 성과코드 입력 ▶ ");
-			String code = br.readLine();
+			String code = InputHandler.getOptionalInput(br, "삭제할 성과코드 입력 ▶ ");
 
 			// 성과 목록에 있는지 체크
 			if (!dao.isPerformnace(code, projectCode)) {

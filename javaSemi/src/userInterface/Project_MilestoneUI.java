@@ -152,8 +152,7 @@ public class Project_MilestoneUI {
 	public void deleteMilestone() {
 		try {
 
-			System.out.print("삭제할 마일스톤 코드 입력 ▶ ");
-			String code = br.readLine();
+			String code = InputHandler.getOptionalInput(br, "삭제할 마일스톤 코드 입력 ▶ ");
 
 			// 기관 체크
 			if (!milestoneDAO.isMilestoneBelongsToOrg(code, projectCode)) {
