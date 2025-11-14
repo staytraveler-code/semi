@@ -41,7 +41,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 
 			pstmt.executeUpdate();
 
-			conn.commit();
+			conn.setAutoCommit(true);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			
 			pstmt.executeUpdate();
 	
-			conn.commit();
+			conn.setAutoCommit(false);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -105,7 +105,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		String sql;
 		
 		try {
-			conn.setAutoCommit(false);
+			conn.commit();
 
 			sql = "DELETE FROM organization WHERE id = ?";
 			
@@ -115,8 +115,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			
 			pstmt.executeUpdate();
 
-			
-			conn.commit();
+		
 
 		} catch (SQLException e) {
 			e.printStackTrace();
