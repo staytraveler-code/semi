@@ -94,6 +94,24 @@ public class Project_ResearcherUI {
 
     private void addProjectResearcher() {
         try {
+        	
+        	List<ResearcherDTO> list = researcherDAO.listResearchersByOrg(orgCode);
+
+            if (list.isEmpty()) {
+                System.out.println("⚠️ 등록된 연구원이 없습니다.\n");
+                return;
+            }
+
+            System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                    		   "연구원코드", "이름", "전화번호", "이메일");
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
+
+            for (ResearcherDTO r : list) {
+                System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                        r.getResearcherCode(), r.getName(), r.getTel(), r.getEmail());
+            }
+            System.out.println();
+        	
             ResearcherRoleDTO dto = new ResearcherRoleDTO();
             System.out.print("연구원 코드 : ");
             String rCode = br.readLine();

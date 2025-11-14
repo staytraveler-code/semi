@@ -47,7 +47,7 @@ public class Project_FundUI {
         dto.setRcode(InputHandler.getValidatedInput(br, "연구원 코드 ▶ "));
         dto.setCharger_name(InputHandler.getValidatedInput(br, "담당자 이름 ▶ "));
         dto.setCategory(InputHandler.getValidatedInput(br, "분류 ▶ "));
-        dto.setDate_used(InputHandler.getValidatedInput(br, "사용일 (YYYY-MM-DD) ▶ "));
+        dto.setDate_used(InputHandler.getValidatedDateInput(br, "사용일 (YYYY-MM-DD) ▶ "));
         dto.setExpense(Long.parseLong(InputHandler.getValidatedInput(br, "금액 ▶ ")));
         dto.setContent(InputHandler.getValidatedInput(br, "내용 ▶ "));
         dto.setVendor_name(InputHandler.getInput(br, "업체명 ▶ "));
