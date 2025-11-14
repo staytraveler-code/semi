@@ -19,7 +19,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 	public void insertOrganization(OrganizationDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		try {
-			conn.setAutoCommit(true); 
+		
 
 			String sql = """
 					    INSERT INTO organization(
@@ -63,7 +63,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		String sql;
 		
 		try {
-			conn.setAutoCommit(false);
+			conn.commit();
 
 			sql = """
 					    UPDATE organization
@@ -83,7 +83,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			
 			pstmt.executeUpdate();
 	
-			conn.setAutoCommit(false);
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
