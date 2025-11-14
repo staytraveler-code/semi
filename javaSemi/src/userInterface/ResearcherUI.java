@@ -27,7 +27,7 @@ public class ResearcherUI {
         while (true) {
         	System.out.println();
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
-            System.out.println("                 [ " + orgCode + " ] 연구원 정보 관리");
+            System.out.println("                        [ " + orgCode + " ] 연구원 정보 관리");
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             printResearcherList();
 
@@ -105,7 +105,7 @@ public class ResearcherUI {
         try {
             String rCode = InputHandler.getOptionalInput(br, "수정할 연구원 코드 ▶ ");
 
-            if (researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
+            if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
                 SleepUtil.sleep(2000);
                 return;
@@ -117,9 +117,9 @@ public class ResearcherUI {
             System.out.println("[ " + rCode + " ] 정보 수정 (Enter: 기존값 유지)");
             System.out.println("⚠️ 괄호 안의 정보는 현재 저장된 정보입니다.");
 
-            input = InputHandler.getRequiredInput(br,  "이름 (" + dto.getName() + ") ▶ ");
+            input = InputHandler.getOptionalInput(br,  "이름 (" + dto.getName() + ") ▶ ");
             if (!input.isBlank()) dto.setName(input);
-            input = InputHandler.getRequiredTelInput(br,  "전화번호 (" + dto.getTel() + ") ▶ ");
+            input = InputHandler.getOptionalTelInput(br,  "전화번호 (" + dto.getTel() + ") ▶ ");
             if (!input.isBlank()) dto.setTel(input);
             input = InputHandler.getOptionalInput(br,  "이메일 (" + dto.getEmail() + ") ▶ ");
             if (!input.isBlank()) dto.setEmail(input);
@@ -137,7 +137,7 @@ public class ResearcherUI {
         try {
         	String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
 
-            if (researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
+            if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
                 SleepUtil.sleep(2000);
                 return;

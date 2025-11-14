@@ -87,7 +87,6 @@ public class InputHandler {
         String input = "";
         
         while (true) {
-            System.out.print(prompt);
             input = getRequiredInput(br, prompt);
 
             if (input.matches(phoneRegex)) {
