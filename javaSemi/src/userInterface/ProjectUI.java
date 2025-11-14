@@ -146,7 +146,7 @@ public class ProjectUI {
 	private void managePerformance(String projectId) {
 		try {
 			while (true) {
-				projectPerformance.setOrgCode(orgCode);
+//				projectPerformance.setOrgCode(orgCode); 사용안하는중
 				projectPerformance.setProjectCode(projectId);
 				projectPerformance.printPerformanceList();
 				System.out.println("""

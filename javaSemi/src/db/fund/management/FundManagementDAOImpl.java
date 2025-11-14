@@ -21,23 +21,22 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		try {
 			conn.setAutoCommit(false);
 			
-			sql = "INSERT INTO Fund_Management(fund_code, project_code, researcher_code,"
-					+ "charger_name, category, date_used, expense, content, vendor_name,"
+			sql = "INSERT INTO Fund_Management(fund_code, project_code, researcher_code, "
+					+ "category, date_used, expense, content, vendor_name, "
 					+ "proof_type, memo) "
-					+ "VALUES ('F' || LPAD(fund_management_fund_code_seq.NEXTVAL, 4, '0'), ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?)";
+					+ "VALUES ('F' || LPAD(fund_management_fund_code_seq.NEXTVAL, 4, '0'), ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getPcode());
 			pstmt.setString(2, dto.getRcode());
-			pstmt.setString(3, dto.getCharger_name());
-			pstmt.setString(4, dto.getCategory());
-			pstmt.setString(5, dto.getDate_used());
-			pstmt.setLong(6, dto.getExpense());
-			pstmt.setString(7, dto.getContent());
-			pstmt.setString(8, dto.getVendor_name());
-			pstmt.setString(9, dto.getProof_type());
-			pstmt.setString(10, dto.getMemo());
+			pstmt.setString(3, dto.getCategory());
+			pstmt.setString(4, dto.getDate_used());
+			pstmt.setLong(5, dto.getExpense());
+			pstmt.setString(6, dto.getContent());
+			pstmt.setString(7, dto.getVendor_name());
+			pstmt.setString(8, dto.getProof_type());
+			pstmt.setString(9, dto.getMemo());
 
 			pstmt.executeUpdate();
 
@@ -67,7 +66,6 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			sql = "UPDATE Fund_Management SET " 
 					+ "project_code = ?,"
 					+ "researcher_code = ?,"
-					+ "charger_name = ?,"
 					+ "category = ?,"
 					+ "date_used = TO_DATE(?, 'YYYY-MM-DD'),"
 					+ "expense = ?,"
@@ -81,15 +79,14 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 			
 			pstmt.setString(1, dto.getPcode());
 			pstmt.setString(2, dto.getRcode());
-			pstmt.setString(3, dto.getCharger_name());
-			pstmt.setString(4, dto.getCategory());
-			pstmt.setString(5, dto.getDate_used());
-			pstmt.setLong(6, dto.getExpense());
-			pstmt.setString(7, dto.getContent());
-			pstmt.setString(8, dto.getVendor_name());
-			pstmt.setString(9, dto.getProof_type());
-			pstmt.setString(10, dto.getMemo());
-			pstmt.setString(11, dto.getFcode());
+			pstmt.setString(3, dto.getCategory());
+			pstmt.setString(4, dto.getDate_used());
+			pstmt.setLong(5, dto.getExpense());
+			pstmt.setString(6, dto.getContent());
+			pstmt.setString(7, dto.getVendor_name());
+			pstmt.setString(8, dto.getProof_type());
+			pstmt.setString(9, dto.getMemo());
+			pstmt.setString(10, dto.getFcode());
 
 			pstmt.executeUpdate();
 
@@ -145,9 +142,10 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		String sql;
 		
 		try {
-			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+			sql = "SELECT fund_code, project_code, f.researcher_code, r.name, category,"
 					+ "date_used, expense, content, vendor_name, proof_type, memo "
-					+ "FROM Fund_Management ORDER BY fund_code";
+					+ "FROM Fund_Management f JOIN Researcher r ON f.researcher_code = r.researcher_code "
+					+ "ORDER BY fund_code";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -159,7 +157,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
-				dto.setCharger_name(rs.getString("charger_name"));
+				dto.setCharger_name(rs.getString("name"));
 				dto.setCategory(rs.getString("category"));
 				dto.setDate_used(rs.getDate("date_used").toString());
 				dto.setExpense(rs.getLong("expense"));
@@ -188,7 +186,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		String sql;
 		
 		try {
-			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+			sql = "SELECT fund_code, project_code, researcher_code, category,"
 					+ "date_used, expense, content, vendor_name, proof_type, memo "
 					+ "FROM Fund_Management WHERE fund_code = ?";
 
@@ -203,7 +201,6 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
-				dto.setCharger_name(rs.getString("charger_name"));
 				dto.setCategory(rs.getString("category"));
 				dto.setDate_used(rs.getDate("date_used").toString());
 				dto.setExpense(rs.getLong("expense"));
@@ -230,9 +227,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		String sql;
 		
 		try {
-			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
-					+ "date_used, expense, content, vendor_name, proof_type, memo "
-					+ "FROM Fund_Management WHERE fund_code = ? AND project_code = ?";
+			sql = "SELECT fund_code FROM Fund_Management WHERE fund_code = ? AND project_code = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, fcode);
@@ -262,9 +257,11 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 		String sql;
 		
 		try {
-			sql = "SELECT fund_code, project_code, researcher_code, charger_name, category,"
+			sql = "SELECT fund_code, project_code, f.researcher_code, r.name, category,"
 					+ "date_used, expense, content, vendor_name, proof_type, memo "
-					+ "FROM Fund_Management WHERE project_code = ? ORDER BY fund_code";
+					+ "FROM Fund_Management f JOIN Researcher r ON f.researcher_code = r.researcher_code "
+					+ "WHERE project_code = ? "
+					+ "ORDER BY fund_code";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, code);
@@ -277,7 +274,7 @@ public class FundManagementDAOImpl implements FundManagementDAO{
 				dto.setFcode(rs.getString("fund_code"));
 				dto.setPcode(rs.getString("project_code"));
 				dto.setRcode(rs.getString("researcher_code"));
-				dto.setCharger_name(rs.getString("charger_name"));
+				dto.setCharger_name(rs.getString("name"));
 				dto.setCategory(rs.getString("category"));
 				dto.setDate_used(rs.getDate("date_used").toString());
 				dto.setExpense(rs.getLong("expense"));

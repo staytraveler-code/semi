@@ -124,8 +124,8 @@ public class Project_ResearcherUI {
             dto.setProjectCode(projectCode);
             dto.setResearcherCode(rCode);
             
-            dto.setRole(InputHandler.getRequiredInput(br, "역할 ▶"));
-            dto.setStartDate(InputHandler.getRequiredDateInput(br, "참여 시작 일자(YYYY-MM-DD) ▶"));
+            dto.setRole(InputHandler.getRequiredInput(br, "역할 ▶ "));
+            dto.setStartDate(InputHandler.getRequiredDateInput(br, "참여 시작 일자(YYYY-MM-DD) ▶ "));
             dto.setEndDate(InputHandler.getRequiredDateInput(br, "참여 종료 일자(YYYY-MM-DD) ▶ "));
 
             roleDAO.insertResearcherRoleDAO(dto);
