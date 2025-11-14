@@ -130,7 +130,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		}
 	}
 
-
+	
 	@Override
 	public OrganizationDTO selectRecord(String id) throws SQLException {
 		PreparedStatement pstmt = null;
