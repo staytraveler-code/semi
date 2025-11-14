@@ -7,6 +7,12 @@ import java.time.format.DateTimeParseException;
 
 public class InputHandler {
 	
+	private static String phoneRegex = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
+	// 010-1234-5678, 02-123-4567, 031-1234-5678 등
+	
+	private static String brnRegex = "^\\d{3}-\\d{2}-\\d{5}$";
+	// 사업자등록번호 정규표현식 ( ex. 000-00-00000 )
+	
 	/**
      * 사용자에게 메시지를 보여주고, 빈 값이 아닌 유효한 입력을 받을 때까지
      * 반복해서 입력을 요청하는 메소드
@@ -17,7 +23,7 @@ public class InputHandler {
      * @throws IOException
      */
 	
-    public static String getValidatedInput(BufferedReader br, String prompt) throws IOException {
+    public static String getRequiredInput(BufferedReader br, String prompt) throws IOException {
         String input = ""; // 반환할 변수
         
         while (true) {
@@ -45,7 +51,7 @@ public class InputHandler {
      * @throws IOException
      */
     
-	public static String getValidatedInput(BufferedReader br, String prompt, String defaultValue) throws IOException {
+	public static String getRequiredInput(BufferedReader br, String prompt, String defaultValue) throws IOException {
 		String input = "";
 
 		System.out.print(prompt);
@@ -67,7 +73,7 @@ public class InputHandler {
      * @throws IOException
      */
 	
-	public static String getInput(BufferedReader br, String prompt) throws IOException {
+	public static String getOptionalInput(BufferedReader br, String prompt) throws IOException {
 		String input = "";
 
 		System.out.print(prompt);
@@ -76,16 +82,13 @@ public class InputHandler {
 		return input.trim();
 	}
 
-	// 전화번호 입력 메소드
-	public static String getValidatedTelInput(BufferedReader br, String prompt) throws IOException {
-
-		// 010-1234-5678, 02-123-4567, 031-1234-5678 등
-        String phoneRegex = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
+	// 전화번호 입력 메소드 ( 필수 )
+	public static String getRequiredTelInput(BufferedReader br, String prompt) throws IOException {
         String input = "";
         
         while (true) {
             System.out.print(prompt);
-            input = getValidatedInput(br, prompt);
+            input = getRequiredInput(br, prompt);
 
             if (input.matches(phoneRegex)) {
                 return input;
@@ -95,12 +98,32 @@ public class InputHandler {
         }
 	}
 	
-	// 날짜 입력 메소드
-	public static String getValidatedDateInput(BufferedReader br, String prompt) throws IOException {
+	// 전화번호 입력 메소드 ( 선택 )
+	public static String getOptionalTelInput(BufferedReader br, String prompt) throws IOException {
+		String input = "";
+
+		while (true) {
+			System.out.print(prompt);
+			input = br.readLine();
+
+			if (input == null || input.trim().isEmpty()) {
+				return input; // 공백 입력 시 그대로 공백 반환
+			}
+			
+			if (input.matches(phoneRegex)) {
+				return input; // 공백이 아니라면 형식에 맞는지 확인
+			}
+
+			System.out.println("⚠️ 전화번호 형식이 올바르지 않습니다.");
+		}
+	}
+	
+	// 날짜 입력 메소드 ( 필수 )
+	public static String getRequiredDateInput(BufferedReader br, String prompt) throws IOException {
 		
 		String input = "";
 		while (true) {
-            input = getValidatedInput(br, prompt);
+            input = getRequiredInput(br, prompt);
 
             try {
                 // LocalDate.parse는 YYYY-MM-DD 형식을 기본으로 사용합니다.
@@ -116,15 +139,34 @@ public class InputHandler {
         }
 	}
 	
-	// 사업자등록번호 입력 메소드
-	public static String getValidatedBizRegInput(BufferedReader br, String prompt) throws IOException {
-		
-		// 사업자등록번호 정규표현식 ( ex. 000-00-00000 )
-		String brnRegex = "^\\d{3}-\\d{2}-\\d{5}$";
+	// 날짜 입력 메소드 ( 선택 )
+	public static String getOptionalDateInput(BufferedReader br, String prompt) throws IOException {
+
+		String input = "";
+		while (true) {
+			System.out.print(prompt);
+			input = br.readLine();
+			
+			if (input == null || input.trim().isEmpty()) {
+				return input; // 공백 입력 시 그대로 공백 반환
+			}
+
+			try {
+				LocalDate.parse(input);
+				return input;
+
+			} catch (DateTimeParseException e) {
+				System.out.println("⚠️ 날짜 형식이 올바르지 않거나 유효하지 않은 날짜입니다. (ex. YYYY-MM-DD)");
+			}
+		}
+	}
+	
+	// 사업자등록번호 입력 메소드 ( 필수 )
+	public static String getRequiredBizRegInput(BufferedReader br, String prompt) throws IOException {
 		String input = "";
         
         while (true) {
-            input = getValidatedInput(br, prompt);
+            input = getRequiredInput(br, prompt);
             
             if (input.matches(brnRegex)) {
                 return input;
@@ -132,6 +174,26 @@ public class InputHandler {
             
             System.out.println("⚠️ 사업자등록번호 형식이 올바르지 않습니다. (ex. 123-45-67890)");
         }
+	}
+	
+	// 사업자등록번호 입력 메소드 ( 선택 )
+	public static String getOptionalBizRegInput(BufferedReader br, String prompt) throws IOException {
+		String input = "";
+
+		while (true) {
+			System.out.print(prompt);
+			input = br.readLine();
+
+			if (input == null || input.trim().isEmpty()) {
+				return input; // 공백 입력 시 그대로 공백 반환
+			}
+
+			if (input.matches(brnRegex)) {
+				return input; // 공백이 아니라면 형식에 맞는지 확인
+			}
+
+			System.out.println("⚠️ 전화번호 형식이 올바르지 않습니다.");
+		}
 	}
 	
 }

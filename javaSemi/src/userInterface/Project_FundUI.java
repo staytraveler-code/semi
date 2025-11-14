@@ -44,15 +44,15 @@ public class Project_FundUI {
     public void addFundUsage() throws IOException {
         FundManagementDTO dto = new FundManagementDTO();
         dto.setPcode(projectCode);
-        dto.setRcode(InputHandler.getValidatedInput(br, "연구원 코드 ▶ "));
-        dto.setCharger_name(InputHandler.getValidatedInput(br, "담당자 이름 ▶ "));
-        dto.setCategory(InputHandler.getValidatedInput(br, "분류 ▶ "));
-        dto.setDate_used(InputHandler.getValidatedDateInput(br, "사용일 (YYYY-MM-DD) ▶ "));
-        dto.setExpense(Long.parseLong(InputHandler.getValidatedInput(br, "금액 ▶ ")));
-        dto.setContent(InputHandler.getValidatedInput(br, "내용 ▶ "));
-        dto.setVendor_name(InputHandler.getInput(br, "업체명 ▶ "));
-        dto.setProof_type(InputHandler.getValidatedInput(br, "증빙 ▶ "));
-        dto.setMemo(InputHandler.getInput(br, "메모 ▶ "));
+        dto.setRcode(InputHandler.getRequiredInput(br, "연구원 코드 ▶ "));
+        dto.setCharger_name(InputHandler.getRequiredInput(br, "담당자 이름 ▶ "));
+        dto.setCategory(InputHandler.getRequiredInput(br, "분류 ▶ "));
+        dto.setDate_used(InputHandler.getRequiredDateInput(br, "사용일 (YYYY-MM-DD) ▶ "));
+        dto.setExpense(Long.parseLong(InputHandler.getRequiredInput(br, "금액 ▶ ")));
+        dto.setContent(InputHandler.getRequiredInput(br, "내용 ▶ "));
+        dto.setVendor_name(InputHandler.getOptionalInput(br, "업체명 ▶ "));
+        dto.setProof_type(InputHandler.getRequiredInput(br, "증빙 ▶ "));
+        dto.setMemo(InputHandler.getOptionalInput(br, "메모 ▶ "));
 
         try {
             fundDAO.insertRecord(dto);
@@ -79,29 +79,29 @@ public class Project_FundUI {
             dto = fundDAO.findByFundCode(fcode);
             String input;
 
-            System.out.print("담당자 이름 (" + dto.getCharger_name() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setCharger_name(input);
-            System.out.print("분류 (" + dto.getCategory() + ") ▶ ");
-            input = br.readLine(); if (!input.isEmpty()) dto.setCategory(input);
-            System.out.print("사용일 (" + dto.getDate_used() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setDate_used(input);
-            System.out.print("금액 (" + dto.getExpense() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setExpense(Long.parseLong(input));
-            System.out.print("내용 (" + dto.getContent() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setContent(input);
-            System.out.print("업체명 (" + dto.getVendor_name() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setVendor_name(input);
-            System.out.print("증빙 (" + dto.getProof_type() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setProof_type(input);
-            System.out.print("메모 (" + dto.getMemo() + ") ▶ "); 
-            input = br.readLine(); if (!input.isEmpty()) dto.setMemo(input);
+            input = InputHandler.getOptionalInput(br, "담당자 이름 (" + dto.getCharger_name() + ") ▶ ");
+            if (!input.isEmpty()) dto.setCharger_name(input);
+            input = InputHandler.getOptionalInput(br, "분류 (" + dto.getCategory() + ") ▶ ");
+            if (!input.isEmpty()) dto.setCategory(input);
+            input = InputHandler.getOptionalDateInput(br, "사용일 (" + dto.getDate_used() + ") ▶ ");
+            if (!input.isEmpty()) dto.setDate_used(input);
+            input = InputHandler.getOptionalInput(br, "금액 (" + dto.getExpense() + ") ▶ ");
+            if (!input.isEmpty()) dto.setExpense(Long.parseLong(input));
+            input = InputHandler.getOptionalInput(br, "내용 (" + dto.getContent() + ") ▶ ");
+            if (!input.isEmpty()) dto.setContent(input);
+            input = InputHandler.getOptionalInput(br, "업체명 (" + dto.getVendor_name() + ") ▶ "); 
+            if (!input.isEmpty()) dto.setVendor_name(input);
+            input = InputHandler.getOptionalInput(br, "증빙 (" + dto.getProof_type() + ") ▶ "); 
+            if (!input.isEmpty()) dto.setProof_type(input);
+            input = InputHandler.getOptionalInput(br, "메모 (" + dto.getMemo() + ") ▶ "); 
+            if (!input.isEmpty()) dto.setMemo(input);
             
             /*
             FundManagementDTO p_dto = fundDAO.findByFundCode(fcode); // 이전 객체
             dto = new FundManagementDTO();
             
-            dto.setCharger_name(InputHandler.getValidatedInput(br, "담당자 이름 (" + dto.getCharger_name() + ") ▶ ", p_dto.getCharger_name()));
-            dto.setCategory(InputHandler.getValidatedInput(br, "분류 (" + dto.getCategory() + ") ▶ ", p_dto.getCategory()));
+            dto.setCharger_name(InputHandler.getRequiredInput(br, "담당자 이름 (" + dto.getCharger_name() + ") ▶ ", p_dto.getCharger_name()));
+            dto.setCategory(InputHandler.getRequiredInput(br, "분류 (" + dto.getCategory() + ") ▶ ", p_dto.getCategory()));
             */
 
             fundDAO.updateRecord(dto);
