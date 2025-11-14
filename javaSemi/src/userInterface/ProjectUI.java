@@ -67,32 +67,6 @@ public class ProjectUI {
 		}
 	}
 
-	// 과제 목록 출력
-	private void printProjectList() {
-		List<ProjectDTO> projects = projectDAO.getProjectsByOrganization(orgCode);
-
-		if (projects.isEmpty()) {
-			System.out.println("⚠️ 등록된 과제가 없습니다.");
-			// 잠시 정지
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			return;
-		}
-
-		System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %-10s%n", "과제코드", "과제명", "기관코드", "단계", "상태", "예산");
-		System.out.println(
-				"────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
-
-		for (ProjectDTO p : projects) {
-			System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %,10d%n", p.getProjectCode(),
-					truncate(p.getTitle(), 30), p.getOrgCode(), p.getStage(), p.getStatus(), p.getBudget());
-		}
-		System.out.println();
-	}
-
 	// 과제 상세 관리 메뉴
 	private void showProjectMenu(String projectId) {
 		try {
@@ -127,11 +101,66 @@ public class ProjectUI {
 		}
 	}
 
+	// 과제 목록 출력
+	private void printProjectList() {
+		List<ProjectDTO> projects = projectDAO.getProjectsByOrganization(orgCode);
+
+		if (projects.isEmpty()) {
+			System.out.println("⚠️ 등록된 과제가 없습니다.");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			return;
+		}
+
+		System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %-15s%n", "과제코드", "과제명", "기관코드", "단계", "상태", "예산");
+		System.out.println(
+				"────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+
+		for (ProjectDTO p : projects) {
+			System.out.printf("%-10s │ %-30s │ %-10s │ %-10s │ %-10s │ %,15d%n", p.getProjectCode(),
+					truncate(p.getTitle(), 30), p.getOrgCode(), p.getStage(), p.getStatus(), p.getBudget());
+		}
+		System.out.println();
+	}
+
 	// 과제 상세 정보
 	private void showProjectDetail(String projectId) {
 		try {
-			System.out.println("이곳에 과제 상세가 뜹니다");
-			
+			ProjectDTO dto = projectDAO.getProjectDetail(projectId);
+
+			if (dto == null) {
+				System.out.println("해당 과제 정보를 찾을 수 없습니다.");
+				return;
+			}
+
+			System.out.println("과제 코드        : " + dto.getProjectCode());
+			System.out.println("기관 코드        : " + dto.getOrgCode());
+			System.out.println("과제명           : " + dto.getTitle());
+			System.out.println("단계            : " + dto.getStage());
+			System.out.println("상태            : " + dto.getStatus());
+			System.out.printf("예산             : %,d%n", dto.getBudget());
+			System.out.println("시작일          : " + (dto.getStartDate() != null ? dto.getStartDate().toString() : "N/A"));
+			System.out.println("종료일          : " + (dto.getEndDate() != null ? dto.getEndDate().toString() : "N/A"));
+			System.out.println(
+					"부처           : " + (dto.getMinistryName() == null || dto.getMinistryName().isBlank() ? "없음"
+							: dto.getMinistryName()));
+			System.out.println(
+					"협약기관          : " + (dto.getPartnerOrgName() == null || dto.getPartnerOrgName().isBlank() ? "없음"
+							: dto.getPartnerOrgName()));
+
+			int total = dto.getTotalMilestones();
+			int completed = dto.getCompletedMilestones();
+			double ratio = dto.getProgressRatio() * 100.0;
+
+			if (total == 0) {
+				System.out.println("등록된 마일스톤 없음 - 진행도 측정 불가");
+			} else {
+				System.out.printf("진행도            : %d / %d (%.2f%%)%n", completed, total, ratio);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,7 +175,6 @@ public class ProjectUI {
 	private void managePerformance(String projectId) {
 		try {
 			while (true) {
-//				projectPerformance.setOrgCode(orgCode); 사용안하는중
 				projectPerformance.setProjectCode(projectId);
 				projectPerformance.printPerformanceList();
 				System.out.println("""
@@ -156,7 +184,7 @@ public class ProjectUI {
 						    0. 뒤로가기
 						""");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
-					
+
 				switch (input) {
 				case "1" -> projectPerformance.addPerformance();
 				case "2" -> projectPerformance.updatePerformance();
@@ -188,7 +216,7 @@ public class ProjectUI {
 						    0. 뒤로가기
 						""");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
-				
+
 				switch (input) {
 				case "1" -> projectFund.addFundUsage();
 				case "2" -> projectFund.updateFundUsage();
@@ -218,7 +246,7 @@ public class ProjectUI {
 						    0. 뒤로가기
 						""");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
-				
+
 				switch (input) {
 				case "1" -> personnelExpensesUI.addPersonnelExpenses();
 				case "2" -> personnelExpensesUI.updatePersonnelExpenses();
@@ -249,7 +277,7 @@ public class ProjectUI {
 						    0. 뒤로가기
 						""");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
-				
+
 				switch (input) {
 				case "1" -> projectMilestone.addMilestone();
 				case "2" -> projectMilestone.updateMilestone();

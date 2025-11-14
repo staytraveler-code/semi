@@ -155,6 +155,34 @@ public class MilestoneDAO {
 
 		return false;
 	}
+	
+	// 총 마일스톤 개수 반환
+	public int countTotalMilestones(String projectCode) throws Exception {
+		String sql = "SELECT COUNT(*) FROM Milestone WHERE project_code = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, projectCode);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		}
+		return 0;
+	}
+
+	// 완료된 마일스톤 개수 반환
+	public int countCompletedMilestones(String projectCode) throws Exception {
+		String sql = "SELECT COUNT(*) FROM Milestone WHERE project_code = ? AND status = '완료'";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, projectCode);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		}
+		return 0;
+	}
 
 //	private java.sql.Date parseDate(String dateStr, String existingDate) {
 //		if (dateStr == null || dateStr.isBlank())

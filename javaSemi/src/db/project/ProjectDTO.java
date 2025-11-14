@@ -12,6 +12,12 @@ public class ProjectDTO {
     private Date startDate;
     private Date endDate;
 
+    private String ministryName;     
+    private String partnerOrgName;   
+
+    private int totalMilestones;      // 전체 마일스톤 수
+    private int completedMilestones;  // 완료된 마일스톤 수
+
     public String getProjectCode() { return projectCode; }
     public void setProjectCode(String projectCode) { this.projectCode = projectCode; }
 
@@ -35,4 +41,22 @@ public class ProjectDTO {
 
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
+
+    public String getMinistryName() { return ministryName; }
+    public void setMinistryName(String ministryName) { this.ministryName = ministryName; }
+
+    public String getPartnerOrgName() { return partnerOrgName; }
+    public void setPartnerOrgName(String partnerOrgName) { this.partnerOrgName = partnerOrgName; }
+
+    public int getTotalMilestones() { return totalMilestones; }
+    public void setTotalMilestones(int totalMilestones) { this.totalMilestones = totalMilestones; }
+
+    public int getCompletedMilestones() { return completedMilestones; }
+    public void setCompletedMilestones(int completedMilestones) { this.completedMilestones = completedMilestones; }
+
+    // 편의 메소드: 진행도 비율(0.0 ~ 1.0)
+    public double getProgressRatio() {
+        if (totalMilestones <= 0) return 0.0;
+        return (double) completedMilestones / totalMilestones;
+    }
 }
