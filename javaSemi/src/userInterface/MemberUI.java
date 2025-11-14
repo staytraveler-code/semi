@@ -48,14 +48,15 @@ public class MemberUI {
             }
 
             System.out.println("===== 회원 정보 =====");
-            System.out.println("ID       : " + dto.getOrgId());
-            System.out.println("이름     : " + dto.getOrgName());
-            System.out.println("기관 유형 : " + dto.getOrgType());
-            System.out.println("사업자번호: " + dto.getBizRegNo());
-            System.out.println("전화번호 : " + dto.getOrgTel());
-            System.out.println("이메일   : " + dto.getOrgEmail());
-            System.out.println("주소     : " + dto.getOrgAddress());
-            System.out.println("====================\n");
+            System.out.printf("ID: %s | 이름: %s | 기관 유형: %s | 사업자번호: %s | 전화번호: %s | 이메일: %s | 주소: %s%n",
+                    dto.getOrgId(),
+                    dto.getOrgName(),
+                    dto.getOrgType(),
+                    dto.getBizRegNo(),
+                    dto.getOrgTel(),
+                    dto.getOrgEmail(),
+                    dto.getOrgAddress());
+          
 
         } catch (Exception e) {
             System.out.println("⚠️ 회원 정보 조회 실패: " + e.getMessage());
@@ -70,41 +71,23 @@ public class MemberUI {
                 return;
             }
 
-            System.out.println("회원 정보 수정 (Enter: 기존값 유지)");
-            System.out.println("------------------------------");
-
-            System.out.println("현재 이름: " + dto.getOrgName());
-            System.out.print("이름 ▶ ");
-            String newName = br.readLine();
-            if (!newName.isBlank()) dto.setOrgName(newName);
+            System.out.println(" === 회원 정보 수정 === ");
             
-         
-            System.out.println("현재 기관유형: " + dto.getOrgType());
-            System.out.print("기관유형 ▶ ");
-            String newType = br.readLine();
-            if (!newType.isBlank()) dto.setOrgType(newType);
+            String input = InputHandler.getOptionalInput(br, "현재 이름: " + dto.getOrgName() + " ▶ ");
+            if (!input.isBlank()) dto.setOrgName(input);
+            input = InputHandler.getOptionalInput(br, "현재 기관유형: " + dto.getOrgType() + " ▶ ");
+            if (!input.isBlank()) dto.setOrgType(input);
+            input = InputHandler.getOptionalTelInput(br, "현재 전화번호: " + dto.getOrgTel() + " ▶ ");
+            if (!input.isBlank()) dto.setOrgTel(input);
+            input = InputHandler.getOptionalInput(br, "현재 이메일: " + dto.getOrgEmail() + " ▶ ");
+            if (!input.isBlank()) dto.setOrgEmail(input);
+            input = InputHandler.getOptionalInput(br, "현재 주소: " + dto.getOrgAddress() + " ▶ ");
+            if (!input.isBlank()) dto.setOrgAddress(input);
             
-            // 사업자번호 수정 불가능
-            System.out.println("사업자번호: " +  dto.getBizRegNo());
-
-            System.out.println("현재 전화번호: " + dto.getOrgTel());
-            System.out.print("전화번호 ▶ ");
-            String newTel = br.readLine();
-            if (!newTel.isBlank()) dto.setOrgTel(newTel);
-
-            System.out.println("현재 이메일: " + dto.getOrgEmail());
-            System.out.print("이메일 ▶ ");
-            String newEmail = br.readLine();
-            if (!newEmail.isBlank()) dto.setOrgEmail(newEmail);
-
-            System.out.println("현재 주소: " + dto.getOrgAddress());
-            System.out.print("주소 ▶ ");
-            String newAddress = br.readLine();
-            if (!newAddress.isBlank()) dto.setOrgAddress(newAddress);
-
             organizationDAO.updateOrganization(dto);
-            System.out.println("✅ 회원 정보 수정 완료\n");
-
+            System.out.println("회원 정보 수정 완료 \n");
+            
+           
         } catch (Exception e) {
             System.out.println("⚠️ 회원 정보 수정 실패: " + e.getMessage());
         }
