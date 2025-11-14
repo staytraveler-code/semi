@@ -51,30 +51,20 @@ public class Project_MilestoneUI {
 	// 마일스톤 추가 -- 완료
 	public void addMilestone() {
 		try {
-			// 기관 소속 과제인지 체크
-			//일단 주석 없어도 될것 같
-//			if (!isProjectBelongsToOrg()) { // 과제체크 확인
-//				System.out.println("⚠️ 이 과제는 해당 기관의 과제가 아닙니다.");
-//				return;
-//			}
-
 			MilestoneDTO dto = new MilestoneDTO();
 
+			dto.setpCode(projectCode);
 			dto.setName(InputHandler.getRequiredInput(br, "목표 ▶ "));
 			dto.setDesc(InputHandler.getRequiredInput(br, "내용 ▶ "));
 			dto.setPeDate(InputHandler.getRequiredDateInput(br,"계획완료일 (YYYY-MM-DD) ▶ "));
 			dto.setAeDate(InputHandler.getRequiredDateInput(br,"실제완료일 (YYYY-MM-DD) ▶ "));
 			dto.setStatus(InputHandler.getRequiredInput(br, "상태 ▶ "));
 
-			int result = milestoneDAO.insertMilestone(dto, projectCode);
-			System.out.println(result > 0 ? "✅ 마일스톤 추가 완료!\n" : "⚠️ 추가 실패\n");
+			milestoneDAO.insertMilestone(dto);
+			System.out.println("✅ 마일스톤 추가 완료!\n");
 
-		} catch (SQLException e) {
-			System.out.println("DB작업중 오류발생");
-		} catch (IOException e) {
-			System.out.println("입력중 오류 발생");
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류 발생");
+			System.out.println("⚠️ 마일스톤 추가 실패: " + e.getMessage());
 		}
 	}
 
@@ -118,33 +108,24 @@ public class Project_MilestoneUI {
 			}
 
 			String peInput = InputHandler.getOptionalDateInput(br, "계획완료일(" + target.getPeDate().substring(0,10) + ") ▶ ");
-//					readDateAllowBlank("계획완료일(" + target.getPeDate().substring(0,10) + ") ▶ ", target.getPeDate());
 			if (!peInput.isBlank()) {
 				target.setPeDate(peInput);
 			}
 
 			String aeInput = InputHandler.getOptionalDateInput(br, "실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ "); 
-//					readDateAllowBlank("실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ ", target.getAeDate());
 			if (!aeInput.isBlank()) {
 				target.setAeDate(aeInput);
 			}
 			
 			input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
-//			System.out.print("상태(" + target.getStatus() + ") ▶ ");
-//			input = br.readLine();
 			if (!input.isBlank()) {
 				target.setStatus(input);
 			}
 			int result = milestoneDAO.updateMilestone(target);
 			System.out.println(result > 0 ? "✅ 마일스톤 수정 완료!\n" : "⚠️ 수정 실패\n");
 
-		} catch (IOException e) {
-			System.out.println("입력중 오류발생");
-		} catch (SQLException e) {
-			System.out.println("db작업중 오류발생");
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류발생");
-
+			System.out.println("⚠️ 마일스톤 수정 실패: " + e.getMessage());
 		}
 	}
 

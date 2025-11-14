@@ -44,18 +44,18 @@ public class MilestoneDAO {
 	}
 
 	// 마일스톤 추가 -- 완료
-	public int insertMilestone(MilestoneDTO dto, String projectCode) throws Exception {
+	public int insertMilestone(MilestoneDTO dto) throws Exception {
 		int result = 0;
 		String sql = "INSERT INTO milestone (milestone_code, project_code, name, description, p_end_date, a_end_date, status) "
 				+ "VALUES ('MS_' || LPAD(seq_milestone.NEXTVAL, 3, '0'), ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'), ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
-			pstmt.setString(1, projectCode);
+			pstmt.setString(1, dto.getpCode());
 			pstmt.setString(2, dto.getName());
 			pstmt.setString(3, dto.getDesc());
-			pstmt.setString(4, dto.getPeDate().substring(0,10));
-			pstmt.setString(5, dto.getAeDate().substring(0,10));
+			pstmt.setString(4, dto.getPeDate());
+			pstmt.setString(5, dto.getAeDate());
 			pstmt.setString(6, dto.getStatus());
 
 			result = pstmt.executeUpdate();
