@@ -34,31 +34,31 @@ public class ProjectUI {
 
 	// 과제 선택
 	public void chooseProject() {
+
+		System.out.println(
+				"\n====================================================================================================================================");
+		System.out.println("            과제 리스트");
+		System.out.println(
+				"====================================================================================================================================");
+
+		printProjectList(); // 과제 목록 출력
+
 		try {
-			while (true) {
-				System.out.println(
-						"\n====================================================================================================================================");
-				System.out.println("            과제 리스트");
-				System.out.println(
-						"====================================================================================================================================");
-				printProjectList(); // 과제 목록 출력
+			String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료)"));
 
-				System.out.print("관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) ");
-				String input = br.readLine();
+			if ("0".equals(input))
+				return;
+			if ("00".equals(input))
+				ui.exit();
 
-				if ("0".equals(input))
-					return;
-				if ("00".equals(input))
-					ui.exit();
+			ProjectDTO selected = projectDAO.getProjectsByOrganization(orgCode).stream()
+					.filter(p -> p.getProjectCode().equalsIgnoreCase(input)).findFirst().orElse(null);
 
-				ProjectDTO selected = projectDAO.getProjectsByOrganization(orgCode).stream()
-						.filter(p -> p.getProjectCode().equalsIgnoreCase(input)).findFirst().orElse(null);
-
-				if (selected != null) {
-					showProjectMenu(input);
-				} else {
-					System.out.println("\n⚠️ 존재하지 않는 과제 코드입니다.\n");
-				}
+			if (selected != null) {
+				showProjectMenu(input);
+			} else {
+				System.out.println("\n⚠️ 존재하지 않는 과제 코드입니다.\n");
+				chooseProject();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -127,16 +127,15 @@ public class ProjectUI {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// 과제 상세 정보
-		private void showProjectDetail(String projectId) {
-			try {
-				System.out.println("이곳에 과제 상세가 뜹니다");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private void showProjectDetail(String projectId) {
+		try {
+			System.out.println("이곳에 과제 상세가 뜹니다");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+	}
 
 	// 너무 많으면 줄여
 	private String truncate(String text, int max) {
