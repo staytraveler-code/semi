@@ -38,7 +38,7 @@ public class Project_MilestoneUI {
 
 			for (MilestoneDTO dto : list) {
 				System.out.printf("코드: %s | 목표: %s | 내용: %s | 계획완료: %s | 실제완료: %s | 상태: %s%n", dto.getMileCode(),
-						dto.getName(), dto.getDesc(), dto.getPeDate(), dto.getAeDate(), dto.getStatus());
+						dto.getName(), dto.getDesc(), dto.getPeDate().substring(0,10), dto.getAeDate().substring(0,10), dto.getStatus());
 			}
 			System.out.println(
 					"================================================================================================================================================\n");
@@ -60,14 +60,11 @@ public class Project_MilestoneUI {
 
 			MilestoneDTO dto = new MilestoneDTO();
 
-			System.out.print("목표 ▶ ");
-			dto.setName(br.readLine());
-			System.out.print("내용 ▶ ");
-			dto.setDesc(br.readLine());
-			dto.setPeDate(readDate("계획완료일 (YYYY-MM-DD) ▶ "));
-			dto.setAeDate(readDate("실제완료일 (YYYY-MM-DD) ▶ "));
-			System.out.print("상태 ▶ ");
-			dto.setStatus(br.readLine());
+			dto.setName(InputHandler.getRequiredInput(br, "목표 ▶ "));
+			dto.setDesc(InputHandler.getRequiredInput(br, "내용 ▶ "));
+			dto.setPeDate(InputHandler.getRequiredDateInput(br,"계획완료일 (YYYY-MM-DD) ▶ "));
+			dto.setAeDate(InputHandler.getRequiredDateInput(br,"실제완료일 (YYYY-MM-DD) ▶ "));
+			dto.setStatus(InputHandler.getRequiredInput(br, "상태 ▶ "));
 
 			int result = milestoneDAO.insertMilestone(dto, projectCode);
 			System.out.println(result > 0 ? "✅ 마일스톤 추가 완료!\n" : "⚠️ 추가 실패\n");
@@ -110,26 +107,31 @@ public class Project_MilestoneUI {
 
 			System.out.println("마일스톤 정보 수정 (Enter: 기존값 유지)");
 
-			System.out.print("목표(" + target.getName() + ") ▶ ");
-			String input = br.readLine();
+			String input = InputHandler.getOptionalInput(br, "목표(" + target.getName() + ") ▶ ");
 			if (!input.isBlank()) {
 				target.setName(input);
 			}
 
-			System.out.print("내용(" + target.getDesc() + ") ▶ ");
-			input = br.readLine();
+			input = InputHandler.getOptionalInput(br, "내용(" + target.getDesc() + ") ▶ ");
 			if (!input.isBlank()) {
 				target.setDesc(input);
 			}
 
-			String peInput = readDateAllowBlank("계획완료일(" + target.getPeDate() + ") ▶ ", target.getPeDate());
-			target.setPeDate(peInput);
+			String peInput = InputHandler.getOptionalDateInput(br, "계획완료일(" + target.getPeDate().substring(0,10) + ") ▶ ");
+//					readDateAllowBlank("계획완료일(" + target.getPeDate().substring(0,10) + ") ▶ ", target.getPeDate());
+			if (!peInput.isBlank()) {
+				target.setPeDate(peInput);
+			}
 
-			String aeInput = readDateAllowBlank("실제완료일(" + target.getAeDate() + ") ▶ ", target.getAeDate());
-			target.setAeDate(aeInput);
-
-			System.out.print("상태(" + target.getStatus() + ") ▶ ");
-			input = br.readLine();
+			String aeInput = InputHandler.getOptionalDateInput(br, "실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ "); 
+//					readDateAllowBlank("실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ ", target.getAeDate());
+			if (!aeInput.isBlank()) {
+				target.setAeDate(aeInput);
+			}
+			
+			input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
+//			System.out.print("상태(" + target.getStatus() + ") ▶ ");
+//			input = br.readLine();
 			if (!input.isBlank()) {
 				target.setStatus(input);
 			}
@@ -170,38 +172,38 @@ public class Project_MilestoneUI {
 		}
 	}
 
-	// 날짜 입력 (Enter → 필수)
-	private String readDate(String prompt) throws Exception {
-		while (true) {
-			System.out.print(prompt);
-			String input = br.readLine();
-			if (input.isBlank()) {
-				System.out.println("⚠️ 날짜 입력은 필수입니다.");
-				continue;
-			}
-			try {
-				java.sql.Date.valueOf(input);
-				return input;
-			} catch (Exception e) {
-				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-			}
-		}
-	}
-
-	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
-		while (true) {
-			System.out.print(prompt);
-			String input = br.readLine();
-			if (input.isBlank())
-				return existingDate;
-			try {
-				java.sql.Date.valueOf(input);
-				return input;
-			} catch (Exception e) {
-				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-			}
-		}
-	}
+//	// 날짜 입력 (Enter → 필수)
+//	private String readDate(String prompt) throws Exception {
+//		while (true) {
+//			System.out.print(prompt);
+//			String input = br.readLine();
+//			if (input.isBlank()) {
+//				System.out.println("⚠️ 날짜 입력은 필수입니다.");
+//				continue;
+//			}
+//			try {
+//				java.sql.Date.valueOf(input);
+//				return input;
+//			} catch (Exception e) {
+//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
+//			}
+//		}
+//	}
+//
+//	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
+//		while (true) {
+//			System.out.print(prompt);
+//			String input = br.readLine();
+//			if (input.isBlank())
+//				return existingDate;
+//			try {
+//				java.sql.Date.valueOf(input);
+//				return input;
+//			} catch (Exception e) {
+//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
+//			}
+//		}
+//	}
 
 	// 없어도 될 것 같은데 일단 주석
 //	// 프로젝트가 기관 소속인지 확인 (필요 시 projectDAO와 연계)
