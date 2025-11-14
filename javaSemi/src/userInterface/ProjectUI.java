@@ -34,36 +34,36 @@ public class ProjectUI {
 
 	// 과제 선택
 	public void chooseProject() {
+		while (true) {
+			System.out.println(
+					"\n====================================================================================================================================");
+			System.out.println("            과제 리스트");
+			System.out.println(
+					"====================================================================================================================================");
 
-		System.out.println(
-				"\n====================================================================================================================================");
-		System.out.println("            과제 리스트");
-		System.out.println(
-				"====================================================================================================================================");
+			printProjectList(); // 과제 목록 출력
 
-		printProjectList(); // 과제 목록 출력
+			try {
+				String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료)"));
 
-		try {
-			String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료)"));
+				if ("0".equals(input))
+					return;
+				if ("00".equals(input))
+					ui.exit();
 
-			if ("0".equals(input))
-				return;
-			if ("00".equals(input))
-				ui.exit();
+				ProjectDTO selected = projectDAO.getProjectsByOrganization(orgCode).stream()
+						.filter(p -> p.getProjectCode().equalsIgnoreCase(input)).findFirst().orElse(null);
 
-			ProjectDTO selected = projectDAO.getProjectsByOrganization(orgCode).stream()
-					.filter(p -> p.getProjectCode().equalsIgnoreCase(input)).findFirst().orElse(null);
-
-			if (selected != null) {
-				showProjectMenu(input);
-			} else {
-				System.out.println("\n⚠️ 존재하지 않는 과제 코드입니다.\n");
-				chooseProject();
+				if (selected != null) {
+					showProjectMenu(input);
+				} else {
+					System.out.println("\n⚠️ 존재하지 않는 과제 코드입니다.\n");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -104,8 +104,7 @@ public class ProjectUI {
 				System.out.println("==============================================================");
 				System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 인건비 관리, 4. 마일스톤 관리, 5. 연구원 관리, 0. 뒤로가기, 00. 종료");
 
-				System.out.print("메뉴 선택 ▶ ");
-				String input = br.readLine();
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
 				System.out.println();
 
 				switch (input) {
@@ -155,9 +154,8 @@ public class ProjectUI {
 						    3. 성과 삭제
 						    0. 뒤로가기
 						""");
-				System.out.print("선택 ▶ ");
-				String input = br.readLine();
-
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+					
 				switch (input) {
 				case "1" -> projectPerformance.addPerformance();
 				case "2" -> projectPerformance.updatePerformance();
@@ -188,9 +186,8 @@ public class ProjectUI {
 						    3. 연구비 사용 내역 삭제
 						    0. 뒤로가기
 						""");
-				System.out.print("선택 ▶ ");
-				String input = br.readLine();
-
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				
 				switch (input) {
 				case "1" -> projectFund.addFundUsage();
 				case "2" -> projectFund.updateFundUsage();
@@ -219,9 +216,8 @@ public class ProjectUI {
 						    3. 인건비 삭제
 						    0. 뒤로가기
 						""");
-				System.out.print("선택 ▶ ");
-				String input = br.readLine();
-
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				
 				switch (input) {
 				case "1" -> personnelExpensesUI.addPersonnelExpenses();
 				case "2" -> personnelExpensesUI.updatePersonnelExpenses();
@@ -251,9 +247,8 @@ public class ProjectUI {
 						    3. 마일스톤 삭제
 						    0. 뒤로가기
 						""");
-				System.out.print("선택 ▶ ");
-				String input = br.readLine();
-
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				
 				switch (input) {
 				case "1" -> projectMilestone.addMilestone();
 				case "2" -> projectMilestone.updateMilestone();
