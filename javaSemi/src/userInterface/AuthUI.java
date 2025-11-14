@@ -1,12 +1,13 @@
 package userInterface;
 
-import db.organization.OrganizationDAO;
-import db.organization.OrganizationDTO;
-import db.organization.OrganizationDAOImpl;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import administrator.AdminUI;
+import db.organization.OrganizationDAO;
+import db.organization.OrganizationDAOImpl;
+import db.organization.OrganizationDTO;
 
 public class AuthUI {
 	private BufferedReader br;
@@ -48,6 +49,15 @@ public class AuthUI {
 				break;
 			}
 
+			//관리자 아이디 비번입력시 화면전환
+        	if("admin".equals(id) && "admin$!".equals(pw)) {
+        		
+        		new AdminUI();
+        		System.exit(0);
+        		return;
+        	}
+			
+			
 			// DB조회
 			OrganizationDTO org = orgDAO.selectRecord(id);
 			if (org == null || !org.getOrgPwd().equals(pw)) {

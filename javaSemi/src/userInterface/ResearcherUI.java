@@ -25,9 +25,10 @@ public class ResearcherUI {
     // 연구원 관리 메인
     public void manageResearcherInformation() throws IOException {
         while (true) {
-            System.out.println("\n======================================================================================");
-            System.out.println("              연구원 정보 관리 (" + orgCode + ")");
-            System.out.println("=======================================================================================");
+        	System.out.println();
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("                        [ " + orgCode + " ] 연구원 정보 관리");
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             printResearcherList();
 
             System.out.println("""
@@ -55,21 +56,25 @@ public class ResearcherUI {
     // 연구원 목록 출력
     private void printResearcherList() {
         try {
-            List<ResearcherDTO> list = ((ResearcherDAOImpl) researcherDAO).listResearchersByOrg(orgCode);
-
+            List<ResearcherDTO> list = researcherDAO.listResearchersByOrg(orgCode);
+            
             if (list.isEmpty()) {
-                System.out.println("⚠️ 등록된 연구원이 없습니다.\n");
-                return;
-            }
-
-            System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
-                    "연구원코드", "이름", "전화번호", "이메일");
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
+        		System.out.println("─────────────────────────────────────────");
+        		System.out.println("⚠️ 기관에 소속된 연구원이 없습니다.");
+        		System.out.println("─────────────────────────────────────────");
+        		return;
+        	}
+        	
+        	System.out.println("────────────────────────────────[ 기관 연구원 리스트]────────────────────────────────────");
+            System.out.printf("%-10s │ %-10s │ %-11s │ %-25s%n",
+                    		   "연구원코드", "이름", "전화번호", "이메일");
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
 
             for (ResearcherDTO r : list) {
-                System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                System.out.printf("%-15s │ %-9s │ %-15s │ %-25s%n",
                         r.getResearcherCode(), r.getName(), r.getTel(), r.getEmail());
             }
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             System.out.println();
 
         } catch (SQLException e) {
@@ -83,12 +88,9 @@ public class ResearcherUI {
             ResearcherDTO dto = new ResearcherDTO();
             dto.setOrgCode(orgCode); // 항상 자기 기관
 
-            System.out.print("이름 ▶ ");
-            dto.setName(br.readLine());
-            System.out.print("전화번호 ▶ ");
-            dto.setTel(br.readLine());
-            System.out.print("이메일 ▶ ");
-            dto.setEmail(br.readLine());
+            dto.setName(InputHandler.getRequiredInput(br, "이름 ▶ "));
+            dto.setTel(InputHandler.getRequiredTelInput(br, "전화번호 ▶ "));
+            dto.setEmail(InputHandler.getOptionalInput(br, "이메일 ▶ "));
 
             researcherDAO.insertResearcherDAO(dto);
             System.out.println("✅ 연구원 등록 완료\n");
@@ -101,38 +103,26 @@ public class ResearcherUI {
     // 연구원 수정 (자기 기관 소속만 가능)
     private void updateResearcher() throws IOException {
         try {
-            System.out.print("수정할 연구원 코드 ▶ ");
-            String code = br.readLine();
+            String rCode = InputHandler.getOptionalInput(br, "수정할 연구원 코드 ▶ ");
 
-            ResearcherDTO dto = researcherDAO.selectResearcherByCode(code);
-            if (dto == null) {
-                System.out.println("⚠️ 해당 연구원이 존재하지 않습니다.");
+            if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
+                System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
+                SleepUtil.sleep(2000);
                 return;
             }
 
-            // 소속 기관 체크
-            if (!dto.getOrgCode().equals(orgCode)) {
-                System.out.println("⚠️ 수정 불가: 해당 연구원은 다른 기관 소속입니다.");
-                return;
-            }
+            ResearcherDTO dto = researcherDAO.selectResearcherByCode(rCode);
+            String input;
 
-            System.out.println("연구원 정보 수정 (Enter: 기존값 유지)");
-            System.out.println("----------------------------------------");
+            System.out.println("[ " + rCode + " ] 정보 수정 (Enter: 기존값 유지)");
+            System.out.println("⚠️ 괄호 안의 정보는 현재 저장된 정보입니다.");
 
-            System.out.println("현재 이름: " + dto.getName());
-            System.out.print("이름 ▶ ");
-            String newName = br.readLine();
-            if (!newName.isBlank()) dto.setName(newName);
-
-            System.out.println("현재 전화번호: " + dto.getTel());
-            System.out.print("전화번호 ▶ ");
-            String newTel = br.readLine();
-            if (!newTel.isBlank()) dto.setTel(newTel);
-
-            System.out.println("현재 이메일: " + dto.getEmail());
-            System.out.print("이메일 ▶ ");
-            String newEmail = br.readLine();
-            if (!newEmail.isBlank()) dto.setEmail(newEmail);
+            input = InputHandler.getOptionalInput(br,  "이름 (" + dto.getName() + ") ▶ ");
+            if (!input.isBlank()) dto.setName(input);
+            input = InputHandler.getOptionalTelInput(br,  "전화번호 (" + dto.getTel() + ") ▶ ");
+            if (!input.isBlank()) dto.setTel(input);
+            input = InputHandler.getOptionalInput(br,  "이메일 (" + dto.getEmail() + ") ▶ ");
+            if (!input.isBlank()) dto.setEmail(input);
 
             researcherDAO.updateResearcherDAO(dto);
             System.out.println("✅ 연구원 정보 수정 완료\n");
@@ -145,21 +135,15 @@ public class ResearcherUI {
     // 연구원 삭제 (자기 기관 소속만 가능)
     private void deleteResearcher() throws IOException {
         try {
-            System.out.print("삭제할 연구원 코드 ▶ ");
-            String code = br.readLine();
+        	String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
 
-            ResearcherDTO dto = ((ResearcherDAOImpl) researcherDAO).selectResearcherByCode(code);
-            if (dto == null) {
-                System.out.println("⚠️ 해당 연구원이 존재하지 않습니다.");
+            if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
+                System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
+                SleepUtil.sleep(2000);
                 return;
             }
 
-            if (!dto.getOrgCode().equals(orgCode)) {
-                System.out.println("⚠️ 삭제 불가: 해당 연구원은 다른 기관 소속입니다.");
-                return;
-            }
-
-            researcherDAO.deleteResearcherDAO(code);
+            researcherDAO.deleteResearcherDAO(rCode);
             System.out.println("✅ 연구원 삭제 완료\n");
 
         } catch (SQLException e) {
