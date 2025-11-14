@@ -41,8 +41,7 @@ public class UI {
     	                0. 종료
     	                ===============================
     	                """);
-    	            System.out.print("메뉴 선택 ▶ ");
-    	            String input = br.readLine();
+    				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
     	            System.out.println();
 
     	            switch (input) {
@@ -97,9 +96,9 @@ public class UI {
                     00. 종료
                     ===============================
                     """);
-                System.out.print("메뉴 선택 ▶ ");
-                String input = br.readLine();
-
+				
+                String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				
                 switch (input) {
                     case "1" -> projectUI.chooseProject();
                     case "2" -> memberUI.manageMemberInformation();
