@@ -95,10 +95,11 @@ public class Project_ResearcherUI {
     private void addProjectResearcher() {
         try {
         	
+        	// 자신의 기관에 속한 연구원 출력
         	List<ResearcherDTO> list = researcherDAO.listResearchersByOrg(orgCode);
 
             if (list.isEmpty()) {
-                System.out.println("⚠️ 등록된 연구원이 없습니다.\n");
+                System.out.println("⚠️ 기관에 소속된 연구원이 없습니다.\n");
                 return;
             }
 
@@ -112,15 +113,18 @@ public class Project_ResearcherUI {
             }
             System.out.println();
         	
-            ResearcherRoleDTO dto = new ResearcherRoleDTO();
-            System.out.print("연구원 코드 : ");
-            String rCode = br.readLine();
+            // 입력 시작
+            String rCode = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ");
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
             	return;
+            } else if (roleDAO.isProjectIncludeRes(projectCode, rCode)){
+            	System.out.println("⚠️ 이미 참여중인 연구원입니다.\n");
+            	return;
             }
             
+            ResearcherRoleDTO dto = new ResearcherRoleDTO();
             dto.setProjectCode(projectCode);
             dto.setResearcherCode(rCode);
             
@@ -138,8 +142,7 @@ public class Project_ResearcherUI {
 
     private void deleteProjectResearcher() {
         try {
-            System.out.print("삭제할 연구원 코드: ");
-            String rCode = br.readLine();
+            String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
             
             if(!roleDAO.isProjectIncludeRes(projectCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
@@ -147,8 +150,8 @@ public class Project_ResearcherUI {
             }
             
             roleDAO.deleteResearcherRoleDAO(projectCode, rCode);
-            
             System.out.println("✅ 연구원 삭제 완료\n");
+            
         } catch (IOException | SQLException e) {
             System.err.println("⚠️ 연구원 삭제 오류: " + e.getMessage());
         }

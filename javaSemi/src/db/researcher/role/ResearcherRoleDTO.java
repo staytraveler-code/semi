@@ -1,7 +1,7 @@
 package db.researcher.role;
 
 public class ResearcherRoleDTO {
-	 private String projectCode;     
+	    private String projectCode;     
 	    private String researcherCode;  
 	    private String role;            
 	    private String startDate;         
