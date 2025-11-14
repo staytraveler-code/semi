@@ -61,14 +61,16 @@ public class Project_ResearcherUI {
             
 
             if (list.isEmpty()) {
-                System.out.println("⚠️ 해당 프로젝트에 배정된 연구원이 없습니다.\n");
+            	System.out.println("───────────────────────────────────────────────────");
+                System.out.println("⚠️ 해당 프로젝트에 배정된 연구원이 없습니다.");
+                System.out.println("───────────────────────────────────────────────────");
                 return;
             }
 
-            System.out.println("프로젝트 연구원 목록:");
+            System.out.println("────────────────────────────────────────────────[ 프로젝트 참여 연구원]────────────────────────────────────────────────────");
             System.out.printf("%-10s | %-10s | %-10s | %-15s | %-15s | %-20s%n",
-                    "프로젝트코드", "연구원코드", "이름", "역할", "참여시작일", "참여종료일");
-            System.out.println("-------------------------------------------------------------------------------------------------------------");
+                    			"프로젝트코드", "연구원코드", "이름", "역할", "참여시작일", "참여종료일");
+            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 
             for (ResearcherRoleDTO dto : list) {
             	ResearcherDTO rdto = researcherDAO.selectResearcherByCode(dto.getResearcherCode());
@@ -80,6 +82,7 @@ public class Project_ResearcherUI {
                         dto.getStartDate().substring(0, 10),
                         dto.getEndDate().substring(0, 10));
             }
+            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
             System.out.println();
 
         } catch (SQLException e) {
@@ -93,19 +96,23 @@ public class Project_ResearcherUI {
         	// 자신의 기관에 속한 연구원 출력
         	List<ResearcherDTO> list = researcherDAO.listResearchersByOrg(orgCode);
 
-            if (list.isEmpty()) {
-                System.out.println("⚠️ 기관에 소속된 연구원이 없습니다.\n");
-                return;
-            }
-
-            System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+        	if (list.isEmpty()) {
+        		System.out.println("─────────────────────────────────────────");
+        		System.out.println("⚠️ 기관에 소속된 연구원이 없습니다.");
+        		System.out.println("─────────────────────────────────────────");
+        		return;
+        	}
+        	
+        	System.out.println("────────────────────────────────[ 기관 연구원 리스트]────────────────────────────────────");
+            System.out.printf("%-10s │ %-10s │ %-11s │ %-25s%n",
                     		   "연구원코드", "이름", "전화번호", "이메일");
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
 
             for (ResearcherDTO r : list) {
-                System.out.printf("%-10s │ %-15s │ %-15s │ %-25s%n",
+                System.out.printf("%-15s │ %-9s │ %-15s │ %-25s%n",
                         r.getResearcherCode(), r.getName(), r.getTel(), r.getEmail());
             }
+            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             System.out.println();
         	
             // 입력 시작
@@ -113,9 +120,11 @@ public class Project_ResearcherUI {
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
+            	SleepUtil.sleep(2000);
             	return;
             } else if (roleDAO.isProjectIncludeRes(projectCode, rCode)){
             	System.out.println("⚠️ 이미 참여중인 연구원입니다.\n");
+            	SleepUtil.sleep(2000);
             	return;
             }
             
@@ -141,6 +150,7 @@ public class Project_ResearcherUI {
             
             if(!roleDAO.isProjectIncludeRes(projectCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
+            	SleepUtil.sleep(2000);
             	return;
             }
             
