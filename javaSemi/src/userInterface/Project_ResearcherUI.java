@@ -14,7 +14,6 @@ import db.researcher.role.ResearcherRoleDTO;
 
 public class Project_ResearcherUI {
     private BufferedReader br;
-    private UI ui;
     private ResearcherDAO researcherDAO;
     private ResearcherRoleDAO roleDAO;
     private String projectCode; // 프로젝트별 관리
@@ -27,10 +26,6 @@ public class Project_ResearcherUI {
 
     public void setBufferedReader(BufferedReader br) {
         this.br = br;
-    }
-
-    public void setUI(UI ui) {
-        this.ui = ui;
     }
 
     public void setCode(String pCode, String oCode) {

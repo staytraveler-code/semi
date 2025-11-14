@@ -177,7 +177,7 @@ public class ProjectUI {
 	// 2. 연구비 관리
 	private void manageFund(String projectId) {
 		try {
-			projectFund.setProjectCode(projectId);
+			projectFund.setProjectCode(projectId, orgCode);
 			while (true) {
 				projectFund.printFundUsageList();
 				System.out.println("""

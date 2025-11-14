@@ -22,8 +22,9 @@ public class Project_FundUI {
         this.br = br;
     }
 
-    public void setProjectCode(String projectCode) {
+    public void setProjectCode(String projectCode, String orgCode) {
         this.projectCode = projectCode;
+        this.orgCode = orgCode;
     }
 
     public void printFundUsageList() {
