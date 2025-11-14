@@ -55,13 +55,13 @@ public class PerformanceManagementDAO {
 
 			String sql = "INSERT INTO performance_management (performance_code, project_code, "
 					+ "name, category, content, p_date, memo) VALUES ('PERF_' || LPAD(SEQ_PERFORMANCE_MANAGEMENT.NEXTVAL, 3, '0'), "
-					+ "?, ?, ?, ?, ?, ?)";
+					+ "?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?)";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, projectCode);
 			pstmt.setString(2, dto.getName());
 			pstmt.setString(3, dto.getCategory());
 			pstmt.setString(4, dto.getContent());
-			pstmt.setDate(5, parseDate(dto.getpDate(), null));
+			pstmt.setString(5, dto.getpDate().substring(0,10));
 			pstmt.setString(6, dto.getMemo());
 			result = pstmt.executeUpdate();
 
@@ -83,14 +83,14 @@ public class PerformanceManagementDAO {
 	public int updatePerformance(PerformanceManagementDTO dto) throws Exception {
 		int result = 0;
 		String sql = "UPDATE performance_management SET name=?, category=?, content=?, "
-				+ "p_date=TO_DATE(?, 'YYYYMMDD'), memo=? WHERE performance_code=? ";
+				+ "p_date=TO_DATE(?, 'YYYY-MM-DD'), memo=? WHERE performance_code=? ";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)){
 			conn.setAutoCommit(false);
 
 			pstmt.setString(1, dto.getName());
 			pstmt.setString(2, dto.getCategory());
 			pstmt.setString(3, dto.getContent());
-			pstmt.setDate(4, parseDate(dto.getpDate(), null));
+			pstmt.setString(4, dto.getpDate().substring(0,10));
 			pstmt.setString(5, dto.getMemo());
 			pstmt.setString(6, dto.getPerfCode());
 			result = pstmt.executeUpdate();
@@ -179,19 +179,19 @@ public class PerformanceManagementDAO {
 
 		return false;
 	}
-
-	private java.sql.Date parseDate(String dateStr, String existingDate) {
-		if (dateStr == null || dateStr.isBlank())
-			dateStr = existingDate;
-		if (dateStr == null || dateStr.isBlank())
-			return null;
-
-		try {
-			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
-		} catch (IllegalArgumentException e) {
-			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
-			return null;
-		}
-	}
+//
+//	private java.sql.Date parseDate(String dateStr, String existingDate) {
+//		if (dateStr == null || dateStr.isBlank())
+//			dateStr = existingDate;
+//		if (dateStr == null || dateStr.isBlank())
+//			return null;
+//
+//		try {
+//			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
+//		} catch (IllegalArgumentException e) {
+//			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
+//			return null;
+//		}
+//	}
 
 }

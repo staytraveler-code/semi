@@ -5,25 +5,24 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import db.milestone.MilestoneDTO;
 import db.performance.management.PerformanceManagementDAO;
 import db.performance.management.PerformanceManagementDTO;
 
 public class Project_PerformanceUI {
 	private PerformanceManagementDAO dao = new PerformanceManagementDAO();
-	private PerformanceManagementDTO dto = new PerformanceManagementDTO();
+//	private PerformanceManagementDTO dto = new PerformanceManagementDTO();
 
 	private BufferedReader br;
-	private String orgCode;
+//	private String orgCode;
 	private String projectCode;
 
 	public void setBufferedReader(BufferedReader br) {
 		this.br = br;
 	}
-
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
-	}
+//
+//	public void setOrgCode(String orgCode) {
+//		this.orgCode = orgCode;
+//	}
 
 	public void setProjectCode(String projectCode) {
 		this.projectCode = projectCode;
@@ -41,7 +40,7 @@ public class Project_PerformanceUI {
 				for (int i = 0; i < list.size(); i++) {
 					PerformanceManagementDTO dto = list.get(i);
 					System.out.printf("%d. [%s] %s | %s | %s | %s%n", i + 1, dto.getPerfCode(), dto.getName(),
-							dto.getCategory(), dto.getpDate(), dto.getMemo());
+							dto.getCategory(), dto.getpDate().substring(0,10), dto.getMemo());
 				}
 			}
 
@@ -63,17 +62,20 @@ public class Project_PerformanceUI {
 			PerformanceManagementDTO dto = new PerformanceManagementDTO();
 
 			System.out.println("추가할 성과 입력");
-			System.out.print("제목 ▶ ");
-			dto.setName(br.readLine());
-			System.out.print("카테고리 ▶ ");
-			dto.setCategory(br.readLine());
-			System.out.print("내용 ▶ ");
-			dto.setContent(br.readLine());
-			
-			dto.setpDate(readDate("성과발생일자 (YYYY-MM-DD) ▶ "));
-			
-			System.out.print("메모 ▶ ");
-			dto.setMemo(br.readLine());
+//			System.out.print("제목 ▶ ");
+//			dto.setName(br.readLine());
+			dto.setName(InputHandler.getRequiredInput(br, "제목 ▶ "));
+//			System.out.print("카테고리 ▶ ");
+//			dto.setCategory(br.readLine());
+			dto.setCategory(InputHandler.getRequiredInput(br, "카테고리 ▶ "));
+//			System.out.print("내용 ▶ ");
+//			dto.setContent(br.readLine());
+			dto.setContent(InputHandler.getRequiredInput(br, "내용 ▶ "));
+//			dto.setpDate(readDate("성과발생일자 (YYYY-MM-DD) ▶ "));
+			dto.setpDate(InputHandler.getRequiredDateInput(br, "성과발생일자 (YYYY-MM-DD) ▶ "));
+//			System.out.print("메모 ▶ ");
+//			dto.setMemo(br.readLine());
+			dto.setMemo(InputHandler.getOptionalInput(br, "메모 ▶ "));
 
 			int result = dao.insertPerformance(dto, projectCode);
 
@@ -123,29 +125,27 @@ public class Project_PerformanceUI {
 
 			System.out.println("성과 수정 (Enter: 기존값 유지)");
 
-			System.out.print("제목(" + target.getName() + ") ▶ ");
-			String input = br.readLine();
+			String input = InputHandler.getOptionalInput(br, "제목(" + target.getName() + ") ▶ "); 
 			if (!input.isBlank()) {
 				target.setName(input);
 			}
 
-			System.out.print("카테고리(" + target.getCategory() + ") ▶ ");
-			input = br.readLine();
+			input = InputHandler.getOptionalInput(br, "카테고리(" + target.getCategory() + ") ▶ ");
 			if (!input.isBlank()) {
 				target.setCategory(input);
 			}
 
-			System.out.print("내용(" + target.getContent() + ") ▶ ");
-			input = br.readLine();
+			input = InputHandler.getOptionalInput(br, "내용(" + target.getContent() + ") ▶ ");
 			if (!input.isBlank()) {
 				target.setContent(input);
 			}
 
-			String pInput = readDateAllowBlank("성과발생일(" + target.getpDate() + ") ▶ ", target.getpDate());
-			target.setpDate(pInput);
+			String pInput = InputHandler.getOptionalDateInput(br, "성과발생일(" + target.getpDate().substring(0,10) + ") ▶ ");
+			if (!pInput.isBlank()) {
+				target.setpDate(pInput);
+			}
 
-			System.out.print("메모(" + target.getMemo() + ") ▶ ");
-			input = br.readLine();
+			input = InputHandler.getOptionalInput(br, "메모(" + target.getMemo() + ") ▶ ");
 			if (!input.isBlank()) {
 				target.setMemo(input);
 			}
@@ -189,37 +189,37 @@ public class Project_PerformanceUI {
 		}
 	}
 
-	// 날짜 입력 (Enter → 필수)
-	private String readDate(String prompt) throws Exception {
-		while (true) {
-			System.out.print(prompt);
-			String input = br.readLine();
-			if (input.isBlank()) {
-				System.out.println("⚠️ 날짜 입력은 필수입니다.");
-				continue;
-			}
-			try {
-				java.sql.Date.valueOf(input);
-				return input;
-			} catch (Exception e) {
-				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-			}
-		}
-	}
-
-	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
-		while (true) {
-			System.out.print(prompt);
-			String input = br.readLine();
-			if (input.isBlank())
-				return existingDate;
-			try {
-				java.sql.Date.valueOf(input);
-				return input;
-			} catch (Exception e) {
-				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-			}
-		}
-	}
+//	// 날짜 입력 (Enter → 필수)
+//	private String readDate(String prompt) throws Exception {
+//		while (true) {
+//			System.out.print(prompt);
+//			String input = br.readLine();
+//			if (input.isBlank()) {
+//				System.out.println("⚠️ 날짜 입력은 필수입니다.");
+//				continue;
+//			}
+//			try {
+//				java.sql.Date.valueOf(input);
+//				return input;
+//			} catch (Exception e) {
+//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
+//			}
+//		}
+//	}
+//
+//	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
+//		while (true) {
+//			System.out.print(prompt);
+//			String input = br.readLine();
+//			if (input.isBlank())
+//				return existingDate;
+//			try {
+//				java.sql.Date.valueOf(input);
+//				return input;
+//			} catch (Exception e) {
+//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
+//			}
+//		}
+//	}
 
 }

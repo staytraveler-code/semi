@@ -47,15 +47,15 @@ public class MilestoneDAO {
 	public int insertMilestone(MilestoneDTO dto, String projectCode) throws Exception {
 		int result = 0;
 		String sql = "INSERT INTO milestone (milestone_code, project_code, name, description, p_end_date, a_end_date, status) "
-				+ "VALUES ('MS_' || LPAD(seq_milestone.NEXTVAL, 3, '0'), ?, ?, ?, ?, ?, ?)";
+				+ "VALUES ('MS_' || LPAD(seq_milestone.NEXTVAL, 3, '0'), ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'), ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
 			pstmt.setString(1, projectCode);
 			pstmt.setString(2, dto.getName());
 			pstmt.setString(3, dto.getDesc());
-			pstmt.setDate(4, parseDate(dto.getPeDate(), null));
-			pstmt.setDate(5, parseDate(dto.getAeDate(), null));
+			pstmt.setString(4, dto.getPeDate().substring(0,10));
+			pstmt.setString(5, dto.getAeDate().substring(0,10));
 			pstmt.setString(6, dto.getStatus());
 
 			result = pstmt.executeUpdate();
@@ -76,15 +76,15 @@ public class MilestoneDAO {
 	// 마일스톤 수정 -- 완료
 	public int updateMilestone(MilestoneDTO dto) throws Exception {
 		int result = 0;
-		String sql = "UPDATE Milestone SET name=?, description=?, p_end_date=?, a_end_date=?, status=? "
+		String sql = "UPDATE Milestone SET name=?, description=?, p_end_date=TO_DATE(?, 'YYYY-MM-DD'), a_end_date=TO_DATE(?, 'YYYY-MM-DD'), status=? "
 				+ "WHERE milestone_code=? AND project_code=?";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
 			pstmt.setString(1, dto.getName());
 			pstmt.setString(2, dto.getDesc());
-			pstmt.setDate(3, parseDate(dto.getPeDate(), null));
-			pstmt.setDate(4, parseDate(dto.getAeDate(), null));
+			pstmt.setString(3, dto.getPeDate().substring(0,10));
+			pstmt.setString(4, dto.getAeDate().substring(0,10));
 			pstmt.setString(5, dto.getStatus());
 			pstmt.setString(6, dto.getMileCode());
 			pstmt.setString(7, dto.getpCode());
@@ -156,17 +156,17 @@ public class MilestoneDAO {
 		return false;
 	}
 
-	private java.sql.Date parseDate(String dateStr, String existingDate) {
-		if (dateStr == null || dateStr.isBlank())
-			dateStr = existingDate;
-		if (dateStr == null || dateStr.isBlank())
-			return null;
-
-		try {
-			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
-		} catch (IllegalArgumentException e) {
-			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
-			return null;
-		}
-	}
+//	private java.sql.Date parseDate(String dateStr, String existingDate) {
+//		if (dateStr == null || dateStr.isBlank())
+//			dateStr = existingDate;
+//		if (dateStr == null || dateStr.isBlank())
+//			return null;
+//
+//		try {
+//			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
+//		} catch (IllegalArgumentException e) {
+//			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
+//			return null;
+//		}
+//	}
 }
