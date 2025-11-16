@@ -3,6 +3,7 @@ package db.milestone;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +13,13 @@ import db.util.DBUtil;
 public class MilestoneDAO {
 	private final Connection conn = DBConn.getConnection();
 
-//    public MilestoneDAO() {
-//        this.conn = DBConn.getConnection();
-//    }
-
-	// 특정 프로젝트 마일스톤 목록 -- 완료
-	public List<MilestoneDTO> listMilestoneByProject(String projectCode) throws Exception {
+	// 특정 프로젝트 마일스톤 목록
+	public List<MilestoneDTO> listMilestoneByProject(String projectCode) {
 		List<MilestoneDTO> list = new ArrayList<>();
+		
 		String sql = "SELECT milestone_code, project_code, name, description, p_end_date, a_end_date, status "
 				+ "FROM Milestone WHERE project_code = ?";
+		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, projectCode);
 			try (ResultSet rs = pstmt.executeQuery()) {
@@ -38,16 +37,18 @@ public class MilestoneDAO {
 			}
 
 		} catch (Exception e) {
-			throw e;
+			e.printStackTrace();
 		}
+		
 		return list;
 	}
 
-	// 마일스톤 추가 -- 완료
-	public int insertMilestone(MilestoneDTO dto) throws Exception {
-		int result = 0;
+	// 마일스톤 추가
+	public void insertMilestone(MilestoneDTO dto) throws SQLException {
+		
 		String sql = "INSERT INTO milestone (milestone_code, project_code, name, description, p_end_date, a_end_date, status) "
 				+ "VALUES ('MS_' || LPAD(seq_milestone.NEXTVAL, 3, '0'), ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'), ?)";
+		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
@@ -58,10 +59,11 @@ public class MilestoneDAO {
 			pstmt.setString(5, dto.getAeDate());
 			pstmt.setString(6, dto.getStatus());
 
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			conn.commit();
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
 			DBUtil.rollback(conn);
 			throw e;
 		} finally {
@@ -70,14 +72,14 @@ public class MilestoneDAO {
 			} catch (Exception e2) {
 			}
 		}
-		return result;
 	}
 
-	// 마일스톤 수정 -- 완료
-	public int updateMilestone(MilestoneDTO dto) throws Exception {
-		int result = 0;
+	// 마일스톤 수정
+	public void updateMilestone(MilestoneDTO dto) throws SQLException {
+
 		String sql = "UPDATE Milestone SET name=?, description=?, p_end_date=TO_DATE(?, 'YYYY-MM-DD'), a_end_date=TO_DATE(?, 'YYYY-MM-DD'), status=? "
 				+ "WHERE milestone_code=? AND project_code=?";
+		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
@@ -89,10 +91,11 @@ public class MilestoneDAO {
 			pstmt.setString(6, dto.getMileCode());
 			pstmt.setString(7, dto.getpCode());
 
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			conn.commit();
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
 			DBUtil.rollback(conn);
 			throw e;
 		} finally {
@@ -101,21 +104,23 @@ public class MilestoneDAO {
 			} catch (Exception e2) {
 			}
 		}
-		return result;
 	}
 
-	// 마일스톤 삭제 -- 완료.
-	public int deleteMilestone(String mileCode) throws Exception {
-		int result = 0;
+	// 마일스톤 삭제
+	public void deleteMilestone(String mileCode) throws SQLException {
+
 		String sql = "DELETE FROM Milestone WHERE milestone_code=? ";
+		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			conn.setAutoCommit(false);
 
 			pstmt.setString(1, mileCode);
-			result = pstmt.executeUpdate();
+			
+			pstmt.executeUpdate();
 			conn.commit();
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
 			DBUtil.rollback(conn);
 			throw e;
 		} finally {
@@ -124,11 +129,10 @@ public class MilestoneDAO {
 			} catch (Exception e2) {
 			}
 		}
-		return result;
 	}
 
-	// 해당 목록에 있는 마일스톤 코드를 입력해야 참 반환 --완료
-	public boolean isMilestoneBelongsToOrg(String code, String projectCode) throws Exception {
+	// 마일스톤이 해당 과제의 마일스톤인지 확인
+	public boolean isProjectIncludeMilestone(String mCode, String pCode) throws Exception {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -137,8 +141,8 @@ public class MilestoneDAO {
 			sql = "SELECT 1 " + "FROM milestone WHERE milestone_code = ? AND project_code = ?";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, code);
-			pstmt.setString(2, projectCode);
+			pstmt.setString(1, mCode);
+			pstmt.setString(2, pCode);
 
 			rs = pstmt.executeQuery();
 
@@ -147,6 +151,7 @@ public class MilestoneDAO {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			DBUtil.close(rs);
@@ -184,17 +189,4 @@ public class MilestoneDAO {
 		return 0;
 	}
 
-//	private java.sql.Date parseDate(String dateStr, String existingDate) {
-//		if (dateStr == null || dateStr.isBlank())
-//			dateStr = existingDate;
-//		if (dateStr == null || dateStr.isBlank())
-//			return null;
-//
-//		try {
-//			return java.sql.Date.valueOf(dateStr); // 시분초 없이 연월일만
-//		} catch (IllegalArgumentException e) {
-//			System.out.println("⚠️ 잘못된 날짜 형식: " + dateStr + " (YYYY-MM-DD)");
-//			return null;
-//		}
-//	}
 }

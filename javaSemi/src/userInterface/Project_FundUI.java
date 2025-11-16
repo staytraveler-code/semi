@@ -89,7 +89,7 @@ public class Project_FundUI {
 
         try {
             if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
-                System.out.println("⚠️ 권한이 없거나 존재하지 않는 코드입니다.\n"); 
+                System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
                 return; 
             }
             
@@ -138,7 +138,7 @@ public class Project_FundUI {
         
         try { 
         	if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
-                System.out.println("⚠️ 권한이 없거나 존재하지 않는 코드입니다.\n"); 
+                System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
                 return; 
             }
         	

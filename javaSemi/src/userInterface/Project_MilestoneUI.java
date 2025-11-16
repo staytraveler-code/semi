@@ -12,7 +12,6 @@ public class Project_MilestoneUI {
 	private BufferedReader br;
 	private MilestoneDAO milestoneDAO = new MilestoneDAO();
 	private String projectCode;
-//	private String orgCode; // 기관 코드 없어도 될것같은
 
 	public void setBufferedReader(BufferedReader br) {
 		this.br = br;
@@ -22,43 +21,49 @@ public class Project_MilestoneUI {
 		this.projectCode = projectCode;
 	}
 
-	// 없어도 될것같은
-//	public void setOrgCode(String orgCode) {
-//		this.orgCode = orgCode;
-//	}
-
-	// 마일스톤 목록 출력 -- 완료
+	// 마일스톤 목록 출력
 	public void printMilestoneList() {
 		try {
-			System.out.println(
-					"===== 마일스톤 목록 =============================================================================================================================");
 			List<MilestoneDTO> list = milestoneDAO.listMilestoneByProject(projectCode);
-			if (list.isEmpty())
-				System.out.println("(등록된 마일스톤이 없습니다)");
-
-			for (MilestoneDTO dto : list) {
-				System.out.printf("코드: %s | 목표: %s | 내용: %s | 계획완료: %s | 실제완료: %s | 상태: %s%n", dto.getMileCode(),
-						dto.getName(), dto.getDesc(), dto.getPeDate().substring(0,10), dto.getAeDate().substring(0,10), dto.getStatus());
+			
+			if (list.isEmpty()) {
+				System.out.println("───────────────────────────────────────────────────");
+            	System.out.println("⚠️ 해당 프로젝트의 마일스톤이 존재하지 않습니다.");
+            	System.out.println("───────────────────────────────────────────────────");
+            	return;
 			}
-			System.out.println(
-					"================================================================================================================================================\n");
+
+			System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+			System.out.printf("%-10s | %-25s | %-30s | %-15s | %-15s | %-10s%n",
+            				  "마일스톤 코드", "목표", "내용", "계획완료일", "실제완료일", "상태");
+			System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+			
+			for (MilestoneDTO dto : list) {
+				System.out.printf("%-12s | %-22s | %-27s | %-20s | %-20s | %-10s%n",
+						dto.getMileCode(), dto.getName(), dto.getDesc(), dto.getPeDate().substring(0, 10),
+						dto.getAeDate().substring(0, 10), dto.getStatus());
+			}
+
+			System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 
 		} catch (Exception e) {
-			System.out.println("마일스톤 목록 출력 중 오류 발생");
+			System.out.println("⚠️ 마일스톤 조회 오류: " + e.getMessage());
 		}
 	}
 
-	// 마일스톤 추가 -- 완료
+	// 마일스톤 추가
 	public void addMilestone() {
 		try {
 			MilestoneDTO dto = new MilestoneDTO();
 
+			System.out.println("⦁ 마일스톤 추가");
+			
 			dto.setpCode(projectCode);
 			dto.setName(InputHandler.getRequiredInput(br, "목표 ▶ "));
 			dto.setDesc(InputHandler.getRequiredInput(br, "내용 ▶ "));
 			dto.setPeDate(InputHandler.getRequiredDateInput(br,"계획완료일 (YYYY-MM-DD) ▶ "));
 			dto.setAeDate(InputHandler.getRequiredDateInput(br,"실제완료일 (YYYY-MM-DD) ▶ "));
-			dto.setStatus(InputHandler.getRequiredInput(br, "상태 ▶ "));
+			dto.setStatus("미완료");
 
 			milestoneDAO.insertMilestone(dto);
 			System.out.println("✅ 마일스톤 추가 완료!\n");
@@ -68,7 +73,7 @@ public class Project_MilestoneUI {
 		}
 	}
 
-	// 마일스톤 수정 --완료
+	// 마일스톤 수정
 	public void updateMilestone() {
 		try {
 			List<MilestoneDTO> list = milestoneDAO.listMilestoneByProject(projectCode);
@@ -77,119 +82,63 @@ public class Project_MilestoneUI {
 				System.out.println("⚠️ 등록된 마일스톤이 없습니다.");
 				return;
 			}
+			
+			System.out.println("⦁ 마일스톤 수정 (Enter: 기존값 유지)");
+			String mCode = InputHandler.getRequiredInput(br, "수정할 마일스톤 코드 입력 ▶ ");
 
-			System.out.print("수정할 마일스톤 코드 입력 ▶ ");
-			String code = br.readLine();
-
-			// 기관 체크
-			if (!milestoneDAO.isMilestoneBelongsToOrg(code, projectCode)) {
-				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 선택해주세요");
+			// 접근 가능한 마일스톤인지 체크
+			if (!milestoneDAO.isProjectIncludeMilestone(mCode, projectCode)) {
+				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 입력해주세요.\n");
 				return;
 			}
 
-			MilestoneDTO target = null; // 기존입력값 빼두기 작업
+			// 기존 입력값 빼두기 작업
+			MilestoneDTO target = null;
 			for (MilestoneDTO dto : list) {
-				if (dto.getMileCode().equals(code)) {
+				if (dto.getMileCode().equals(mCode)) {
 					target = dto;
 					break;
 				}
 			}
 
-			System.out.println("마일스톤 정보 수정 (Enter: 기존값 유지)");
-
 			String input = InputHandler.getOptionalInput(br, "목표(" + target.getName() + ") ▶ ");
-			if (!input.isBlank()) {
-				target.setName(input);
-			}
-
+			if (!input.isBlank()) target.setName(input);
 			input = InputHandler.getOptionalInput(br, "내용(" + target.getDesc() + ") ▶ ");
-			if (!input.isBlank()) {
-				target.setDesc(input);
-			}
-
+			if (!input.isBlank()) target.setDesc(input);
 			String peInput = InputHandler.getOptionalDateInput(br, "계획완료일(" + target.getPeDate().substring(0,10) + ") ▶ ");
-			if (!peInput.isBlank()) {
-				target.setPeDate(peInput);
-			}
-
+			if (!peInput.isBlank()) target.setPeDate(peInput);
 			String aeInput = InputHandler.getOptionalDateInput(br, "실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ "); 
-			if (!aeInput.isBlank()) {
-				target.setAeDate(aeInput);
-			}
-			
+			if (!aeInput.isBlank()) target.setAeDate(aeInput);
 			input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
-			if (!input.isBlank()) {
-				target.setStatus(input);
-			}
-			int result = milestoneDAO.updateMilestone(target);
-			System.out.println(result > 0 ? "✅ 마일스톤 수정 완료!\n" : "⚠️ 수정 실패\n");
+			if (!input.isBlank()) target.setStatus(input);
+			
+			milestoneDAO.updateMilestone(target);
+			System.out.println("✅ 마일스톤 수정 완료!\n");
 
 		} catch (Exception e) {
 			System.out.println("⚠️ 마일스톤 수정 실패: " + e.getMessage());
 		}
 	}
 
-	// 마일스톤 삭제 -- 완료
+	// 마일스톤 삭제
 	public void deleteMilestone() {
 		try {
 
-			String code = InputHandler.getOptionalInput(br, "삭제할 마일스톤 코드 입력 ▶ ");
+			System.out.println("⦁ 마일스톤 삭제");
+			String mCode = InputHandler.getOptionalInput(br, "삭제할 마일스톤 코드 입력 ▶ ");
 
-			// 기관 체크
-			if (!milestoneDAO.isMilestoneBelongsToOrg(code, projectCode)) {
-				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 선택해주세요");
+			// 접근 가능한 마일스톤인지 체크
+			if (!milestoneDAO.isProjectIncludeMilestone(mCode, projectCode)) {
+				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 입력해주세요.\n");
 				return;
 			}
 
-			int result = milestoneDAO.deleteMilestone(code);
-			System.out.println(result > 0 ? "✅ 마일스톤 삭제 완료!\n" : "⚠️ 해당 마일스톤삭제 실패.\n");
-		} catch (IOException e) {
-			System.out.println("입력중 오류발생");
-		} catch (SQLException e) {
-			System.out.println("DB작업중 오류발생");
+			milestoneDAO.deleteMilestone(mCode);
+			System.out.println("✅ 마일스톤 삭제 완료!\n");
+			
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류 발생");
+			System.out.println("⚠️ 마일스톤 삭제 실패: " + e.getMessage());
 		}
 	}
 
-//	// 날짜 입력 (Enter → 필수)
-//	private String readDate(String prompt) throws Exception {
-//		while (true) {
-//			System.out.print(prompt);
-//			String input = br.readLine();
-//			if (input.isBlank()) {
-//				System.out.println("⚠️ 날짜 입력은 필수입니다.");
-//				continue;
-//			}
-//			try {
-//				java.sql.Date.valueOf(input);
-//				return input;
-//			} catch (Exception e) {
-//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-//			}
-//		}
-//	}
-//
-//	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
-//		while (true) {
-//			System.out.print(prompt);
-//			String input = br.readLine();
-//			if (input.isBlank())
-//				return existingDate;
-//			try {
-//				java.sql.Date.valueOf(input);
-//				return input;
-//			} catch (Exception e) {
-//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-//			}
-//		}
-//	}
-
-	// 없어도 될 것 같은데 일단 주석
-//	// 프로젝트가 기관 소속인지 확인 (필요 시 projectDAO와 연계)
-//	private boolean isProjectBelongsToOrg() {
-//		// 프로젝트가 orgCode 소속인지 확인하는 DAO 메서드 호출
-//		// return projectDAO.isProjectBelongsToOrg(projectCode, orgCode);
-//		return true; // 임시: 실제로는 projectDAO에서 체크
-//	}
 }
