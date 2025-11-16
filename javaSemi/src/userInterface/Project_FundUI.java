@@ -143,8 +143,8 @@ public class Project_FundUI {
             }
         	
             fundDAO.deleteRecord(fcode); 
-            
             System.out.println("✅ 삭제 완료!\n"); 
+            
         } catch (Exception e) { 
             System.out.println("⚠️ 삭제 실패: " + e.getMessage()); 
         }

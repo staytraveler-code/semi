@@ -10,25 +10,19 @@ import db.performance.management.PerformanceManagementDTO;
 
 public class Project_PerformanceUI {
 	private PerformanceManagementDAO dao = new PerformanceManagementDAO();
-//	private PerformanceManagementDTO dto = new PerformanceManagementDTO();
 
 	private BufferedReader br;
-//	private String orgCode;
 	private String projectCode;
 
 	public void setBufferedReader(BufferedReader br) {
 		this.br = br;
 	}
-//
-//	public void setOrgCode(String orgCode) {
-//		this.orgCode = orgCode;
-//	}
-
+	
 	public void setProjectCode(String projectCode) {
 		this.projectCode = projectCode;
 	}
 
-	// DAO에서 해당 과제의 성과 목록 가져오기 -- 완료
+	// DAO에서 해당 과제의 성과 목록 가져오기
 	public void printPerformanceList() {
 		try {
 			System.out.println("=========성과목록=========");
@@ -43,87 +37,58 @@ public class Project_PerformanceUI {
 							dto.getCategory(), dto.getpDate().substring(0,10), dto.getMemo());
 				}
 			}
-
 			System.out.println("======================\n");
-		} catch (IOException e) {
-			System.out.println("입력중 오류 발생");
-		} catch (SQLException e) {
-			System.out.println("db작업 중 오류발생");
 		} catch (Exception e) {
-			System.out.println("-예기치 못한 오류발생-");
+			System.out.println("⚠️ 성과 조회 오류: " + e.getMessage());
 		}
 	}
 
-	// 과제에 성과 추가하기 --완료
+	// 과제에 성과 추가하기
 	public void addPerformance() {
 
 		try {
-
 			PerformanceManagementDTO dto = new PerformanceManagementDTO();
 
-			System.out.println("추가할 성과 입력");
-//			System.out.print("제목 ▶ ");
-//			dto.setName(br.readLine());
+			System.out.println("⦁ 성과 추가");
+			
 			dto.setName(InputHandler.getRequiredInput(br, "제목 ▶ "));
-//			System.out.print("카테고리 ▶ ");
-//			dto.setCategory(br.readLine());
 			dto.setCategory(InputHandler.getRequiredInput(br, "카테고리 ▶ "));
-//			System.out.print("내용 ▶ ");
-//			dto.setContent(br.readLine());
 			dto.setContent(InputHandler.getRequiredInput(br, "내용 ▶ "));
-//			dto.setpDate(readDate("성과발생일자 (YYYY-MM-DD) ▶ "));
-			dto.setpDate(InputHandler.getRequiredDateInput(br, "성과발생일자 (YYYY-MM-DD) ▶ "));
-//			System.out.print("메모 ▶ ");
-//			dto.setMemo(br.readLine());
+			dto.setpDate(InputHandler.getRequiredDateInput(br, "발생일자(YYYY-MM-DD) ▶ "));
 			dto.setMemo(InputHandler.getOptionalInput(br, "메모 ▶ "));
 
-			int result = dao.insertPerformance(dto, projectCode);
+			dao.insertPerformance(dto, projectCode);
+            System.out.println("✅ 성과 추가 완료!\n");
 
-			if (result > 0) {
-
-				System.out.println("✅ 성과 추가 완료!\n");
-			} else {
-				System.out.println("✅ 성과 추가 실패\n");
-			}
-
-		} catch (IOException e) {
-			System.out.println("입력중 오류발생");
-		} catch (SQLException e) {
-			System.out.println("DB작업중 오류발생");
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류발생");
-		}
+            System.out.println("⚠️ 추가 실패: " + e.getMessage());
+        }
 	}
 
-	// 기존 목록의 성과 수정하기 -- 완료
+	// 기존 목록의 성과 수정하기
 	public void updatePerformance() {
 		try {
-			List<PerformanceManagementDTO> list = dao.performanceList(projectCode);
-			if (list.isEmpty()) {
-				System.out.println("⚠️ 등록된 성과가 없습니다.");
-				return;
-			}
-
-			System.out.print("수정할 성과코드 입력 ▶ ");
-			String perfCode = br.readLine();
+			System.out.println("⦁ 성과 수정 (Enter: 기존값 유지)");
+			String perfCode = InputHandler.getRequiredInput(br, "수정할 성과코드 입력 ▶ ");
 
 			// 성과 목록에 있는지 체크
-			if (!dao.isPerformnace(perfCode, projectCode)) {
-				System.out.println("⚠️ 목록에 있는 성과코드를 선택해주세요");
+			if (!dao.isProjectIncludePerformance(perfCode, projectCode)) {
+				System.out.println("⚠️ 목록에 있는 성과코드를 입력해주세요.\n");
 				return;
 			}
 
 			// 기존값 빼두기
+			List<PerformanceManagementDTO> list = dao.performanceList(projectCode);
 			PerformanceManagementDTO target = null;
+			
 			for (PerformanceManagementDTO dto : list) {
 				if (dto.getPerfCode().equals(perfCode)) {
 					target = dto;
 					break;
 				}
 			}
-			target.setPerfCode(perfCode);
-
-			System.out.println("성과 수정 (Enter: 기존값 유지)");
+			
+			// target.setPerfCode(perfCode);\
 
 			String input = InputHandler.getOptionalInput(br, "제목(" + target.getName() + ") ▶ "); 
 			if (!input.isBlank()) {
@@ -150,75 +115,31 @@ public class Project_PerformanceUI {
 				target.setMemo(input);
 			}
 
-			int result = dao.updatePerformance(target);
-			System.out.println(result > 0 ? "✅ 성과 수정 완료!\n" : "⚠️ 수정 실패\n");
+			dao.updatePerformance(target);
+            System.out.println("✅ 성과 수정 완료!\n");
 
-		} catch (IOException e) {
-			System.out.println("입력중 오류 발생");
-		} catch (SQLException e) {
-			e.printStackTrace();
-//			System.out.println("DB작업중 오류 발생");
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류발생");
-		}
+            System.out.println("⚠️ 수정 실패: " + e.getMessage());
+        }
 	}
 
-	// 기존 성과 삭제하기.
+	// 성과 삭제
 	public void deletePerformance()  {
 		try {
+			System.out.println("⦁ 성과 삭제");
 			String code = InputHandler.getOptionalInput(br, "삭제할 성과코드 입력 ▶ ");
 
 			// 성과 목록에 있는지 체크
-			if (!dao.isPerformnace(code, projectCode)) {
+			if (!dao.isProjectIncludePerformance(code, projectCode)) {
 				System.out.println("⚠️ 목록에 있는 성과코드를 선택해주세요");
 				return;
 			}
-
 			
-			int result = dao.deletePerformance(code);
+			dao.deletePerformance(code);
+            System.out.println("✅ 성과 삭제 완료!\n");
 
-			System.out.println(result > 0 ? "✅ 성과 삭제 완료!\n" : "⚠️ 성과 삭제 실패.\n");
-
-		} catch (IOException e) {
-			System.out.println("입력중 오류발생");
-		} catch (SQLException e) {
-			System.out.println("DB작업중 오류발생");
 		} catch (Exception e) {
-			System.out.println("예기치 못한 오류 발생");
-		}
+            System.out.println("⚠️ 삭제 실패: " + e.getMessage());
+        }
 	}
-
-//	// 날짜 입력 (Enter → 필수)
-//	private String readDate(String prompt) throws Exception {
-//		while (true) {
-//			System.out.print(prompt);
-//			String input = br.readLine();
-//			if (input.isBlank()) {
-//				System.out.println("⚠️ 날짜 입력은 필수입니다.");
-//				continue;
-//			}
-//			try {
-//				java.sql.Date.valueOf(input);
-//				return input;
-//			} catch (Exception e) {
-//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-//			}
-//		}
-//	}
-//
-//	private String readDateAllowBlank(String prompt, String existingDate) throws Exception {
-//		while (true) {
-//			System.out.print(prompt);
-//			String input = br.readLine();
-//			if (input.isBlank())
-//				return existingDate;
-//			try {
-//				java.sql.Date.valueOf(input);
-//				return input;
-//			} catch (Exception e) {
-//				System.out.println("⚠️ 날짜 형식이 잘못되었습니다. (YYYY-MM-DD)");
-//			}
-//		}
-//	}
-
 }
