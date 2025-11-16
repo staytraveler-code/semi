@@ -18,7 +18,6 @@ public class ProjectUI {
 	private Project_MilestoneUI projectMilestone = new Project_MilestoneUI();
 	private Project_ResearcherUI projectResearcher = new Project_ResearcherUI();
 	private Project_PerformanceUI projectPerformance = new Project_PerformanceUI();
-	private Project_PersonnelExpensesUI personnelExpensesUI = new Project_PersonnelExpensesUI();
 
 	public ProjectUI(BufferedReader br, UI ui, String orgCode) {
 		this.br = br;
@@ -28,7 +27,6 @@ public class ProjectUI {
 		projectFund.setBufferedReader(br);
 		projectMilestone.setBufferedReader(br);
 		projectPerformance.setBufferedReader(br);
-		personnelExpensesUI.setBufferedReader(br);
 		projectResearcher.setBufferedReader(br);
 	}
 
@@ -76,7 +74,7 @@ public class ProjectUI {
 				System.out.println("==============================================================");
 				showProjectDetail(projectId);
 				System.out.println("==============================================================");
-				System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 인건비 관리, 4. 마일스톤 관리, 5. 연구원 관리, 0. 뒤로가기, 00. 종료");
+				System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 마일스톤 관리, 4. 연구원 관리, 0. 뒤로가기, 00. 종료");
 
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
 				System.out.println();
@@ -84,9 +82,8 @@ public class ProjectUI {
 				switch (input) {
 				case "1" -> managePerformance(projectId);
 				case "2" -> manageFund(projectId);
-				case "3" -> managePersonnelCost();
-				case "4" -> manageMilestone(projectId);
-				case "5" -> manageProjectResearcher(projectId);
+				case "3" -> manageMilestone(projectId);
+				case "4" -> manageProjectResearcher(projectId);
 				case "0" -> {
 					return;
 				}
@@ -234,37 +231,7 @@ public class ProjectUI {
 		}
 	}
 
-	// 3. 인건비 관리
-	private void managePersonnelCost() {
-		try {
-			while (true) {
-				personnelExpensesUI.printPersonnelExpensesList();
-				System.out.println("""
-						    1. 인건비 추가
-						    2. 인건비 수정
-						    3. 인건비 삭제
-						    0. 뒤로가기
-						""");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
-
-				switch (input) {
-				case "1" -> personnelExpensesUI.addPersonnelExpenses();
-				case "2" -> personnelExpensesUI.updatePersonnelExpenses();
-				case "3" -> personnelExpensesUI.deletePersonnelExpenses();
-				case "0" -> {
-					return;
-				}
-				default -> System.out.println("⚠️ 잘못된 입력입니다.\n");
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	// 4. 마일스톤 관리
+	// 3. 마일스톤 관리
 	private void manageMilestone(String projectId) {
 		try {
 			projectMilestone.setProjectCode(projectId);
@@ -296,7 +263,7 @@ public class ProjectUI {
 		}
 	}
 
-	// 5. 프로젝트 연구원 관리
+	// 4. 프로젝트 연구원 관리
 	private void manageProjectResearcher(String projectId) {
 		try {
 			// 프로젝트 코드 세팅
