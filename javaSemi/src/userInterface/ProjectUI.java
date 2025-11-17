@@ -51,9 +51,15 @@ public class ProjectUI {
 						.filter(p -> p.getProjectCode().equalsIgnoreCase(input)).findFirst().orElse(null);
 
 				if (selected != null) {
+					System.out.println();
+					System.out.println();
+					System.out.println();
 					showProjectMenu(input);
 				} else {
 					System.out.println("\n⚠️ 존재하지 않는 과제 코드입니다.\n");
+					System.out.println();
+					System.out.println();
+					System.out.println();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -75,6 +81,9 @@ public class ProjectUI {
 				System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 마일스톤 관리, 4. 연구원 관리, 0. 뒤로가기, 00. 종료");
 
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) "));
+				System.out.println();
+				System.out.println();
+				System.out.println();
 				System.out.println();
 
 				switch (input) {
