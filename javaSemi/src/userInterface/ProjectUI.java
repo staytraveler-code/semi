@@ -104,11 +104,7 @@ public class ProjectUI {
 
 		if (projects.isEmpty()) {
 			System.out.println("⚠️ 등록된 과제가 없습니다.");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+			SleepUtil.sleep(1000);
 			return;
 		}
 
