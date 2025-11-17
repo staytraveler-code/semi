@@ -111,7 +111,7 @@ public class Project_MilestoneUI {
 			while(true) {
 				input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
 				if (input.isBlank()) break;
-				else if(input == "완료" || input == "진행중") {
+				else if(input == "완료" || input == "미완료") {
 					target.setStatus(input);				
 					break;
 				} else {
