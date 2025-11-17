@@ -26,9 +26,9 @@ public class ResearcherUI {
     public void manageResearcherInformation() throws IOException {
         while (true) {
         	System.out.println();
-            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
-            System.out.println("                        [ " + orgCode + " ] 연구원 정보 관리");
-            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────");
+            System.out.println("                      [ " + orgCode + " ] 연구원 리스트");
+            System.out.println("────────────────────────────────────────────────────────────────────");
             printResearcherList();
 
             System.out.println("""
@@ -64,16 +64,15 @@ public class ResearcherUI {
         		return;
         	}
         	
-        	System.out.println("────────────────────────────────[ 기관 연구원 리스트 ]────────────────────────────────────");
-            System.out.printf("%-10s │ %-10s │ %-11s │ %-25s%n",
+            System.out.printf("%-10s │ %-9s │ %-13s │ %-25s%n",
                     		   "연구원코드", "이름", "전화번호", "이메일");
-            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────");
 
             for (ResearcherDTO r : list) {
-                System.out.printf("%-15s │ %-9s │ %-15s │ %-25s%n",
+                System.out.printf("%-12s │ %-9s │ %-15s │ %-25s%n",
                         r.getResearcherCode(), r.getName(), r.getTel(), r.getEmail());
             }
-            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("────────────────────────────────────────────────────────────────────");
             System.out.println();
 
         } catch (SQLException e) {

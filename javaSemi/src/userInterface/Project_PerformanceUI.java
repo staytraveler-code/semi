@@ -35,8 +35,8 @@ public class Project_PerformanceUI {
 			System.out.println("────────────────────────────────[ 성과 목록 ]────────────────────────────────────");
 			for (int i = 0; i < list.size(); i++) {
 				PerformanceManagementDTO dto = list.get(i);
-				System.out.printf("%d. [ %s ] %s | %s | %s \n", i + 1,
-						dto.getCategory(), dto.getName(), dto.getpDate().substring(0,10), dto.getMemo());
+				System.out.printf("%d. [ %s ] [ %s ] %s | %s | %s \n", i + 1,
+						dto.getPerfCode(), dto.getCategory(), dto.getName(), dto.getpDate().substring(0,10), dto.getMemo());
 			}
 			System.out.println("───────────────────────────────────────────────────────────────────────────────");
 		} catch (Exception e) {
