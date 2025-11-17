@@ -38,11 +38,14 @@ public class UI {
     	                ===============================
     	                1. 로그인
     	                2. 회원가입
+    	                
     	                0. 종료
     	                ===============================
     	                """);
-    				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+    				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ "));
     	            System.out.println();
+    				System.out.println();
+    				System.out.println();
 
     	            switch (input) {
     	                case "1" -> authUI.signIn();
@@ -92,12 +95,16 @@ public class UI {
                     1. 과제 관리
                     2. 회원 정보 관리
                     3. 연구원 정보 관리
+                    
                     0. 로그아웃
                     00. 종료
                     ===============================
                     """);
 				
-                String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+                String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ "));
+    			System.out.println();
+    			System.out.println();
+    			System.out.println();
 				
                 switch (input) {
                     case "1" -> projectUI.chooseProject();

@@ -22,16 +22,20 @@ public class AuthUI {
 
 	// 로그인
 	public void signIn() throws IOException {
-		System.out.println("===== 로그인 =====");
+		System.out.println("────────── 로그인 ───────────");
 
 		try {
 			
+			System.out.println();
 			// 아이디 입력
 			String id = InputHandler.getRequiredInput(br, "아이디 ▶  ");
 
 			// 비밀번호 입력
 			String pw = InputHandler.getRequiredInput(br, "비밀번호 ▶  ");
+			System.out.println();
 
+			System.out.println("───────────────────────────");
+			
 			//관리자 아이디 비번입력시 화면전환
         	if("admin".equals(id) && "admin$!".equals(pw)) {
         		
@@ -49,8 +53,10 @@ public class AuthUI {
 			}
 		
 			// 로그인 성공
-			System.out.println("로그인 성공! 🎉");
-			System.out.println("기관명 ▶ " + org.getOrgName() + "\n");
+			System.out.println(org.getOrgName() +" 기관 로그인 성공! 🎉");
+			System.out.println();
+			System.out.println();
+			System.out.println();
 
 			ui.onOrgLogin(org.getOrgId());
 
@@ -61,7 +67,7 @@ public class AuthUI {
 	
 	// 회원가입
 	public void signUp() throws IOException {
-		System.out.println("===== 회원가입 =====");
+		System.out.println("=========== 회원가입 ===========");
 		
 		// 아이디 입력 + 중복체크
 		try {
@@ -70,6 +76,7 @@ public class AuthUI {
 			String id = InputHandler.getRequiredInput(br, "아이디 ▶  ");
             
 			if (orgDAO.selectRecord(id) != null) {
+				System.out.println();
                 System.out.println("⦁ 이미 사용 중인 아이디입니다.\n");
                 return;           
             }

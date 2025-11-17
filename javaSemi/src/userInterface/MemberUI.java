@@ -47,7 +47,7 @@ public class MemberUI {
                 return;
             }
 
-            System.out.println("===== 회원 정보 =====");
+            System.out.println("=============================== 회원 정보 ===============================");
             System.out.printf("ID: %s | 이름: %s | 기관 유형: %s | 사업자번호: %s | 전화번호: %s | 이메일: %s | 주소: %s%n",
                     dto.getOrgId(),
                     dto.getOrgName(),
@@ -56,6 +56,9 @@ public class MemberUI {
                     dto.getOrgTel(),
                     dto.getOrgEmail(),
                     dto.getOrgAddress());
+            System.out.println("=====================================================================");
+            System.out.println();
+      
           
 
         } catch (Exception e) {
