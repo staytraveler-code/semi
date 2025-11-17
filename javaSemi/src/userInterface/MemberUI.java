@@ -47,16 +47,15 @@ public class MemberUI {
                 return;
             }
 
-            System.out.println("=============================== 회원 정보 ===============================");
-            System.out.printf("ID: %s | 이름: %s | 기관 유형: %s | 사업자번호: %s | 전화번호: %s | 이메일: %s | 주소: %s%n",
-                    dto.getOrgId(),
-                    dto.getOrgName(),
-                    dto.getOrgType(),
-                    dto.getBizRegNo(),
-                    dto.getOrgTel(),
-                    dto.getOrgEmail(),
-                    dto.getOrgAddress());
-            System.out.println("=====================================================================");
+			System.out.println("───────────────────────────[ 회원 정보 ]───────────────────────────────");
+			System.out.println("ID\t  : " + dto.getOrgId());
+			System.out.println("이름\t  : " + dto.getOrgName());
+			System.out.println("기관유형\t  : " + dto.getOrgType());
+			System.out.println("사업자등록번호 : " + dto.getBizRegNo());
+			System.out.println("전화번호\t  : " + dto.getOrgTel());
+			System.out.println("이메일\t  : " + dto.getOrgEmail());
+			System.out.println("주소\t  : " + dto.getOrgAddress());
+			System.out.println("─────────────────────────────────────────────────────────────────────");
             System.out.println();
       
           
