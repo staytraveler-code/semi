@@ -110,8 +110,9 @@ public class Project_MilestoneUI {
 			if (!aeInput.isBlank()) target.setAeDate(aeInput);
 			while(true) {
 				input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
-				if (input.isBlank()) break;
-				else if(input == "완료" || input == "미완료") {
+				if (input.isBlank()) {
+					break;
+				} else if(input.equals("완료") || input.equals("미완료")) {
 					target.setStatus(input);				
 					break;
 				} else {
