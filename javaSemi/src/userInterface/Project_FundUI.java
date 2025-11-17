@@ -28,23 +28,27 @@ public class Project_FundUI {
     }
 
     public void printFundUsageList() {
-        System.out.println("===== 연구비 사용 내역 =====");
         try {
             List<FundManagementDTO> list = fundDAO.listRecord(projectCode);
-            if(list.size() == 0) {
-            	System.out.println("(등록된 연구비 사용 내역이 없습니다)");
-            } else {
-            	for (FundManagementDTO dto : list) {
-            		System.out.printf("코드: %s | 담당자 코드 : %s | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
-            				dto.getFcode(), dto.getRcode(), dto.getCharger_name(), dto.getCategory(),
-            				dto.getDate_used(), dto.getExpense(), dto.getContent(),
-            				dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
-            	}
+            
+            if (list.isEmpty()) {
+				System.out.println("───────────────────────────────────────────────────");
+            	System.out.println("⚠️ 해당 프로젝트의 연구비 사용 내역이 존재하지 않습니다.");
+            	System.out.println("───────────────────────────────────────────────────");
+            	return;
+			}
+            
+            System.out.println("────────────────────────────────[ 연구비 사용 내역 ]────────────────────────────────────");
+            for (FundManagementDTO dto : list) {
+            	System.out.printf("코드: %s | 담당자 코드 : %s | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
+            			dto.getFcode(), dto.getRcode(), dto.getCharger_name(), dto.getCategory(),
+            			dto.getDate_used(), dto.getExpense(), dto.getContent(),
+            			dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
             }
+            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
         } catch (Exception e) {
             System.out.println("⚠️ 연구비 사용 내역 조회 오류: " + e.getMessage());
         }
-        System.out.println("============================\n");
     }
 
     public void addFundUsage() throws IOException, SQLException {
@@ -54,6 +58,7 @@ public class Project_FundUI {
         String input;
 
 		while (true) {
+			System.out.println("⦁ 연구비 사용 내역 추가");
 			input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ");
 			if (!input.isBlank()) {
 				if (!resDAO.isOrgIncludeRes(orgCode, input)) {
@@ -85,6 +90,7 @@ public class Project_FundUI {
     public void updateFundUsage() throws IOException {
     	
         FundManagementDTO dto = null;
+        System.out.println("⦁ 연구비 사용 내역 수정 (Enter: 기존값 유지)");
         String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ");
 
         try {
@@ -134,6 +140,7 @@ public class Project_FundUI {
 
     public void deleteFundUsage() throws IOException {
 
+    	System.out.println("⦁ 연구비 사용 내역 삭제");
         String fcode = InputHandler.getOptionalInput(br, "삭제할 코드 입력 ▶ ");
         
         try { 
@@ -143,7 +150,7 @@ public class Project_FundUI {
             }
         	
             fundDAO.deleteRecord(fcode); 
-            System.out.println("✅ 삭제 완료!\n"); 
+            System.out.println("✅ 연구비 사용 내역 삭제 완료!\n"); 
             
         } catch (Exception e) { 
             System.out.println("⚠️ 삭제 실패: " + e.getMessage()); 

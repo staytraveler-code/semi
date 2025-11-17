@@ -42,7 +42,7 @@ public class ProjectUI {
 			printProjectList(); // 과제 목록 출력
 
 			try {
-				String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료)"));
+				String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) "));
 
 				if ("0".equals(input))
 					return;
@@ -76,7 +76,7 @@ public class ProjectUI {
 				System.out.println("==============================================================");
 				System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 마일스톤 관리, 4. 연구원 관리, 0. 뒤로가기, 00. 종료");
 
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) "));
 				System.out.println();
 
 				switch (input) {
@@ -133,19 +133,19 @@ public class ProjectUI {
 				return;
 			}
 
-			System.out.println("과제 코드        : " + dto.getProjectCode());
-			System.out.println("기관 코드        : " + dto.getOrgCode());
-			System.out.println("과제명           : " + dto.getTitle());
-			System.out.println("단계            : " + dto.getStage());
-			System.out.println("상태            : " + dto.getStatus());
-			System.out.printf("예산             : %,d%n", dto.getBudget());
-			System.out.println("시작일          : " + (dto.getStartDate().toString()));
-			System.out.println("종료일          : " + (dto.getEndDate().toString()));
+			System.out.println("과제 코드\t: " + dto.getProjectCode());
+			System.out.println("기관 코드\t: " + dto.getOrgCode());
+			System.out.println("과제명\t: " + dto.getTitle());
+			System.out.println("단계\t: " + dto.getStage());
+			System.out.println("상태\t: " + dto.getStatus());
+			System.out.printf("예산\t: %,d\n", dto.getBudget());
+			System.out.println("시작일\t: " + (dto.getStartDate() != null ? dto.getStartDate().toString() : "N/A"));
+			System.out.println("종료일\t: " + (dto.getEndDate() != null ? dto.getEndDate().toString() : "N/A"));
 			System.out.println(
-					"부처           : " + (dto.getMinistryName() == null || dto.getMinistryName().isBlank() ? "없음"
+					"부처\t: " + (dto.getMinistryName() == null || dto.getMinistryName().isBlank() ? "없음"
 							: dto.getMinistryName()));
 			System.out.println(
-					"협약기관          : " + (dto.getPartnerOrgName() == null || dto.getPartnerOrgName().isBlank() ? "없음"
+					"협약기관\t: " + (dto.getPartnerOrgName() == null || dto.getPartnerOrgName().isBlank() ? "없음"
 							: dto.getPartnerOrgName()));
 
 			int total = dto.getTotalMilestones();
@@ -155,7 +155,7 @@ public class ProjectUI {
 			if (total == 0) {
 				System.out.println("등록된 마일스톤 없음 - 진행도 측정 불가");
 			} else {
-				System.out.printf("진행도            : %d / %d (%.2f%%)%n", completed, total, ratio);
+				System.out.printf("진행도\t: %d / %d (%.2f%%)\n", completed, total, ratio);
 			}
 
 		} catch (Exception e) {
@@ -180,7 +180,7 @@ public class ProjectUI {
 						    3. 성과 삭제
 						    0. 뒤로가기
 						""");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) "));
 
 				switch (input) {
 				case "1" -> projectPerformance.addPerformance();
@@ -212,7 +212,7 @@ public class ProjectUI {
 						    3. 연구비 사용 내역 삭제
 						    0. 뒤로가기
 						""");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) "));
 
 				switch (input) {
 				case "1" -> projectFund.addFundUsage();
@@ -243,7 +243,7 @@ public class ProjectUI {
 						    3. 마일스톤 삭제
 						    0. 뒤로가기
 						""");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) "));
 
 				switch (input) {
 				case "1" -> projectMilestone.addMilestone();

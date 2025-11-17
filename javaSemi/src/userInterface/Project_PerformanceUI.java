@@ -23,19 +23,22 @@ public class Project_PerformanceUI {
 	// DAO에서 해당 과제의 성과 목록 가져오기
 	public void printPerformanceList() {
 		try {
-			System.out.println("=========성과목록=========");
 			List<PerformanceManagementDTO> list = dao.performanceList(projectCode);
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 성과가 없습니다)");
-			} else {
-				for (int i = 0; i < list.size(); i++) {
-					PerformanceManagementDTO dto = list.get(i);
-					System.out.printf("%d. [%s] %s | %s | %s | %s%n", i + 1, dto.getPerfCode(), dto.getName(),
-							dto.getCategory(), dto.getpDate().substring(0,10), dto.getMemo());
-				}
+				System.out.println("───────────────────────────────────────────────────");
+            	System.out.println("⚠️ 해당 프로젝트의 성과가 존재하지 않습니다.");
+            	System.out.println("───────────────────────────────────────────────────");
+            	return;
 			}
-			System.out.println("======================\n");
+			
+			System.out.println("────────────────────────────────[ 성과 목록 ]────────────────────────────────────");
+			for (int i = 0; i < list.size(); i++) {
+				PerformanceManagementDTO dto = list.get(i);
+				System.out.printf("%d. [ %s ] %s | %s | %s \n", i + 1,
+						dto.getCategory(), dto.getName(), dto.getpDate().substring(0,10), dto.getMemo());
+			}
+			System.out.println("───────────────────────────────────────────────────────────────────────────────");
 		} catch (Exception e) {
 			System.out.println("⚠️ 성과 조회 오류: " + e.getMessage());
 		}
@@ -59,7 +62,7 @@ public class Project_PerformanceUI {
             System.out.println("✅ 성과 추가 완료!\n");
 
 		} catch (Exception e) {
-            System.out.println("⚠️ 추가 실패: " + e.getMessage());
+            System.out.println("⚠️ 성과 추가 실패: " + e.getMessage());
         }
 	}
 
@@ -117,7 +120,7 @@ public class Project_PerformanceUI {
             System.out.println("✅ 성과 수정 완료!\n");
 
 		} catch (Exception e) {
-            System.out.println("⚠️ 수정 실패: " + e.getMessage());
+            System.out.println("⚠️ 성과 수정 실패: " + e.getMessage());
         }
 	}
 
@@ -137,7 +140,7 @@ public class Project_PerformanceUI {
             System.out.println("✅ 성과 삭제 완료!\n");
 
 		} catch (Exception e) {
-            System.out.println("⚠️ 삭제 실패: " + e.getMessage());
+            System.out.println("⚠️ 성과 삭제 실패: " + e.getMessage());
         }
 	}
 }

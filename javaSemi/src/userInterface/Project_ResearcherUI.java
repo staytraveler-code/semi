@@ -116,6 +116,7 @@ public class Project_ResearcherUI {
             System.out.println();
         	
             // 입력 시작
+            System.out.println("⦁ 연구원 추가");
             String rCode = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ");
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
@@ -159,6 +160,7 @@ public class Project_ResearcherUI {
 
     private void deleteProjectResearcher() {
         try {
+        	System.out.println("⦁ 연구원 삭제");
             String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
             
             if(!roleDAO.isProjectIncludeRes(projectCode, rCode)) {
