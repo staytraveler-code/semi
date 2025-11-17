@@ -92,7 +92,7 @@ public class AuthUI {
             }
             dto.setBizRegNo(bizRegNo);
             dto.setOrgTel(InputHandler.getRequiredTelInput(br, "전화번호(010-0000-0000) ▶ "));
-            dto.setOrgEmail(InputHandler.getRequiredInput(br, "이메일 ▶ "));
+            dto.setOrgEmail(InputHandler.getOptionalInput(br, "이메일 ▶ "));
             dto.setOrgAddress(InputHandler.getRequiredInput(br, "주소 ▶ "));
             orgDAO.insertOrganization(dto);
 
