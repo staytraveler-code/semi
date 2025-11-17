@@ -71,7 +71,7 @@ public class MemberUI {
                 return;
             }
 
-            System.out.println(" === 회원 정보 수정 === ");
+            System.out.println(" === 회원 정보 수정 === (Enter: 기존값 유지)");
             
             String input = InputHandler.getOptionalInput(br, "현재 이름: " + dto.getOrgName() + " ▶ ");
             if (!input.isBlank()) dto.setOrgName(input);
