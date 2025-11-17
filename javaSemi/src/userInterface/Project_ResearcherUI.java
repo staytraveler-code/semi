@@ -58,7 +58,6 @@ public class Project_ResearcherUI {
     private void printProjectResearchers() {
         try {
             List<ResearcherRoleDTO> list = roleDAO.listRole(projectCode); // 프로젝트 코드 기준으로 필터링 필요
-            
 
             if (list.isEmpty()) {
             	System.out.println("───────────────────────────────────────────────────");

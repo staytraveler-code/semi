@@ -16,7 +16,7 @@ public class Project_PerformanceUI {
 		this.br = br;
 	}
 	
-	public void setProjectCode(String projectCode) {
+	public void setProjectCode(String projectCode, String orgCode) {
 		this.projectCode = projectCode;
 	}
 

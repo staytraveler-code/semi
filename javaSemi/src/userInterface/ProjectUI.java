@@ -172,7 +172,7 @@ public class ProjectUI {
 	private void managePerformance(String projectId) {
 		try {
 			while (true) {
-				projectPerformance.setProjectCode(projectId);
+				projectPerformance.setProjectCode(projectId, orgCode);
 				projectPerformance.printPerformanceList();
 				System.out.println("""
 						    1. 성과 추가

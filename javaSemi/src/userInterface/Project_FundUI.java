@@ -10,11 +10,16 @@ import db.fund.management.FundManagementDAOImpl;
 import db.fund.management.FundManagementDTO;
 import db.researcher.ResearcherDAO;
 import db.researcher.ResearcherDAOImpl;
+import db.researcher.ResearcherDTO;
+import db.researcher.role.ResearcherRoleDAO;
+import db.researcher.role.ResearcherRoleDAOImpl;
+import db.researcher.role.ResearcherRoleDTO;
 
 public class Project_FundUI {
     private BufferedReader br;
     private FundManagementDAO fundDAO = new FundManagementDAOImpl();
     private ResearcherDAO resDAO = new ResearcherDAOImpl();
+    private ResearcherRoleDAO roleDAO = new ResearcherRoleDAOImpl();
     private String projectCode; // 현재 프로젝트 코드
     private String orgCode; // 현재 기관 코드
 
@@ -38,23 +43,50 @@ public class Project_FundUI {
             	return;
 			}
             
-            System.out.println("────────────────────────────────[ 연구비 사용 내역 ]────────────────────────────────────");
+            System.out.println("─────────────────────────────────────────────────[ 연구비 사용 내역 ]─────────────────────────────────────────────────────");
             for (FundManagementDTO dto : list) {
             	System.out.printf("코드: %s | 담당자 코드 : %s | 담당자: %s | 분류: %s | 사용일: %s | 금액: %d | 내용: %s | 업체: %s | 증빙: %s | 메모: %s%n",
             			dto.getFcode(), dto.getRcode(), dto.getCharger_name(), dto.getCategory(),
             			dto.getDate_used(), dto.getExpense(), dto.getContent(),
             			dto.getVendor_name(), dto.getProof_type(), dto.getMemo());
             }
-            System.out.println("────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
         } catch (Exception e) {
             System.out.println("⚠️ 연구비 사용 내역 조회 오류: " + e.getMessage());
         }
     }
 
     public void addFundUsage() throws IOException, SQLException {
-        FundManagementDTO dto = new FundManagementDTO();
-        dto.setPcode(projectCode);
+    	
+    	List<ResearcherRoleDTO> list = roleDAO.listRole(projectCode); // 프로젝트 코드 기준으로 필터링 필요
+
+        if (list.isEmpty()) {
+        	System.out.println("───────────────────────────────────────────────────");
+            System.out.println("⚠️ 해당 프로젝트에 배정된 연구원이 없습니다.");
+            System.out.println("───────────────────────────────────────────────────");
+            return;
+        }
+
+        System.out.println("────────────────────────────────────────────────[ 프로젝트 참여 연구원 ]────────────────────────────────────────────────────");
+        System.out.printf("%-13s | %-13s | %-10s | %-13s | %-18s | %-20s%n",
+                			"프로젝트코드", "연구원코드", "이름", "역할", "참여시작일", "참여종료일");
+        System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+
+        for (ResearcherRoleDTO dto : list) {
+        	ResearcherDTO rdto = resDAO.selectResearcherByCode(dto.getResearcherCode());
+            System.out.printf("%-16s | %-15s | %-9s | %-12s | %-20s | %-20s%n",
+                    dto.getProjectCode(),
+                    dto.getResearcherCode(),
+                    rdto.getName(),
+                    dto.getRole(),
+                    dto.getStartDate().substring(0, 10),
+                    dto.getEndDate().substring(0, 10));
+        }
+        System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+        System.out.println();
         
+    	FundManagementDTO dto = new FundManagementDTO();
+    	dto.setPcode(projectCode);
         String input;
 
 		while (true) {
