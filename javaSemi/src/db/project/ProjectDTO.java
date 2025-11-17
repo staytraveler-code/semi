@@ -3,7 +3,16 @@ package db.project;
 import java.sql.Date;
 
 public class ProjectDTO {
-    private String projectCode;
+	private String orgName; //관리자 조회기능때매 추가
+	
+    public String getOrgName() {
+		return orgName;
+	}
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	private String projectCode;
     private String orgCode;
     private String title;
     private String stage;
