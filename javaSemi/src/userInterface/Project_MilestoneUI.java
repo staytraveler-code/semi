@@ -108,8 +108,16 @@ public class Project_MilestoneUI {
 			if (!peInput.isBlank()) target.setPeDate(peInput);
 			String aeInput = InputHandler.getOptionalDateInput(br, "실제완료일(" + target.getAeDate().substring(0,10) + ") ▶ "); 
 			if (!aeInput.isBlank()) target.setAeDate(aeInput);
-			input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
-			if (!input.isBlank()) target.setStatus(input);
+			while(true) {
+				input = InputHandler.getOptionalInput(br, "상태(" + target.getStatus() + ") ▶ ");
+				if (input.isBlank()) break;
+				else if(input == "완료" || input == "진행중") {
+					target.setStatus(input);				
+					break;
+				} else {
+					System.out.println("⚠️ 상태는 [완료], [미완료]만 입력 가능합니다.\n");
+				}
+			}
 			
 			milestoneDAO.updateMilestone(target);
 			System.out.println("✅ 마일스톤 수정 완료!\n");
