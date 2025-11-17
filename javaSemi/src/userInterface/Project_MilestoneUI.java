@@ -82,11 +82,12 @@ public class Project_MilestoneUI {
 			}
 			
 			System.out.println("⦁ 마일스톤 수정 (Enter: 기존값 유지)");
-			String mCode = InputHandler.getRequiredInput(br, "수정할 마일스톤 코드 입력 ▶ ");
+			String mCode = InputHandler.getRequiredInput(br, "수정할 마일스톤 코드 입력 ▶ ").toUpperCase();
 
 			// 접근 가능한 마일스톤인지 체크
 			if (!milestoneDAO.isProjectIncludeMilestone(mCode, projectCode)) {
 				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 입력해주세요.\n");
+				SleepUtil.sleep(1000);
 				return;
 			}
 
@@ -123,11 +124,12 @@ public class Project_MilestoneUI {
 		try {
 
 			System.out.println("⦁ 마일스톤 삭제");
-			String mCode = InputHandler.getOptionalInput(br, "삭제할 마일스톤 코드 입력 ▶ ");
+			String mCode = InputHandler.getOptionalInput(br, "삭제할 마일스톤 코드 입력 ▶ ").toUpperCase();
 
 			// 접근 가능한 마일스톤인지 체크
 			if (!milestoneDAO.isProjectIncludeMilestone(mCode, projectCode)) {
 				System.out.println("⚠️ 목록에 있는 마일스톤 코드를 입력해주세요.\n");
+				SleepUtil.sleep(1000);
 				return;
 			}
 

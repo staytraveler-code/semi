@@ -59,10 +59,11 @@ public class Project_FundUI {
 
 		while (true) {
 			System.out.println("⦁ 연구비 사용 내역 추가");
-			input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ");
+			input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ").toUpperCase();
 			if (!input.isBlank()) {
 				if (!resDAO.isOrgIncludeRes(orgCode, input)) {
 					System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
+					SleepUtil.sleep(1000);
 					continue;
 				}
 				dto.setRcode(input); break; // 공백이 아니면서, 자신의 기관에 속해있으면 break
@@ -91,11 +92,12 @@ public class Project_FundUI {
     	
         FundManagementDTO dto = null;
         System.out.println("⦁ 연구비 사용 내역 수정 (Enter: 기존값 유지)");
-        String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ");
+        String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ").toUpperCase();
 
         try {
             if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
                 System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
+                SleepUtil.sleep(1000);
                 return; 
             }
             
@@ -103,7 +105,7 @@ public class Project_FundUI {
             String input;
 
 			while (true) {
-				input = InputHandler.getOptionalInput(br, "연구원 코드 (" + dto.getRcode() + ") ▶ ");
+				input = InputHandler.getOptionalInput(br, "연구원 코드 (" + dto.getRcode() + ") ▶ ").toUpperCase();
 				if (!input.isBlank()) {
 					if (!resDAO.isOrgIncludeRes(orgCode, input)) {
 						System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
@@ -141,11 +143,12 @@ public class Project_FundUI {
     public void deleteFundUsage() throws IOException {
 
     	System.out.println("⦁ 연구비 사용 내역 삭제");
-        String fcode = InputHandler.getOptionalInput(br, "삭제할 코드 입력 ▶ ");
+        String fcode = InputHandler.getOptionalInput(br, "삭제할 코드 입력 ▶ ").toUpperCase();
         
         try { 
         	if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
                 System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
+                SleepUtil.sleep(1000);
                 return; 
             }
         	

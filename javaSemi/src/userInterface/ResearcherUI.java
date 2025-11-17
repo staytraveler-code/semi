@@ -39,8 +39,7 @@ public class ResearcherUI {
                 00. 종료
             """);
 
-            System.out.print("선택 ▶ ");
-            String input = br.readLine();
+            String input = InputHandler.getOptionalInput(br, "선택 ▶ ");
 
             switch (input) {
                 case "1" -> addResearcher();
@@ -103,19 +102,18 @@ public class ResearcherUI {
     // 연구원 수정 (자기 기관 소속만 가능)
     private void updateResearcher() throws IOException {
         try {
-            String rCode = InputHandler.getOptionalInput(br, "수정할 연구원 코드 ▶ ");
+            String rCode = InputHandler.getOptionalInput(br, "수정할 연구원 코드 ▶ ").toUpperCase();
 
             if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
-                SleepUtil.sleep(2000);
+                SleepUtil.sleep(1000);
                 return;
             }
 
             ResearcherDTO dto = researcherDAO.selectResearcherByCode(rCode);
             String input;
 
-            System.out.println("[ " + rCode + " ] 정보 수정 (Enter: 기존값 유지)");
-            System.out.println("⚠️ 괄호 안의 정보는 현재 저장된 정보입니다.");
+            System.out.println("⦁ [ " + rCode + " ] 정보 수정 (Enter: 기존값 유지)");
 
             input = InputHandler.getOptionalInput(br,  "이름 (" + dto.getName() + ") ▶ ");
             if (!input.isBlank()) dto.setName(input);
@@ -135,11 +133,11 @@ public class ResearcherUI {
     // 연구원 삭제 (자기 기관 소속만 가능)
     private void deleteResearcher() throws IOException {
         try {
-        	String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
+        	String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ").toUpperCase();
 
             if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
                 System.out.println("⚠️ 해당 연구원이 존재하지 않거나, 다른 기관 소속입니다.");
-                SleepUtil.sleep(2000);
+                SleepUtil.sleep(1000);
                 return;
             }
 

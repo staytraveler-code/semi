@@ -43,8 +43,8 @@ public class Project_ResearcherUI {
                 2. 연구원 삭제
                 0. 뒤로가기
             """);
-            System.out.print("선택 ▶ ");
-            String input = br.readLine();
+            
+            String input = InputHandler.getOptionalInput(br, "선택 ▶ ");
 
             switch (input) {
                 case "1" -> addProjectResearcher();
@@ -121,11 +121,11 @@ public class Project_ResearcherUI {
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
-            	SleepUtil.sleep(2000);
+            	SleepUtil.sleep(1000);
             	return;
             } else if (roleDAO.isProjectIncludeRes(projectCode, rCode)){
             	System.out.println("⚠️ 이미 참여중인 연구원입니다.\n");
-            	SleepUtil.sleep(2000);
+            	SleepUtil.sleep(1000);
             	return;
             }
             
@@ -161,11 +161,11 @@ public class Project_ResearcherUI {
     private void deleteProjectResearcher() {
         try {
         	System.out.println("⦁ 연구원 삭제");
-            String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ");
+            String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ").toUpperCase();
             
             if(!roleDAO.isProjectIncludeRes(projectCode, rCode)) {
             	System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
-            	SleepUtil.sleep(2000);
+            	SleepUtil.sleep(1000);
             	return;
             }
             

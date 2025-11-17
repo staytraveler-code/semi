@@ -70,11 +70,12 @@ public class Project_PerformanceUI {
 	public void updatePerformance() {
 		try {
 			System.out.println("⦁ 성과 수정 (Enter: 기존값 유지)");
-			String perfCode = InputHandler.getRequiredInput(br, "수정할 성과코드 입력 ▶ ");
+			String perfCode = InputHandler.getRequiredInput(br, "수정할 성과코드 입력 ▶ ").toUpperCase();
 
 			// 성과 목록에 있는지 체크
 			if (!dao.isProjectIncludePerformance(perfCode, projectCode)) {
 				System.out.println("⚠️ 목록에 있는 성과코드를 입력해주세요.\n");
+				SleepUtil.sleep(1000);
 				return;
 			}
 
@@ -133,6 +134,7 @@ public class Project_PerformanceUI {
 			// 성과 목록에 있는지 체크
 			if (!dao.isProjectIncludePerformance(code, projectCode)) {
 				System.out.println("⚠️ 목록에 있는 성과코드를 선택해주세요");
+				SleepUtil.sleep(1000);
 				return;
 			}
 			
