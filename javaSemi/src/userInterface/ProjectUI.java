@@ -42,7 +42,7 @@ public class ProjectUI {
 			printProjectList(); // 과제 목록 출력
 
 			try {
-				String input = (InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) "));
+				String input = InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) ").toUpperCase();
 
 				if ("0".equals(input))
 					return;
