@@ -139,8 +139,8 @@ public class ProjectUI {
 			System.out.println("단계            : " + dto.getStage());
 			System.out.println("상태            : " + dto.getStatus());
 			System.out.printf("예산             : %,d%n", dto.getBudget());
-			System.out.println("시작일          : " + (dto.getStartDate() != null ? dto.getStartDate().toString() : "N/A"));
-			System.out.println("종료일          : " + (dto.getEndDate() != null ? dto.getEndDate().toString() : "N/A"));
+			System.out.println("시작일          : " + (dto.getStartDate().toString()));
+			System.out.println("종료일          : " + (dto.getEndDate().toString()));
 			System.out.println(
 					"부처           : " + (dto.getMinistryName() == null || dto.getMinistryName().isBlank() ? "없음"
 							: dto.getMinistryName()));
