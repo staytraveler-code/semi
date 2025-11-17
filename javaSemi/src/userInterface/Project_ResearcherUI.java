@@ -68,9 +68,9 @@ public class Project_ResearcherUI {
             }
 
             System.out.println("────────────────────────────────────────────────[ 프로젝트 참여 연구원 ]────────────────────────────────────────────────────");
-            System.out.printf("%-10s | %-10s | %-10s | %-15s | %-15s | %-20s%n",
+            System.out.printf("%-13s | %-13s | %-10s | %-13s | %-18s | %-20s%n",
                     			"프로젝트코드", "연구원코드", "이름", "역할", "참여시작일", "참여종료일");
-            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 
             for (ResearcherRoleDTO dto : list) {
             	ResearcherDTO rdto = researcherDAO.selectResearcherByCode(dto.getResearcherCode());
@@ -82,7 +82,7 @@ public class Project_ResearcherUI {
                         dto.getStartDate().substring(0, 10),
                         dto.getEndDate().substring(0, 10));
             }
-            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+            System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
             System.out.println();
 
         } catch (SQLException e) {
@@ -103,7 +103,7 @@ public class Project_ResearcherUI {
         		return;
         	}
         	
-        	System.out.println("────────────────────────────────[ 기관 연구원 리스트]────────────────────────────────────");
+        	System.out.println("────────────────────────────────[ 기관 연구원 리스트 ]────────────────────────────────────");
             System.out.printf("%-10s │ %-10s │ %-11s │ %-25s%n",
                     		   "연구원코드", "이름", "전화번호", "이메일");
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
@@ -129,17 +129,30 @@ public class Project_ResearcherUI {
             }
             
             ResearcherRoleDTO dto = new ResearcherRoleDTO();
+            String sDate;
+            String eDate;
+            
             dto.setProjectCode(projectCode);
             dto.setResearcherCode(rCode);
             
             dto.setRole(InputHandler.getRequiredInput(br, "역할 ▶ "));
-            dto.setStartDate(InputHandler.getRequiredDateInput(br, "참여 시작 일자(YYYY-MM-DD) ▶ "));
-            dto.setEndDate(InputHandler.getRequiredDateInput(br, "참여 종료 일자(YYYY-MM-DD) ▶ "));
+            
+            sDate = InputHandler.getRequiredDateInput(br, "참여 시작 일자(YYYY-MM-DD) ▶ ");
+            dto.setStartDate(sDate);
+            while(true) {
+            	eDate = InputHandler.getRequiredDateInput(br, "참여 종료 일자(YYYY-MM-DD) ▶ ");
+            	if(!InputHandler.compareDateInput(sDate, eDate)) {
+            		System.out.println("⚠️ 참여 종료 일자는 참여 시작 일자와 같거나 그 이후여야 합니다.\n");
+            		continue;
+            	} 
+            	dto.setEndDate(eDate);            	
+            	break;
+            }
 
             roleDAO.insertResearcherRoleDAO(dto);
             System.out.println("✅ 연구원 추가 완료\n");
 
-        } catch (IOException | SQLException e) {
+        } catch (Exception e) {
             System.err.println("⚠️ 연구원 추가 오류: " + e.getMessage());
         }
     }

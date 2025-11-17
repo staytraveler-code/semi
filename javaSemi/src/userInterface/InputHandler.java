@@ -2,8 +2,11 @@ package userInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 public class InputHandler {
 	
@@ -193,6 +196,21 @@ public class InputHandler {
 
 			System.out.println("⚠️ 전화번호 형식이 올바르지 않습니다.");
 		}
+	}
+	
+	// 날짜 비교 메소드
+	public static boolean compareDateInput(String sDate, String eDate) throws Exception{
+		try {
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = f.parse(sDate);
+		Date endDate = f.parse(eDate);
+		
+		return startDate.before(endDate);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}		
 	}
 	
 }

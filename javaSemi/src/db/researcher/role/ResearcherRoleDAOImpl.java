@@ -110,7 +110,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 				dto.setResearcherCode(rs.getString("researcher_code"));
 				dto.setRole(rs.getString("role"));
 				dto.setStartDate(rs.getString("start_date"));
-				dto.setEndDate(rs.getString("start_date"));
+				dto.setEndDate(rs.getString("end_date"));
 
 				list.add(dto);
 			}
