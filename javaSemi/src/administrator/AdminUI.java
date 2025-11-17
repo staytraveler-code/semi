@@ -53,8 +53,8 @@ public class AdminUI {
 				System.out.println("\n==============================================================");
 				System.out.println("[ 기관 조회 기능 ]");
 				System.out.println("==============================================================");
-				System.out.println("1. 기관명 2. 기관타입 3. 기관주소지 0. 뒤로가기, 00. 종료");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				System.out.println("1. 기관명 2. 기관타입 3. 기관주소지 0. 뒤로가기 00. 종료");
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기 00. 종료)"));
 				System.out.println();
 
 				switch (input) {
@@ -208,8 +208,8 @@ public class AdminUI {
 				System.out.println("\n==============================================================");
 				System.out.println("[ 과제 조회 기능 ]");
 				System.out.println("==============================================================");
-				System.out.println(" 1. 주제별 과제 2. 단계별 과제 3. 상태별 과제 4.예산 내림차순 정렬보기 0. 뒤로가기, 00. 종료");
-				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
+				System.out.println(" 1. 주제별 과제 2. 단계별 과제 3. 상태별 과제 4.예산 내림차순 정렬보기 0. 뒤로가기 00. 종료");
+				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기 00. 종료)"));
 				System.out.println();
 
 				switch (input) {
