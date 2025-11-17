@@ -24,7 +24,7 @@ public class AdminUI {
 		while (true) {
 			System.out.print("""
 					===============================
-						    < 관 리 자 모 드 >
+					[ 관 리 자 모 드 ]
 					===============================
 					1. 등록된 기관 전체조회
 					2. 등록된 과제 전체조회
@@ -32,7 +32,7 @@ public class AdminUI {
 					===============================
 					""");
 
-			String input = br.readLine();
+			String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 종료)"));
 
 			switch (input) {
 			case "1" -> OrganizationUI(); // 등록된 기관 전체조회
@@ -51,9 +51,9 @@ public class AdminUI {
 			OrganizationList();
 			while (true) {
 				System.out.println("\n==============================================================");
-				System.out.println("조회 기능");
+				System.out.println("[ 기관 조회 기능 ]");
 				System.out.println("==============================================================");
-				System.out.println(" 1.기관명 2.기관타입 3.기관주소지 0. 뒤로가기, 00. 종료");
+				System.out.println("1. 기관명 2. 기관타입 3. 기관주소지 0. 뒤로가기, 00. 종료");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
 				System.out.println();
 
@@ -80,7 +80,9 @@ public class AdminUI {
 	// 전체기관목록 출력
 	public void OrganizationList() {
 		try {
-			System.out.println("=========전체기관목록=========");
+			System.out.println("\n==============================================================");
+			System.out.println("[ 전 체 기 관 목 록 ]");
+			System.out.println("==============================================================");
 			List<OrganizationDTO> list = dao.ListOrgan();
 
 			if (list.isEmpty()) {
@@ -93,7 +95,7 @@ public class AdminUI {
 							dto.getOrgAddress(), dto.getOrgId());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
@@ -108,15 +110,16 @@ public class AdminUI {
 	public void OrganizationNameList() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 기관명 => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 기관명 ▶ ");
 
 			List<OrganizationDTO> list = dao.findByOrganName(key);
 
-			System.out.println("=========기관명 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("기관명 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 이름이 없습니다)");
+				System.out.println("(해당 이름의 기관이 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					OrganizationDTO dto = list.get(i);
@@ -125,7 +128,7 @@ public class AdminUI {
 							dto.getOrgAddress(), dto.getOrgId());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -139,15 +142,15 @@ public class AdminUI {
 	public void OrganizationTypeList() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 타입 => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 타입 ▶ ");
 
 			List<OrganizationDTO> list = dao.findByOrganType(key);
-
-			System.out.println("=========타입 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("타입 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 타입이 없습니다)");
+				System.out.println("(해당 타입이 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					OrganizationDTO dto = list.get(i);
@@ -156,7 +159,7 @@ public class AdminUI {
 							dto.getOrgAddress(), dto.getOrgId());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -170,15 +173,15 @@ public class AdminUI {
 	public void OrganizationAddrList() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 주소지 => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 주소지 ▶ ");
 
 			List<OrganizationDTO> list = dao.findByOrganAddr(key);
-
-			System.out.println("=========주소지 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("주소지 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 주소가 없습니다)");
+				System.out.println("(해당 주소의 기관이 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					OrganizationDTO dto = list.get(i);
@@ -187,7 +190,7 @@ public class AdminUI {
 							dto.getOrgAddress(), dto.getOrgId());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -197,15 +200,15 @@ public class AdminUI {
 		}
 	}
 
-	// 과제 조회 ui
+	// 과제 조회 UI
 	public void ProjectUI() {
 		try {
 			ProjectList();
 			while (true) {
 				System.out.println("\n==============================================================");
-				System.out.println("조회 기능");
+				System.out.println("[ 과제 조회 기능 ]");
 				System.out.println("==============================================================");
-				System.out.println(" 1.과제 주제별 2.과제 단계별 3.과제 상태별 4.예산 내림차순 정렬 0. 뒤로가기, 00. 종료");
+				System.out.println(" 1. 주제별 과제 2. 단계별 과제 3. 상태별 과제 4.예산 내림차순 정렬보기 0. 뒤로가기, 00. 종료");
 				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료)"));
 				System.out.println();
 
@@ -232,7 +235,10 @@ public class AdminUI {
 	// 전체과제목록 출력
 	public void ProjectList() {
 		try {
-			System.out.println("=========전체과제목록=========");
+			System.out.println("\n==============================================================");
+			System.out.println("[ 전 체 과 제 목 록 ]");
+			System.out.println("==============================================================");
+			
 			List<ProjectDTO> list = dao.ListProject();
 
 			if (list.isEmpty()) {
@@ -245,7 +251,7 @@ public class AdminUI {
 							dto.getStartDate(), dto.getEndDate());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -259,15 +265,16 @@ public class AdminUI {
 	public void ProjectByTitle() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 주제 => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 주제 ▶ ");
 
 			List<ProjectDTO> list = dao.FindByProjectTitle(key);
 
-			System.out.println("=========주제 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("주제 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 주제가 없습니다)");
+				System.out.println("(해당 주제의 과제가 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					ProjectDTO dto = list.get(i);
@@ -276,7 +283,7 @@ public class AdminUI {
 							dto.getStartDate(), dto.getEndDate());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -290,15 +297,16 @@ public class AdminUI {
 	public void ProjectByStage() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 단계(1단계~4단계) => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 단계(1단계~4단계) ▶ ");
 
 			List<ProjectDTO> list = dao.FindByProjectStage(key);
 
-			System.out.println("=========단계 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("단계 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 단계가 없습니다)");
+				System.out.println("(해당 단계의 과제가 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					ProjectDTO dto = list.get(i);
@@ -307,7 +315,7 @@ public class AdminUI {
 							dto.getStartDate(), dto.getEndDate());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -321,15 +329,16 @@ public class AdminUI {
 	public void ProjectByStatus() {
 		String key = null;
 		try {
-			System.out.print("조회하고 싶은 상태(계획,진행,완료,지연) => ");
-			key = br.readLine();
+			key = InputHandler.getRequiredInput(br,"조회하고 싶은 상태(계획,진행,완료,지연 ..) ▶ ");
 
 			List<ProjectDTO> list = dao.FindByProjectStatus(key);
 
-			System.out.println("=========상태 : " + key + "=========");
+			System.out.println("\n==============================================================");
+			System.out.println("상태 : [ " + key + " ]");
+			System.out.println("==============================================================");
 
 			if (list.isEmpty()) {
-				System.out.println("(등록된 상태가 없습니다)");
+				System.out.println("(해당 상태의 과제가 없습니다)");
 			} else {
 				for (int i = 0; i < list.size(); i++) {
 					ProjectDTO dto = list.get(i);
@@ -338,7 +347,7 @@ public class AdminUI {
 							dto.getStartDate(), dto.getEndDate());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
@@ -351,7 +360,9 @@ public class AdminUI {
 	// 4. 과제 예산 내림차순 정렬
 	public void ProjectBudgeSort() {
 		try {
-			System.out.println("=========예산 내림차순 목록=========");
+			System.out.println("\n==============================================================");
+			System.out.println("[ 예산 내림차 순 정렬 ]");
+			System.out.println("==============================================================");
 			List<ProjectDTO> list = dao.ListProjectBudget();
 
 			if (list.isEmpty()) {
@@ -364,7 +375,7 @@ public class AdminUI {
 							dto.getStartDate(), dto.getEndDate());
 				}
 			}
-			System.out.println("======================\n");
+			System.out.println("==============================================================\n");
 		} catch (SQLException e) {
 			System.out.println("⚠️ 데이터베이스 오류: " + e.getMessage());
 		} catch (IOException e) {
