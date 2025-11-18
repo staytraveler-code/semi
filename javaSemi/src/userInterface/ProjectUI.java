@@ -155,10 +155,10 @@ public class ProjectUI {
             System.out.println("단계\t: " + dto.getStage());
             System.out.println("상태\t: " + dto.getStatus());
             System.out.printf("예산\t: %,d\n", dto.getBudget());
-            System.out.println("시작일\t: " + (dto.getStartDate() != null ? dto.getStartDate() : "N/A"));
-            System.out.println("종료일\t: " + (dto.getEndDate() != null ? dto.getEndDate() : "N/A"));
-            System.out.println("부처\t: " + (dto.getMinistryName() == null || dto.getMinistryName().isBlank() ? "없음" : dto.getMinistryName()));
-            System.out.println("협약기관\t: " + (dto.getPartnerOrgName() == null || dto.getPartnerOrgName().isBlank() ? "없음" : dto.getPartnerOrgName()));
+            System.out.println("시작일\t: " + (dto.getStartDate()));
+            System.out.println("종료일\t: " + (dto.getEndDate()));
+            System.out.println("부처\t: " + (dto.getMinistryName() == null ? "없음" : dto.getMinistryName()));
+            System.out.println("협약기관\t: " + (dto.getPartnerOrgName() == null ? "없음" : dto.getPartnerOrgName()));
 
             // 마일스톤 진행도
             int total = dto.getTotalMilestones();
