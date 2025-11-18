@@ -54,9 +54,13 @@ public class ProjectUI {
                     ui.exit();
 
                 // 입력한 코드와 일치하는 프로젝트 선택
-                ProjectDTO selected = projectDAO.getProjectsByOrganization(orgCode).stream()
-                        .filter(p -> p.getProjectCode().equalsIgnoreCase(input))
-                        .findFirst().orElse(null);
+                ProjectDTO selected = null;
+                for (ProjectDTO p : projectDAO.getProjectsByOrganization(orgCode)) {
+                    if (p.getProjectCode().equalsIgnoreCase(input)) {
+                        selected = p;
+                        break;
+                    }
+                }
 
                 if (selected != null) {
                     // 선택된 프로젝트가 존재하면 상세 메뉴 보여주기
