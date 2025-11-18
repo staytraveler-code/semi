@@ -22,15 +22,16 @@ public class InputHandler {
      *
      * @param br     BufferedReader 객체
      * @return trim() 처리된 유효한 입력 문자열
-     * @throws IOException
+     * @throws IOException, InputCancelledException
      */
 	
-    public static String getRequiredInput(BufferedReader br, String prompt) throws IOException {
+    public static String getRequiredInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
         String input = ""; // 반환할 변수
         
         while (true) {
             System.out.print(prompt); // prompt 출력
             input = br.readLine();
+            if(input.trim().equals("00")) throw new InputCancelledException();
 
             // null이 아니고, 좌우 공백 제거 후 비어있지 않다면
             if (input != null && !input.trim().isEmpty()) {
@@ -50,14 +51,15 @@ public class InputHandler {
      * @param br     BufferedReader 객체
      * @return defaultValue (공백 입력 시) 인자로 넘긴 기존 값 반환
      * @return trim() (공백이 아닐 시) 처리된 유효한 입력 문자열 반환
-     * @throws IOException
+     * @throws IOException, InputCancelledException
      */
     
-	public static String getRequiredInput(BufferedReader br, String prompt, String defaultValue) throws IOException {
+	public static String getRequiredInput(BufferedReader br, String prompt, String defaultValue) throws IOException, InputCancelledException {
 		String input = "";
 
 		System.out.print(prompt);
 		input = br.readLine();
+		if(input.trim().equals("00")) throw new InputCancelledException();
 
 		if (input != null && !input.trim().isEmpty()) {
 			return input.trim(); // 공백이 아니라면 좌우 공백 제거 후 반환
@@ -72,10 +74,20 @@ public class InputHandler {
      *
      * @param br     BufferedReader 객체
      * @return trim() 처리된 유효한 입력 문자열 반환
-     * @throws IOException
+     * @throws IOException, InputCancelledException
      */
 	
-	public static String getOptionalInput(BufferedReader br, String prompt) throws IOException {
+	public static String getOptionalInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
+		String input = "";
+
+		System.out.print(prompt);
+		input = br.readLine();
+		if(input.trim().equals("00")) throw new InputCancelledException();
+
+		return input.trim();
+	}
+	
+	public static String getOptionalMenuInput(BufferedReader br, String prompt) throws IOException {
 		String input = "";
 
 		System.out.print(prompt);
@@ -85,7 +97,7 @@ public class InputHandler {
 	}
 
 	// 전화번호 입력 메소드 ( 필수 )
-	public static String getRequiredTelInput(BufferedReader br, String prompt) throws IOException {
+	public static String getRequiredTelInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
         String input = "";
         
         while (true) {
@@ -100,12 +112,13 @@ public class InputHandler {
 	}
 	
 	// 전화번호 입력 메소드 ( 선택 )
-	public static String getOptionalTelInput(BufferedReader br, String prompt) throws IOException {
+	public static String getOptionalTelInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
 		String input = "";
 
 		while (true) {
 			System.out.print(prompt);
 			input = br.readLine();
+			if(input.trim().equals("00")) throw new InputCancelledException();
 
 			if (input == null || input.trim().isEmpty()) {
 				return input; // 공백 입력 시 그대로 공백 반환
@@ -120,7 +133,7 @@ public class InputHandler {
 	}
 	
 	// 날짜 입력 메소드 ( 필수 )
-	public static String getRequiredDateInput(BufferedReader br, String prompt) throws IOException {
+	public static String getRequiredDateInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
 		
 		String input = "";
 		while (true) {
@@ -141,12 +154,13 @@ public class InputHandler {
 	}
 	
 	// 날짜 입력 메소드 ( 선택 )
-	public static String getOptionalDateInput(BufferedReader br, String prompt) throws IOException {
+	public static String getOptionalDateInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
 
 		String input = "";
 		while (true) {
 			System.out.print(prompt);
 			input = br.readLine();
+			if(input.trim().equals("00")) throw new InputCancelledException();
 			
 			if (input == null || input.trim().isEmpty()) {
 				return input; // 공백 입력 시 그대로 공백 반환
@@ -163,7 +177,7 @@ public class InputHandler {
 	}
 	
 	// 사업자등록번호 입력 메소드 ( 필수 )
-	public static String getRequiredBizRegInput(BufferedReader br, String prompt) throws IOException {
+	public static String getRequiredBizRegInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
 		String input = "";
         
         while (true) {
@@ -178,12 +192,13 @@ public class InputHandler {
 	}
 	
 	// 사업자등록번호 입력 메소드 ( 선택 )
-	public static String getOptionalBizRegInput(BufferedReader br, String prompt) throws IOException {
+	public static String getOptionalBizRegInput(BufferedReader br, String prompt) throws IOException, InputCancelledException {
 		String input = "";
 
 		while (true) {
 			System.out.print(prompt);
 			input = br.readLine();
+			if(input.trim().equals("00")) throw new InputCancelledException();
 
 			if (input == null || input.trim().isEmpty()) {
 				return input; // 공백 입력 시 그대로 공백 반환
@@ -198,7 +213,7 @@ public class InputHandler {
 	}
 	
 	// 날짜 비교 메소드
-	public static boolean compareDateInput(String sDate, String eDate) throws Exception{
+	public static boolean compareDateInput(String sDate, String eDate) throws Exception {
 		try {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate = f.parse(sDate);

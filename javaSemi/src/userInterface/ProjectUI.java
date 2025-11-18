@@ -43,7 +43,7 @@ public class ProjectUI {
 
             try {
                 // 사용자에게 과제 코드 입력 받기
-                String input = InputHandler.getRequiredInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) ").toUpperCase();
+                String input = InputHandler.getOptionalMenuInput(br, "관리할 과제 코드 입력 ▶ (0. 뒤로가기, 00. 종료) ").toUpperCase();
 
                 // 뒤로가기
                 if ("0".equals(input))
@@ -88,7 +88,7 @@ public class ProjectUI {
                 // 메뉴 출력
                 System.out.println(" 1. 성과 관리, 2. 연구비 관리, 3. 마일스톤 관리, 4. 연구원 관리, 0. 뒤로가기, 00. 종료");
 
-                String input = InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) ");
+                String input = InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) ");
 
                 // 메뉴 선택에 따른 처리
                 switch (input) {
@@ -189,7 +189,7 @@ public class ProjectUI {
                         3. 성과 삭제
                         0. 뒤로가기
                         """);
-                String input = InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) ");
+                String input = InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ (0. 뒤로가기) ");
 
                 switch (input) {
                     case "1" -> projectPerformance.addPerformance();
@@ -218,7 +218,7 @@ public class ProjectUI {
                         3. 연구비 사용 내역 삭제
                         0. 뒤로가기
                         """);
-                String input = InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) ");
+                String input = InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ (0. 뒤로가기) ");
 
                 switch (input) {
                     case "1" -> projectFund.addFundUsage();
@@ -249,7 +249,7 @@ public class ProjectUI {
                         3. 마일스톤 삭제
                         0. 뒤로가기
                         """);
-                String input = InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 뒤로가기, 00. 종료) ");
+                String input = InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ (0. 뒤로가기) ");
 
                 switch (input) {
                     case "1" -> projectMilestone.addMilestone();

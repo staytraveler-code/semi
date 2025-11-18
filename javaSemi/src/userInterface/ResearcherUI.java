@@ -39,7 +39,7 @@ public class ResearcherUI {
                 00. 종료
             """);
 
-            String input = InputHandler.getOptionalInput(br, "선택 ▶ ");
+            String input = InputHandler.getOptionalMenuInput(br, "선택 ▶ ");
 
             switch (input) {
                 case "1" -> addResearcher();
@@ -93,6 +93,8 @@ public class ResearcherUI {
             researcherDAO.insertResearcherDAO(dto);
             System.out.println("✅ 연구원 등록 완료\n");
 
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (SQLException e) {
             System.out.println("❌ 연구원 등록 실패: " + e.getMessage());
         }
@@ -123,7 +125,9 @@ public class ResearcherUI {
 
             researcherDAO.updateResearcherDAO(dto);
             System.out.println("✅ 연구원 정보 수정 완료\n");
-
+            
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (SQLException e) {
             System.out.println("❌ 수정 실패: " + e.getMessage());
         }
@@ -143,6 +147,8 @@ public class ResearcherUI {
             researcherDAO.deleteResearcherDAO(rCode);
             System.out.println("✅ 연구원 삭제 완료\n");
 
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (SQLException e) {
             System.out.println("❌ 삭제 실패: " + e.getMessage());
         }

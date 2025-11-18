@@ -32,7 +32,7 @@ public class AdminUI {
 					===============================
 					""");
 
-			String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ (0. 종료)"));
+			String input = (InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ (0. 종료)"));
 
 			switch (input) {
 			case "1" -> OrganizationUI(); // 등록된 기관 전체조회

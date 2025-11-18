@@ -23,7 +23,7 @@ public class AdminDAO {
 		try {
 			String sql = """
 					   SELECT org_code, name, type, biz_reg_no, tel, email, address , id
-					     FROM organization
+					     FROM organization ORDER BY org_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -62,7 +62,7 @@ public class AdminDAO {
 		try {
 			String sql = """
 					   SELECT org_code, name, type, biz_reg_no, tel, email, address , id
-					     FROM organization WHERE name LIKE ?
+					     FROM organization WHERE name LIKE ? ORDER BY org_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -102,7 +102,7 @@ public class AdminDAO {
 		try {
 			String sql = """
 					   SELECT org_code, name, type, biz_reg_no, tel, email, address , id
-					     FROM organization WHERE type LIKE ?
+					     FROM organization WHERE type LIKE ? ORDER BY org_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -142,7 +142,7 @@ public class AdminDAO {
 		try {
 			String sql = """
 					   SELECT org_code, name, type, biz_reg_no, tel, email, address , id
-					     FROM organization WHERE address LIKE ?
+					     FROM organization WHERE address LIKE ? ORDER BY org_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -184,7 +184,7 @@ public class AdminDAO {
 					   SELECT project_code, org.name AS name, title, stage, status, budget,
 					   start_date, end_date
 					    FROM project p
-					    JOIN organization org ON p.org_code = org.org_code
+					    JOIN organization org ON p.org_code = org.org_code ORDER BY project_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -226,6 +226,7 @@ public class AdminDAO {
 					    FROM project p
 					    JOIN organization org ON p.org_code = org.org_code
 					    WHERE title Like ?
+					    ORDER BY project_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -269,6 +270,7 @@ public class AdminDAO {
 					    FROM project p
 					    JOIN organization org ON p.org_code = org.org_code
 					    WHERE Stage Like ?
+					    ORDER BY project_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);
@@ -312,6 +314,7 @@ public class AdminDAO {
 					    FROM project p
 					    JOIN organization org ON p.org_code = org.org_code
 					    WHERE Status Like ?
+					    ORDER BY project_code
 					""";
 
 			pstmt = conn.prepareStatement(sql);

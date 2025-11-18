@@ -44,7 +44,7 @@ public class Project_ResearcherUI {
                 0. 뒤로가기
             """);
             
-            String input = InputHandler.getOptionalInput(br, "선택 ▶ ");
+            String input = InputHandler.getOptionalMenuInput(br, "선택 ▶ ");
 
             switch (input) {
                 case "1" -> addProjectResearcher();
@@ -152,6 +152,8 @@ public class Project_ResearcherUI {
             roleDAO.insertResearcherRoleDAO(dto);
             System.out.println("✅ 연구원 추가 완료\n");
 
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (Exception e) {
             System.err.println("⚠️ 연구원 추가 오류: " + e.getMessage());
         }
@@ -171,6 +173,8 @@ public class Project_ResearcherUI {
             roleDAO.deleteResearcherRoleDAO(projectCode, rCode);
             System.out.println("✅ 연구원 삭제 완료\n");
             
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (IOException | SQLException e) {
             System.err.println("⚠️ 연구원 삭제 오류: " + e.getMessage());
         }

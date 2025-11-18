@@ -103,7 +103,7 @@ public class ResearcherDAOImpl implements ResearcherDAO {
 
     @Override
     public List<ResearcherDTO> listResearchersByOrg(String orgCode) throws SQLException {
-        String sql = "SELECT researcher_code, name, tel, email FROM Researcher WHERE org_code=?";
+        String sql = "SELECT researcher_code, name, tel, email FROM Researcher WHERE org_code=? ORDER BY researcher_code";
         List<ResearcherDTO> list = new ArrayList<>();
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

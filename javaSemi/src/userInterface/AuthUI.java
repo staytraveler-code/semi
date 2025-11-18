@@ -59,7 +59,9 @@ public class AuthUI {
 			System.out.println();
 
 			ui.onOrgLogin(org.getOrgId());
-
+			
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (SQLException e) {
 			System.err.println("❌ 로그인 처리 중 DB 오류: " + e.getMessage());
 		}
@@ -103,7 +105,8 @@ public class AuthUI {
             dto.setOrgAddress(InputHandler.getRequiredInput(br, "주소 ▶ "));
             orgDAO.insertOrganization(dto);
 
-
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (SQLException e) {
 			System.out.println("❌ 회원가입 DB 오류: " + e.getMessage());
 		}

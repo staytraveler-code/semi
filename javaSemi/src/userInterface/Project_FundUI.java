@@ -89,44 +89,47 @@ public class Project_FundUI {
     	dto.setPcode(projectCode);
         String input;
 
-		while (true) {
-			System.out.println("⦁ 연구비 사용 내역 추가");
-			input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ").toUpperCase();
-			if (!input.isBlank()) {
-				if (!resDAO.isOrgIncludeRes(orgCode, input)) {
-					System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
-					SleepUtil.sleep(1000);
-					continue;
-				}
-				dto.setRcode(input); break; // 공백이 아니면서, 자신의 기관에 속해있으면 break
-			} else {
-				break; // 공백이면 break
-			}
-		}
-		
-        dto.setCategory(InputHandler.getRequiredInput(br, "분류 ▶ "));
-        dto.setDate_used(InputHandler.getRequiredDateInput(br, "사용일 (YYYY-MM-DD) ▶ "));
-        dto.setExpense(Long.parseLong(InputHandler.getRequiredInput(br, "금액 ▶ ")));
-        dto.setContent(InputHandler.getRequiredInput(br, "내용 ▶ "));
-        dto.setVendor_name(InputHandler.getOptionalInput(br, "업체명 ▶ "));
-        dto.setProof_type(InputHandler.getRequiredInput(br, "증빙 ▶ "));
-        dto.setMemo(InputHandler.getOptionalInput(br, "메모 ▶ "));
-
         try {
+        	while (true) {
+				System.out.println("⦁ 연구비 사용 내역 추가");
+				input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ").toUpperCase();
+				if (!input.isBlank()) {
+					if (!resDAO.isOrgIncludeRes(orgCode, input)) {
+						System.out.println("⚠️ 당신의 기관에 소속된 연구원이 아니거나, 존재하지 않는 연구원 코드입니다.\n");
+						SleepUtil.sleep(1000);
+						continue;
+					}
+					dto.setRcode(input); break; // 공백이 아니면서, 자신의 기관에 속해있으면 break
+				} else {
+					break; // 공백이면 break
+				}
+			}
+		
+        	dto.setCategory(InputHandler.getRequiredInput(br, "분류 ▶ "));
+        	dto.setDate_used(InputHandler.getRequiredDateInput(br, "사용일 (YYYY-MM-DD) ▶ "));
+        	dto.setExpense(Long.parseLong(InputHandler.getRequiredInput(br, "금액 ▶ ")));
+        	dto.setContent(InputHandler.getRequiredInput(br, "내용 ▶ "));
+        	dto.setVendor_name(InputHandler.getOptionalInput(br, "업체명 ▶ "));
+        	dto.setProof_type(InputHandler.getRequiredInput(br, "증빙 ▶ "));
+        	dto.setMemo(InputHandler.getOptionalInput(br, "메모 ▶ "));
+
             fundDAO.insertRecord(dto);
             System.out.println("✅ 연구비 사용 내역 추가 완료!\n");
+            
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (Exception e) {
             System.out.println("⚠️ 추가 실패: " + e.getMessage());
         }
     }
 
     public void updateFundUsage() throws IOException {
+    	FundManagementDTO dto = null;
     	
-        FundManagementDTO dto = null;
-        System.out.println("⦁ 연구비 사용 내역 수정 (Enter: 기존값 유지)");
-        String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ").toUpperCase();
-
         try {
+        	System.out.println("⦁ 연구비 사용 내역 수정 (Enter: 기존값 유지)");
+        	String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ").toUpperCase();
+
             if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
                 System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
                 SleepUtil.sleep(1000);
@@ -167,6 +170,9 @@ public class Project_FundUI {
             fundDAO.updateRecord(dto);
             
             System.out.println("✅ 연구비 사용 내역 수정 완료!\n");
+            
+        } catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (Exception e) { 
             System.out.println("⚠️ 수정 실패: " + e.getMessage()); 
         }
@@ -174,10 +180,10 @@ public class Project_FundUI {
 
     public void deleteFundUsage() throws IOException {
 
-    	System.out.println("⦁ 연구비 사용 내역 삭제");
-        String fcode = InputHandler.getOptionalInput(br, "삭제할 코드 입력 ▶ ").toUpperCase();
+    	try { 
+    		System.out.println("⦁ 연구비 사용 내역 삭제");
+    		String fcode = InputHandler.getOptionalInput(br, "삭제할 코드 입력 ▶ ").toUpperCase();
         
-        try { 
         	if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 
                 System.out.println("⚠️ 목록에 있는 연구비 코드를 입력해주세요.\n"); 
                 SleepUtil.sleep(1000);
@@ -186,7 +192,9 @@ public class Project_FundUI {
         	
             fundDAO.deleteRecord(fcode); 
             System.out.println("✅ 연구비 사용 내역 삭제 완료!\n"); 
-            
+           
+    	} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
         } catch (Exception e) { 
             System.out.println("⚠️ 삭제 실패: " + e.getMessage()); 
         }

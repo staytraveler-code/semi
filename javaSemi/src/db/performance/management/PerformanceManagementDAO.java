@@ -19,7 +19,7 @@ public class PerformanceManagementDAO {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT performance_code AS code, name, category, content, p_date, memo "
-					+ "FROM performance_management WHERE project_code = ?";
+					+ "FROM performance_management WHERE project_code = ? ORDER BY code";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, projectCode);

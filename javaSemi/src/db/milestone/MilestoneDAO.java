@@ -18,7 +18,7 @@ public class MilestoneDAO {
 		List<MilestoneDTO> list = new ArrayList<>();
 		
 		String sql = "SELECT milestone_code, project_code, name, description, p_end_date, a_end_date, status "
-				+ "FROM Milestone WHERE project_code = ?";
+				+ "FROM Milestone WHERE project_code = ? ORDER BY milestone_code";
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, projectCode);

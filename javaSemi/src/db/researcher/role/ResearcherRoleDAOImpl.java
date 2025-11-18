@@ -96,7 +96,7 @@ public class ResearcherRoleDAOImpl implements ResearcherRoleDAO {
 		
 		try {
 			sql = "SELECT project_code, researcher_code, role, start_date, end_date"
-					+ " FROM Researcher_Role WHERE project_code = ?";
+					+ " FROM Researcher_Role WHERE project_code = ? ORDER BY project_code, researcher_code";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, code);

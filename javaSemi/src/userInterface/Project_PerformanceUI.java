@@ -61,6 +61,8 @@ public class Project_PerformanceUI {
 			dao.insertPerformance(dto, projectCode);
             System.out.println("✅ 성과 추가 완료!\n");
 
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
             System.out.println("⚠️ 성과 추가 실패: " + e.getMessage());
         }
@@ -120,6 +122,8 @@ public class Project_PerformanceUI {
 			dao.updatePerformance(target);
             System.out.println("✅ 성과 수정 완료!\n");
 
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
             System.out.println("⚠️ 성과 수정 실패: " + e.getMessage());
         }
@@ -141,6 +145,8 @@ public class Project_PerformanceUI {
 			dao.deletePerformance(code);
             System.out.println("✅ 성과 삭제 완료!\n");
 
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
             System.out.println("⚠️ 성과 삭제 실패: " + e.getMessage());
         }

@@ -65,7 +65,9 @@ public class Project_MilestoneUI {
 
 			milestoneDAO.insertMilestone(dto);
 			System.out.println("✅ 마일스톤 추가 완료!\n");
-
+			
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
 			System.out.println("⚠️ 마일스톤 추가 실패: " + e.getMessage());
 		}
@@ -122,7 +124,9 @@ public class Project_MilestoneUI {
 			
 			milestoneDAO.updateMilestone(target);
 			System.out.println("✅ 마일스톤 수정 완료!\n");
-
+			
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
 			System.out.println("⚠️ 마일스톤 수정 실패: " + e.getMessage());
 		}
@@ -145,6 +149,8 @@ public class Project_MilestoneUI {
 			milestoneDAO.deleteMilestone(mCode);
 			System.out.println("✅ 마일스톤 삭제 완료!\n");
 			
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
 			System.out.println("⚠️ 마일스톤 삭제 실패: " + e.getMessage());
 		}

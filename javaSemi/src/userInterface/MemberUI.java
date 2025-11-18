@@ -26,8 +26,7 @@ public class MemberUI {
 
 			// 메뉴 출력
 			System.out.println("1. 정보 수정 0. 뒤로가기 00. 종료");
-			System.out.print("메뉴 선택 ▶ ");
-			String input = br.readLine();
+			String input = InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ ");
 
 			switch (input) {
 			case "1" -> editMemberInformation();
@@ -99,6 +98,8 @@ public class MemberUI {
 			organizationDAO.updateOrganization(dto);
 			System.out.println("회원 정보 수정 완료 \n");
 
+		} catch (InputCancelledException e) {
+			System.out.println("❌ 입력을 중단하였습니다.");
 		} catch (Exception e) {
 			System.out.println("⚠️ 회원 정보 수정 실패: " + e.getMessage());
 		}
