@@ -69,7 +69,7 @@ public class AuthUI {
 	
 	// 회원가입
 	public void signUp() throws IOException {
-		System.out.println("=========== 회원가입 ===========");
+		System.out.println("=========== 회원가입 (00 : 입력 중단) ===========");
 		
 		// 아이디 입력 + 중복체크
 		try {

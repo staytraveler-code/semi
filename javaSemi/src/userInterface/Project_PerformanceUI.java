@@ -50,7 +50,7 @@ public class Project_PerformanceUI {
 		try {
 			PerformanceManagementDTO dto = new PerformanceManagementDTO();
 
-			System.out.println("⦁ 성과 추가");
+			System.out.println("⦁ 성과 추가 (00 : 입력 중단)");
 			
 			dto.setName(InputHandler.getRequiredInput(br, "제목 ▶ "));
 			dto.setCategory(InputHandler.getRequiredInput(br, "카테고리 ▶ "));
@@ -71,7 +71,7 @@ public class Project_PerformanceUI {
 	// 기존 목록의 성과 수정하기
 	public void updatePerformance() {
 		try {
-			System.out.println("⦁ 성과 수정 (Enter: 기존값 유지)");
+			System.out.println("⦁ 성과 수정 (Enter : 기존값 유지, 00 : 입력 중단)");
 			String perfCode = InputHandler.getRequiredInput(br, "수정할 성과코드 입력 ▶ ").toUpperCase();
 
 			// 성과 목록에 있는지 체크

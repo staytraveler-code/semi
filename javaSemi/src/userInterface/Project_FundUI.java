@@ -91,7 +91,7 @@ public class Project_FundUI {
 
         try {
         	while (true) {
-				System.out.println("⦁ 연구비 사용 내역 추가");
+				System.out.println("⦁ 연구비 사용 내역 추가 (00 : 입력 중단)");
 				input = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ").toUpperCase();
 				if (!input.isBlank()) {
 					if (!resDAO.isOrgIncludeRes(orgCode, input)) {
@@ -127,7 +127,7 @@ public class Project_FundUI {
     	FundManagementDTO dto = null;
     	
         try {
-        	System.out.println("⦁ 연구비 사용 내역 수정 (Enter: 기존값 유지)");
+        	System.out.println("⦁ 연구비 사용 내역 수정 (Enter : 기존값 유지, 00 : 입력 중단)");
         	String fcode =  InputHandler.getOptionalInput(br, "수정할 코드 입력 ▶ ").toUpperCase();
 
             if (!fundDAO.isProjectFundRecord(projectCode, fcode)) { 

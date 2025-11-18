@@ -85,7 +85,8 @@ public class ResearcherUI {
         try {
             ResearcherDTO dto = new ResearcherDTO();
             dto.setOrgCode(orgCode); // 항상 자기 기관
-
+            
+            System.out.println("⦁ 연구원 추가 (00 : 입력 중단)");
             dto.setName(InputHandler.getRequiredInput(br, "이름 ▶ "));
             dto.setTel(InputHandler.getRequiredTelInput(br, "전화번호 ▶ "));
             dto.setEmail(InputHandler.getOptionalInput(br, "이메일 ▶ "));
@@ -103,6 +104,7 @@ public class ResearcherUI {
     // 연구원 수정 (자기 기관 소속만 가능)
     private void updateResearcher() throws IOException {
         try {
+        	System.out.println("⦁ 연구원 정보 수정 (Enter : 기존값 유지, 00 : 입력 중단)");
             String rCode = InputHandler.getOptionalInput(br, "수정할 연구원 코드 ▶ ").toUpperCase();
 
             if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {
@@ -136,6 +138,7 @@ public class ResearcherUI {
     // 연구원 삭제 (자기 기관 소속만 가능)
     private void deleteResearcher() throws IOException {
         try {
+        	System.out.println("⦁ 연구원 삭제");
         	String rCode = InputHandler.getOptionalInput(br, "삭제할 연구원 코드 ▶ ").toUpperCase();
 
             if (!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {

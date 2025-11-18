@@ -115,7 +115,7 @@ public class Project_ResearcherUI {
             System.out.println();
         	
             // 입력 시작
-            System.out.println("⦁ 연구원 추가");
+            System.out.println("⦁ 연구원 추가 (00 : 입력 중단)");
             String rCode = InputHandler.getOptionalInput(br, "연구원 코드 ▶ ");
             
             if(!researcherDAO.isOrgIncludeRes(orgCode, rCode)) {

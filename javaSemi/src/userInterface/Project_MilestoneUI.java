@@ -54,7 +54,7 @@ public class Project_MilestoneUI {
 		try {
 			MilestoneDTO dto = new MilestoneDTO();
 
-			System.out.println("⦁ 마일스톤 추가");
+			System.out.println("⦁ 마일스톤 추가 (00 : 입력 중단)");
 			
 			dto.setpCode(projectCode);
 			dto.setName(InputHandler.getRequiredInput(br, "목표 ▶ "));
@@ -83,7 +83,7 @@ public class Project_MilestoneUI {
 				return;
 			}
 			
-			System.out.println("⦁ 마일스톤 수정 (Enter: 기존값 유지)");
+			System.out.println("⦁ 마일스톤 수정 (Enter : 기존값 유지, 00 : 입력 중단)");
 			String mCode = InputHandler.getRequiredInput(br, "수정할 마일스톤 코드 입력 ▶ ").toUpperCase();
 
 			// 접근 가능한 마일스톤인지 체크
