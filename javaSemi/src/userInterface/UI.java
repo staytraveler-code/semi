@@ -41,7 +41,7 @@ public class UI {
     	                0. 종료
     	                ===============================
     	                """);
-    				String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ "));
+    				String input = (InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ "));
     	            System.out.println();
     				System.out.println();
     				System.out.println();
@@ -100,7 +100,7 @@ public class UI {
                     ===============================
                     """);
 				
-                String input = (InputHandler.getRequiredInput(br, "메뉴 선택 ▶ "));
+                String input = (InputHandler.getOptionalMenuInput(br, "메뉴 선택 ▶ "));
     			System.out.println();
     			System.out.println();
     			System.out.println();
